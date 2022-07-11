@@ -1,5 +1,7 @@
 import { AccordionBody, AccordionHeader, AccordionItem, UncontrolledAccordion } from 'reactstrap'
 import Categories from '../../components/Categories';
+import Comments from '../../components/Comments';
+import CommentsForm from '../../components/CommentsForm';
 import PostDetail from '../../components/PostDetails';
 import PostWidget from '../../components/PostWidget';
 import { getPosts, getPostDetails } from '../../services';
@@ -39,8 +41,8 @@ const SinglePost = ({examPosts}) => {
     ))}
 
 </UncontrolledAccordion>
-{/* <CommentsForm slug={examPosts.slug} />
-            <Comments slug={examPosts.slug} /> */}
+<CommentsForm slug={examPosts.slug} />
+            <Comments slug={examPosts.slug} />
 </div>
             
           
@@ -60,9 +62,7 @@ export default SinglePost;
 
 // Fetch data at build time
 export async function getStaticProps({ params }) {
-    console.log("params is  ", params.slug)
     const data = await getPostDetails(params.slug);
-    console.log("data is    ", data)
     return {
       props: {
         examPosts : data,

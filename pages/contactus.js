@@ -19,25 +19,12 @@ const validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val
 
 const contactus = () => {
     const form = useRef();
-/*     const sendEmail = (values) => {
-    
-        emailjs.sendForm('service_g587ta8', 'template_3iycr0n', document.getElementById('feedback'), 'user_LPf1XOqxV7t8iSDE0qi1n')
-          .then((result) => {        
-              document.getElementById("feedback").reset();
-              console.log("result is ", result)
-              alert('Your mail is sent!');
-          }, (error) => {
-              alert(error.text)
-          });
-          
-      } */
       const sendEmail = (e) => {
         e.preventDefault();
     
         emailjs.sendForm('service_g587ta8', 'template_3iycr0n', form.current, 'user_LPf1XOqxV7t8iSDE0qi1n')
           .then((result) => {
-              console.log(result.text);
-              alert('Your mail is sent!');
+              alert('Votre mail a été envoyé');
           }, (error) => {
               console.log(error.text);
           });
@@ -80,89 +67,38 @@ const contactus = () => {
                     </div>
                         <div className="col-sm-12 col-md-6">
                         <form ref={form} onSubmit={sendEmail}>
-                        <FormGroup className="form-group mb-4">
+                        <FormGroup >
                                     <Label for="firstname" md={2}>First Name</Label>
                                     
                                         <Input type="text" name="to_name"
                                             placeholder="First Name"
                                             className="form-control"
-                                            /* validators={{
-                                                required, minLength: minLength(3), maxLength: maxLength(15)
-                                            }} */
                                              />
-                                        {/* <Errors
-                                            className="text-danger"
-                                            model=".firstname"
-                                            show="touched"
-                                            messages={{
-                                                required: 'Required',
-                                                minLength: 'Must be greater than 2 characters',
-                                                maxLength: 'Must be 15 characters or less'
-                                            }}
-                                         /> */}
+                                       
                                     
                                 </FormGroup>
-                                <FormGroup className="form-group mb-4">
+                                <FormGroup >
                                     <Label for="lastname" md={2}>Last Name</Label>
                                         <Input type="text"  name="to_last_name"
                                             placeholder="Last Name"
                                             className="form-control"
-                                            /* validators={{
-                                                required, minLength: minLength(3), maxLength: maxLength(15)
-                                            }} */
                                              />
-                                        {/* <Errors
-                                            className="text-danger"
-                                            model=".lastname"
-                                            show="touched"
-                                            messages={{
-                                                required: 'Required',
-                                                minLength: 'Must be greater than 2 characters',
-                                                maxLength: 'Must be 15 characters or less'
-                                            }}
-                                         /> */}
                                 </FormGroup>
-                                <FormGroup className="form-group mb-4">
+                                <FormGroup >
                                     <Label for="telnum" md={2}>Contact Tel.</Label>
                                         <Input type="text" name="telnum"
                                             placeholder="Tel. Number"
                                             className="form-control"
-                                            /* validators={{
-                                                required, minLength: minLength(3), maxLength: maxLength(15), isNumber
-                                            }} */
                                              />
-                                       {/*  <Errors
-                                            className="text-danger"
-                                            model=".telnum"
-                                            show="touched"
-                                            messages={{
-                                                required: 'Required',
-                                                minLength: 'Must be greater than 2 numbers',
-                                                maxLength: 'Must be 15 numbers or less',
-                                                isNumber: 'Must be a number'
-                                            }}
-                                         /> */}
                                 </FormGroup>
-                                <FormGroup className="form-group mb-4">
+                                <FormGroup >
                                     <Label for="email" md={2}>Email</Label>
                                         <Input type="email"  name="user_email"
                                             placeholder="Email"
                                             className="form-control"
-                                            /* validators={{
-                                                required, validEmail
-                                            }} */
                                              />
-                                       {/*  <Errors
-                                            className="text-danger"
-                                            model=".email"
-                                            show="touched"
-                                            messages={{
-                                                required: 'Required',
-                                                validEmail: 'Invalid Email Address'
-                                            }}
-                                         /> */}
                                 </FormGroup>
-                                <FormGroup className="form-group mb-4">
+                                <FormGroup >
                                         <div className="form-check">
                                             <Label check>
                                                 <Input type="radio" model=".agree" name="agree"
@@ -177,13 +113,13 @@ const contactus = () => {
                                             <option>Email</option>
                                         </Input>
                                 </FormGroup>
-                                <FormGroup className="form-group mb-4">
+                                <FormGroup >
                                     <Label for="message" >Your Feedback</Label>
                                         <Input type="textarea"  name="message"
                                             
                                             className="form-control" />
                                 </FormGroup>
-                                <FormGroup className="form-group mb-4">
+                                <FormGroup >
                                         <Input type="submit" color="bg-primary" value="Send Feedback" />
                                         
                                 </FormGroup>

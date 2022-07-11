@@ -32,7 +32,6 @@ query MyQuery {
 
   const result = await request(graphqlAPI, query);
 
-  console.log("result is getPost    ", result)
   return result.examPostsConnection.edges;
 };
 
@@ -81,7 +80,6 @@ export const getPostDetails = async (slug) => {
   `;
 
   const result = await request(graphqlAPI, query, { slug });
-console.log("result getPostDetails is   ", result)
   return result.examPost;
 };
 
@@ -102,7 +100,6 @@ export const getSimilarPosts = async (categories, slug) => {
     }
   `;
   const result = await request(graphqlAPI, query, { slug, categories });
-console.log("result is  ", result)
   return result.examPosts;
 };
 
@@ -204,7 +201,7 @@ export const submitComment = async (obj) => {
 export const getComments = async (slug) => {
   const query = gql`
     query GetComments($slug:String!) {
-      comments(where: {post: {slug:$slug}}){
+      comments(where: {examPost: {slug:$slug}}){
         name
         createdAt
         comment
