@@ -9,6 +9,7 @@ import {
 NavbarBrand} from 'reactstrap';
 
   import { useState } from "react";
+import Link from 'next/link';
 const NavbarHeader = () => {
   const [isOpenn , setIsOpenn] = useState(false)
 
@@ -40,7 +41,7 @@ const NavbarHeader = () => {
               1ere Année Bac
             </DropdownItem>
             <DropdownItem>
-              2eme Année Bac
+            <Link href='category/examens-du-bac/'>2eme Année Bac</Link>
             </DropdownItem>
             <DropdownItem divider />
             <DropdownItem>

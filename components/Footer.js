@@ -14,7 +14,7 @@ const Footer = () => {
                         <li><Link href='/'>Home</Link></li>
                         <li><Link href='/contactus/'>About Us</Link></li>
                         <li><Link href='/posts/exercice-resolver/'>Exercice Resolver</Link></li>
-                        <li><Link href='/category/bonplanargent/'>Faireduprofit</Link></li>
+                        <li><Link href='category/examens-du-bac/'>Examens 2eme Bac</Link></li>
                     </ul>
                 </div>
                 <div className="col-7 col-sm-5">
