@@ -10,8 +10,8 @@ const FeaturedPostCard = ({ post }) => (
     </div>
     <div className={Style.div3} />
     <div className={Style.div4} >
-      <p>{moment(post.createdAt).format('MMM DD, YYYY')}</p>
-      <p >{post.title}</p>
+      <p >{moment(post.createdAt).format('MMM DD, YYYY')}</p>
+      <p className='fontbold'><em>{post.title}</em></p>
       <div className={Style.div5}>
       </div>
     </div>

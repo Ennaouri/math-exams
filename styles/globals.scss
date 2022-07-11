@@ -1,14 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:ital,wght@1,500&family=Merriweather:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
 
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Merriweather', 'Montserrat', sans-serif;
   &:before{
     content:'';
     content: "";
@@ -73,4 +73,12 @@ a {
 
 .categoriepointer{
   cursor: pointer;
+}
+
+.categoriepointer:hover{
+  color: blue;
+}
+
+.fontbold{
+  font-weight: bold;
 }

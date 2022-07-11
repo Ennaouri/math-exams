@@ -31,12 +31,12 @@ const Footer = () => {
                 </div>
                 <div className="col-12 col-sm-4 align-self-center">
                     <div className="text-center colz">
-                        <a className="btn btn-social-icon btn-google" href="http://google.com/+"><FontAwesomeIcon icon={faGooglePlusSquare} style={{padding: "8px", width: '50px'}}/></a>
-                        <a className="btn btn-social-icon btn-facebook" href="https://www.facebook.com/simohammed.nouri="><FontAwesomeIcon icon={faFacebookSquare} style={{padding: "8px", width: '50px'}}/></a>
-                        <a className="btn btn-social-icon btn-linkedin" href="http://www.linkedin.com/in/"><FontAwesomeIcon icon={faInstagramSquare} style={{padding: "8px", width: '50px'}}/></a>
-                        <a className="btn btn-social-icon btn-twitter" href="http://twitter.com/"><FontAwesomeIcon icon={faTwitterSquare} style={{padding: "8px", width: '50px'}} size="lg"/></a>
-                        <a className="btn btn-social-icon btn-google" href="https://www.youtube.com/channel/UClHoF1987YkP3UMjMxVI01g"><FontAwesomeIcon icon={faYoutubeSquare} style={{padding: "8px", width: '50px'}}/></a>
-                        <a className="btn btn-social-icon" href="mailto:"><i className="fa fa-envelope-o"></i></a>
+                        <a  href="http://google.com/+"><FontAwesomeIcon icon={faGooglePlusSquare} style={{padding: "8px", width: '50px'}}/></a>
+                        <a  href="https://www.facebook.com/simohammed.nouri"><FontAwesomeIcon icon={faFacebookSquare} style={{padding: "8px", width: '50px'}}/></a>
+                        <a  href="https://www.instagram.com/simohammednouri/?hl=fr"><FontAwesomeIcon icon={faInstagramSquare} style={{padding: "8px", width: '50px'}}/></a>
+                        <a  href="https://twitter.com/EnnaouriMohamm3"><FontAwesomeIcon icon={faTwitterSquare} style={{padding: "8px", width: '50px'}} size="lg"/></a>
+                        <a  href="https://www.youtube.com/channel/UCyWGt2jLbZz4IKjlYjmBasw"><FontAwesomeIcon icon={faYoutubeSquare} style={{padding: "8px", width: '50px'}}/></a>
+                        <a  href="mailto:"><i className="fa fa-envelope-o"></i></a>
                     </div>
                 </div>
             </div>
