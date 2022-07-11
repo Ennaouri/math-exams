@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
-import { Breadcrumb, BreadcrumbItem,
-    Button, Col, Card, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Card, FormGroup, Label, Input } from 'reactstrap';
 /* import { Control, Errors, LocalForm} from 'react-redux-form'; */
 import Link from 'next/link';
 import * as emailjs from "@emailjs/browser"
@@ -8,16 +7,11 @@ import Style from '../styles/contact.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faMapMarker, faPhone } from '@fortawesome/free-solid-svg-icons';
 
-const required = (val) => val && val.length;
-const maxLength = (len) => (val) => !(val) || (val.length <= len);
-const minLength = (len) => (val) => val && (val.length >= len);
-const isNumber = (val) => !isNaN(Number(val));
-const validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
 
 
 
 
-const contactus = () => {
+const Contactus = () => {
     const form = useRef();
       const sendEmail = (e) => {
         e.preventDefault();
@@ -135,4 +129,4 @@ const contactus = () => {
             </> );
 }
  
-export default contactus;
+export default Contactus;
