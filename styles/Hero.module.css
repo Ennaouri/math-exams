@@ -1,0 +1,93 @@
+.hero{
+    background-color: blue;
+}
+
+.colz{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+.colz a:hover{
+    color: aliceblue;
+}
+
+.primarybtn {
+    background-color: #1f2235;
+    border: 2px solid linen;
+    color: white;
+    font-size: 14px;
+    border-radius: 50px;
+    width: 160px;
+    padding: 14px 0;
+    transition: .2s;
+}
+.primarybtn:hover{
+    color: white;
+    border-color: orangered;
+}
+
+.textprimary{
+    color : (--white);
+    font-size: 25px;
+}
+
+.highlightedbtn{
+    border: 1px solid transparent;
+    background-color: #ff5823;
+    color: white;
+    font-size: 14px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: Poppins SemiBold;
+    padding: 14px 0;
+    transition: .2s;
+    width: 160px;
+    
+}
+
+.highlightedbtn{
+    margin: 0 0 0 28px;
+}
+
+.options .highlightedbtn:hover{
+    margin: 0 0 0 28px;
+    background-color: cornsilk;
+    color: #111;
+}
+.picture{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    height: 380px;
+}
+.picturebackground{
+    height: 92%;
+    width: 70%;
+    background-image: url(../public/profilephoto.jpg);
+    background-size: cover;
+    box-shadow: 0 1px 0px 0px white;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.picturebackground:hover{
+    transform: scal(1.07);
+    transition : 1s ease-out;
+}
+
+.profiledetailsrole{
+    display: flex;
+    flex-direction: column;
+    margin: 14px 0 24px 0;
+    font-size: 25px;
+}
+
+.h1{
+    font-size: 40px;
+    font-family: cursive;
+}
+
+
+

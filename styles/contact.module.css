@@ -1,0 +1,26 @@
+.header3{
+    color: #212529;
+font-family: "Poppins", Sans-serif;
+font-size: 36px;
+font-weight: 700;
+text-transform: uppercase;
+text-align: center;
+}
+.paragraphe{
+color: #212529;
+font-family: "Poppins", Sans-serif;
+font-size: 14px;
+font-weight: 500;
+line-height: 2em;
+text-align: center;
+}
+
+.styledcard{
+    border-style: solid;
+border-width: 1px 1px 1px 1px;
+border-color: #f8f8f8;
+box-shadow: 1px 1px 8px 3px #f2f2f2;
+transition: background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s;
+margin: 0px 15px 0px 0px;
+padding: 48px 10px 48px 10px;
+}
