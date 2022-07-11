@@ -3,6 +3,7 @@ import Categories from '../components/Categories'
 import Hero from '../components/Hero'
 import PostCard from '../components/PostCard'
 import PostWidget from '../components/PostWidget'
+import FeaturedPosts from '../sections/FeaturedPost'
 import { getPosts } from '../services'
 
 const index = ({examPosts}) =>  {
@@ -16,6 +17,7 @@ const index = ({examPosts}) =>  {
         </Head>
         <Hero />
         <div className='container'>
+          <FeaturedPosts />
           <div className='row'>
             <div className='col-md-8'>
             {examPosts.map((post, index) => (

@@ -55,7 +55,7 @@ const PostDetail = ({ post }) => {
         />
         <CardBody>
           <CardTitle tag="h5">
-            Correction examen national Mathématiques 2022 | section PC et SVT session juin
+            {post.title}
           </CardTitle>
           <CardSubtitle
             className="mb-2 text-muted"

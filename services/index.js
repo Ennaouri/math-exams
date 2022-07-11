@@ -186,7 +186,7 @@ export const getFeaturedPosts = async () => {
 
   const result = await request(graphqlAPI, query);
 
-  return result.posts;
+  return result.examPosts;
 };
 
 export const submitComment = async (obj) => {

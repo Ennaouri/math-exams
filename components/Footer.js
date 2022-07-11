@@ -30,7 +30,7 @@ const Footer = () => {
                     </address>
                 </div>
                 <div className="col-12 col-sm-4 align-self-center">
-                    <div className="text-center">
+                    <div className="text-center colz">
                         <a className="btn btn-social-icon btn-google" href="http://google.com/+"><FontAwesomeIcon icon={faGooglePlusSquare} style={{padding: "8px", width: '50px'}}/></a>
                         <a className="btn btn-social-icon btn-facebook" href="https://www.facebook.com/simohammed.nouri="><FontAwesomeIcon icon={faFacebookSquare} style={{padding: "8px", width: '50px'}}/></a>
                         <a className="btn btn-social-icon btn-linkedin" href="http://www.linkedin.com/in/"><FontAwesomeIcon icon={faInstagramSquare} style={{padding: "8px", width: '50px'}}/></a>

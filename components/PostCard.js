@@ -1,5 +1,7 @@
 import Link from "next/link";
 import {Card, CardImg, CardBody, CardTitle, CardSubtitle, CardText, Button} from "reactstrap"
+import moment from 'moment'
+
 const PostCard = ({post}) => {
     return ( 
         <Card>
@@ -13,27 +15,21 @@ const PostCard = ({post}) => {
         />
         <CardBody>
           <CardTitle tag="h5">
-            Correction examen national Mathématiques 2022 | section PC et SVT session juin
+          {post.title}
           </CardTitle>
           <CardSubtitle
             className="mb-2 text-muted"
             tag="h6"
           >
-            Solution Video
+                        <div className="" >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20px" className="h-6 w-6 inline mr-2 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>{' '}
+              <span className="align-middle">{moment(post.createdAt).format('MMM DD, YYYY')}</span>
+            </div>
           </CardSubtitle>
-          <CardText>
-          Je vous présente ici une solution de l exercice 1 concernant la géométrie dans l'espace de l'examen national 2022 (section PC et SVT session juin). 
-Calcule du produit vectoriel de deux vecteurs
-ecrire l'equation cartésienne d'un plan
-calculer la distance d'un point à un plan.
-trouver l'equation d'une sphere.
-montrer q'un plan est tangent à une sphere.
-trouver la repéresentation paramétrique d'une droite.
-montrer d'une droite est tangente à une sphere.
-trouver la distance d'un point à une droite
-          </CardText>
-          <Link href={`/posts/${post.slug}`}>
-          <Button color="primary" size="lg" block>Consulter</Button>
+          {post.excerpt}
+          <Link type="button" href={`/posts/${post.slug}`}  role="button"><span className="btn btn-primary w-100 rounded mt-4 ">Consulter</span>
           </Link>
         </CardBody>
       </Card>
