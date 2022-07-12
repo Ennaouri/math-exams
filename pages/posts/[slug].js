@@ -34,6 +34,7 @@ const SinglePost = ({examPosts}) => {
           </AccordionHeader>
           <AccordionBody accordionId={`${index+1}`}>
           <div dangerouslySetInnerHTML={{__html:rubrique.description.html}}
+          
             className={Style.formatter}
             ></div>
           </AccordionBody>
