@@ -27,7 +27,7 @@ const NavbarHeader = () => {
           <NavLink href="/contactus/" className="text-light bold fs-5">Contact Us</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink href="/posts/exercice-resolver/" className="text-light bold fs-5"> Poster Vos Exercices</NavLink>
+          <NavLink href="/posts/postez-vos-exercices-et-demandez-de-laide/" className="text-light bold fs-5"> Poster Vos Exercices</NavLink>
         </NavItem>
         <UncontrolledDropdown nav inNavbar >
           <DropdownToggle nav caret className="text-light bold fs-5">
@@ -41,7 +41,7 @@ const NavbarHeader = () => {
               1ere Année Bac
             </DropdownItem>
             <DropdownItem>
-            <Link href='category/examens-du-bac/'>2eme Année Bac</Link>
+            <Link href='/category/examens-du-bac-pc-et-svt/'>2eme Année Bac</Link>
             </DropdownItem>
             <DropdownItem divider />
             <DropdownItem>

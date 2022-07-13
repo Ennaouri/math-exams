@@ -4,7 +4,7 @@ import moment from 'moment'
 
 const PostCard = ({post}) => {
     return ( 
-        <Card className="mt-4">
+        <Card className="mb-4">
         <CardImg
           alt={post.title}
           src={post.thumbnail.url}
