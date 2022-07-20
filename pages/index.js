@@ -7,6 +7,8 @@ import FeaturedPosts from '../sections/FeaturedPost'
 import { getPosts } from '../services'
 
 const index = ({examPosts}) =>  {
+  const url = "https://refpa5362975.top/L?tag=d_1656713m_1573c_&site=1656713&ad=1573"
+
   return (
     <div>
         <Head>     
@@ -26,6 +28,7 @@ const index = ({examPosts}) =>  {
             </div>
             <div className='col-md-4'>
             <PostWidget />
+            <Link href={url}><div className='onexbet'></div></Link>
             <Categories />
             </div>
           </div>
