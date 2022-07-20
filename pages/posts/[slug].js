@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { AccordionBody, AccordionHeader, AccordionItem, UncontrolledAccordion } from 'reactstrap'
 import Categories from '../../components/Categories';
 import Comments from '../../components/Comments';

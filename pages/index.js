@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import Categories from '../components/Categories'
 import Hero from '../components/Hero'
 import PostCard from '../components/PostCard'
