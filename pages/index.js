@@ -27,7 +27,7 @@ const index = ({examPosts}) =>  {
             {examPosts.map((post, index) => (
               <div>
             <PostCard key={index} post={post.node} />
-            <GoogleAd />
+            <GoogleAd key={index} />
             </div>
           ))}
             </div>
