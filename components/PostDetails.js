@@ -53,7 +53,7 @@ const PostDetail = ({ post }) => {
           height={315}
           className="p-3"
         />
-        <CardBody>
+        <CardBody className='personalisedlink'>
           <CardTitle tag="h5">
             {post.title}
           </CardTitle>
