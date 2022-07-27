@@ -25,9 +25,9 @@ const index = ({examPosts}) =>  {
           <div className='row'>
             <div className='col-md-8'>
             {examPosts.map((post, index) => (
-              <div>
-            <PostCard key={index} post={post.node} />
-            <GoogleAd key={index} />
+              <div key={index}>
+            <PostCard  post={post.node} />
+            <GoogleAd />
             </div>
           ))}
             </div>
