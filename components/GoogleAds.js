@@ -11,7 +11,7 @@ export function GoogleAd() {
   }, []);
 
   return (
-<ins className="adsbygoogle"
+<ins className="adsbygoogle mt-2"
      style={{ display: "block" }}
      data-ad-client="ca-pub-5587331919297301"
      data-ad-slot="7752134728"
