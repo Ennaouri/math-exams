@@ -54,12 +54,12 @@ const PostDetail = ({ post }) => {
           className="p-3"
         />
         <CardBody className='personalisedlink'>
-          <CardTitle tag="h5">
+          <CardTitle tag="h1">
             {post.title}
           </CardTitle>
           <CardSubtitle
             className="mb-2 text-muted"
-            tag="h6"
+            tag="h3"
           >
             <div>
               <svg xmlns="http://www.w3.org/2000/svg" width="20px" className="h-6 w-6 inline mr-2 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">

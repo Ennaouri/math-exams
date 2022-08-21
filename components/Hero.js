@@ -23,7 +23,7 @@ const Hero = () => {
             </span>
         </div>
         <div className={Style.profiledetailsrole}>
-        <h1>
+        <h2>
                                 <Typical
                                 loop={Infinity}
                                 steps={[
@@ -34,7 +34,7 @@ const Hero = () => {
                                     
                                 ]}
                                 />
-                            </h1>
+                            </h2>
         </div>
         <div className={`mb-3 ` +Style.options}>
                         <Link href="/posts/exercice-resolver/">

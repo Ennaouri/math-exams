@@ -9,16 +9,10 @@ import FeaturedPosts from '../sections/FeaturedPost'
 import { getPosts } from '../services'
 
 const index = ({examPosts}) =>  {
-  const url = "https://refpa5362975.top/L?tag=d_1656713m_1573c_&site=1656713&ad=1573"
+  const url = "https://refpa58036.top/L?tag=d_1709601m_1573c_Lowdiscovery&site=1709601&ad=1573"
 
   return (
     <div>
-        <Head>     
-          <title>Solutions des examens du secondaire en mathématiques |</title>
-          <meta name='description' content='les solutions de tous les examens de maths du secondaire qualifiants se trouvent désormé sur une seule plateforme avec des videos explicatifs et un contenu ecrit' />
-          <meta name='robots' content='index, follow' />
-          <link rel='icon' href='/favicon.ico' />
-        </Head>
         <Hero />
         <div className='container'>
           <FeaturedPosts />
