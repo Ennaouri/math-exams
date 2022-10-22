@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Categories from '../components/Categories'
-import { GoogleAd } from '../components/GoogleAds'
 import Hero from '../components/Hero'
 import PostCard from '../components/PostCard'
 import PostWidget from '../components/PostWidget'
@@ -21,7 +20,6 @@ const index = ({examPosts}) =>  {
             {examPosts.map((post, index) => (
               <div key={index}>
             <PostCard  post={post.node} />
-            <GoogleAd />
             </div>
           ))}
             </div>
