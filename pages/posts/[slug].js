@@ -8,7 +8,6 @@ import PostWidget from '../../components/PostWidget';
 import { getPosts, getPostDetails } from '../../services';
 import Style from '../../styles/SinglePost.module.css'
 const SinglePost = ({examPosts}) => {
-  const url = "https://refpa5362975.top/L?tag=d_1656713m_1573c_&site=1656713&ad=1573"
 
     return (
       <div className='container m-auto p-2 mb-4 mt-4'>
@@ -16,9 +15,6 @@ const SinglePost = ({examPosts}) => {
           <div className='col-md-8'>
           <div>
             <PostDetail post={examPosts} />
-            <Link href={url}>
-            <div className='onexbet2' ></div>
-              </Link>
 <UncontrolledAccordion
   defaultOpen={[
     '1',
@@ -57,9 +53,6 @@ const SinglePost = ({examPosts}) => {
           <div className="col-md-4">
             <div className="relative lg:sticky top-8">
               <PostWidget /* slug={post.slug} categories={post.categories.map((category) => category.slug)}  *//>
-              <Link href={url}>
-            <div className='onexbet' ></div>
-              </Link>
               <Categories />
             </div>
           </div>

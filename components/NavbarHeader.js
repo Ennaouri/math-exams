@@ -29,7 +29,10 @@ const NavbarHeader = () => {
         <NavItem>
           <NavLink href="/posts/postez-vos-exercices-et-demandez-de-laide/" className="text-light bold fs-5"> Poster Vos Exercices</NavLink>
         </NavItem>
-        <UncontrolledDropdown nav inNavbar >
+        <NavItem>
+          <NavLink href="/policy/" className="text-light bold fs-5"> Politique de confidentialité</NavLink>
+        </NavItem>
+      {/*  <UncontrolledDropdown nav inNavbar >
           <DropdownToggle nav caret className="text-light bold fs-5">
             Niveau
           </DropdownToggle>
@@ -48,7 +51,7 @@ const NavbarHeader = () => {
               Olympiade
             </DropdownItem>
           </DropdownMenu>
-        </UncontrolledDropdown>
+  </UncontrolledDropdown>*/}
       </Nav>
     </Collapse>
   </Navbar>

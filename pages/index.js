@@ -9,7 +9,6 @@ import FeaturedPosts from '../sections/FeaturedPost'
 import { getPosts } from '../services'
 
 const index = ({examPosts}) =>  {
-  const url = "https://refpa58036.top/L?tag=d_1709601m_1573c_Lowdiscovery&site=1709601&ad=1573"
 
   return (
     <div>
@@ -26,7 +25,6 @@ const index = ({examPosts}) =>  {
             </div>
             <div className='col-md-4'>
             <PostWidget />
-            <Link href={url}><div className='onexbet'></div></Link>
             <Categories />
             </div>
             <About />
