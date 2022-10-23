@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import About from '../components/About'
 import Categories from '../components/Categories'
 import Hero from '../components/Hero'
 import PostCard from '../components/PostCard'
@@ -28,6 +29,7 @@ const index = ({examPosts}) =>  {
             <Link href={url}><div className='onexbet'></div></Link>
             <Categories />
             </div>
+            <About />
           </div>
         </div>
     </div>
