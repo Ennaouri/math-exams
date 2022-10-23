@@ -37,7 +37,7 @@ const Hero = () => {
                             </h2>
         </div>
         <div className={`mb-3 ` +Style.options}>
-                        <Link href="/posts/exercice-resolver/">
+                        <Link href="/posts/postez-vos-exercices-et-demandez-de-laide/">
                         <button className={Style.primarybtn}>
                             Poster Un Exercice
                         </button>
