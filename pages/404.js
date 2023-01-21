@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from "next/link"
 
 export default function NoFoundPage() {
   return <>
@@ -7,7 +7,7 @@ export default function NoFoundPage() {
     </div>
     <Link href="/">
       <a className="link-danger alert-primary bg-dark ">
-        Revenir à l'acceuil
+        Revenir à l&apos;acceuil
       </a>
     </Link>
   </>
