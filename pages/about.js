@@ -40,7 +40,7 @@ Maths-exams la platforms des exams de maths par excellence            </Accordio
 
 <p>une plateforme éducative en ligne qui propose des cours et des exercices de mathématiques pour tous les niveaux, allant de l&apos;école primaire à l&apos;université.</p>
 <p>une plateforme qui propose des exercices de mathématiques pour les élèves du collège et du lycée. Il contient également des cours et des vidéos pour aider les utilisateurs à comprendre les concepts mathématiques.</p>
-<p>Il est important de noter que ces plateformes ont généralement des fonctionnalités d&apos;évaluation et de suivi pour permettre aux utilisateurs de suivre leur progrès et de cibler les domaines qui nécessitent des améliorations. Il est également important de choisir une plateforme qui est adaptée à votre niveau de compétence en mathématiques et à vos besoins d'apprentissage.</p>
+<p>Il est important de noter que ces plateformes ont généralement des fonctionnalités d&apos;évaluation et de suivi pour permettre aux utilisateurs de suivre leur progrès et de cibler les domaines qui nécessitent des améliorations. Il est également important de choisir une plateforme qui est adaptée à votre niveau de compétence en mathématiques et à vos besoins d&apos;apprentissage.</p>
 </AccordionBody>
         </AccordionItem>
         <AccordionItem >
