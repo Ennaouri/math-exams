@@ -34,7 +34,7 @@ Introduction
         </AccordionItem>
         <AccordionItem >
             <AccordionHeader targetId='2'>
-Maths-exams la platforms des exams de maths par excellence            </AccordionHeader>
+            Maths-exams la platforms des exams de maths par excellence            </AccordionHeader>
             <AccordionBody accordionId='2'>
             Il existe de nombreux sites et plateformes en ligne qui proposent des examens et des contrôles de mathématiques pour les élèves et les étudiants. Maths exams a pris sa place parmis les plus grandes en ci-peu de temps. Maths-exams est :
 
