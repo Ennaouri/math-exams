@@ -2,10 +2,12 @@ import Link from 'next/link'
 
 export default function NoFoundPage() {
   return <>
-    <h1>404 - Page Not Found</h1>
+        <div class="d-flex align-items-center justify-content-center vh-100">
+        <h1 class="display-1 fw-bold text-white">404</h1>
+    </div>
     <Link href="/">
-      <a>
-        Go back home
+      <a className="link-danger alert-primary bg-dark ">
+        Revenir à l'acceuil
       </a>
     </Link>
   </>

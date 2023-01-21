@@ -23,6 +23,9 @@ const NavbarHeader = () => {
         <NavItem >
           <NavLink href="/" className="text-light bold fs-5">Acceuil</NavLink>
         </NavItem>
+        <NavItem >
+          <NavLink href="/about" className="text-light bold fs-5">About</NavLink>
+        </NavItem>
         <NavItem>
           <NavLink href="/contactus/" className="text-light bold fs-5">Contact Us</NavLink>
         </NavItem>

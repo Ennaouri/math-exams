@@ -13,6 +13,7 @@ export default class MyDocument extends Document {
           <meta name="robots" content="index,follow" />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301"
      crossOrigin="anonymous"></script>
+     <script type='text/javascript' src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
         <script
                   async
                   src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
