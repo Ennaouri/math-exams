@@ -35,6 +35,7 @@ const index = ({examPosts, getFeaturedPosts}) =>  {
 export default index;
 
 export async function getStaticProps() {
+  
   const examPosts = (await getPosts()) || [];
   return {
     props: { examPosts },
