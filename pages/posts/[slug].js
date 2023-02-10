@@ -29,6 +29,7 @@ const SinglePost = ({examPosts}) => {
   ]}
   stayOpen
 >
+  
     {examPosts.examDetails.map((rubrique,index) => (
       <AccordionItem key={index}>
           <AccordionHeader targetId={`${index+1}`}>
