@@ -8,7 +8,7 @@ import PostWidget from '../../components/PostWidget';
 import { getPosts, getPostDetails } from '../../services';
 import Style from '../../styles/SinglePost.module.css'
 const SinglePost = ({examPosts}) => {
-
+  
     return (
       <div className='container m-auto p-2 mb-4 mt-4'>
       <div className='row'>
@@ -34,6 +34,7 @@ const SinglePost = ({examPosts}) => {
       <AccordionItem key={index}>
           <AccordionHeader targetId={`${index+1}`}>
           {rubrique.title}
+          {console.log("rubrique est : ", rubrique)}
           </AccordionHeader>
           <AccordionBody accordionId={`${index+1}`}>
           <div dangerouslySetInnerHTML={{__html:rubrique.description.html}}
@@ -78,6 +79,7 @@ export async function getStaticProps({ params }) {
   // The HTML is generated at build time and will be reused on each request.
   export async function getStaticPaths() {
     const examPosts = await getPosts();
+    
     return {
       paths: examPosts.map(({ node: { slug } }) => ({ params: { slug } })),
       fallback: false,

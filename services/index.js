@@ -5,7 +5,7 @@ const graphqlAPI = process.env.NEXT_PUBLIC_API;
 export const getPosts = async () => {
   const query = gql`
 query MyQuery {
-  examPostsConnection {
+  examPostsConnection(first: 500) {
     edges {
       cursor
       node {
@@ -31,7 +31,6 @@ query MyQuery {
   `;
 
   const result = await request(graphqlAPI, query);
-
   return result.examPostsConnection.edges;
 };
 
@@ -83,6 +82,7 @@ export const getPostDetails = async (slug) => {
   `;
 
   const result = await request(graphqlAPI, query, { slug });
+  console.log("exam details : ", result.examPost)
   return result.examPost;
 };
 
@@ -185,7 +185,7 @@ export const getFeaturedPosts = async () => {
   `;
 
   const result = await request(graphqlAPI, query);
-
+    console.log("Featured Posts : ", result.examPosts)
   return result.examPosts;
 };
 
@@ -234,6 +234,6 @@ export const getRecentPosts = async () => {
     }
   `;
   const result = await request(graphqlAPI, query);
-
+    console.log("recent posts : " , result.examPosts)
   return result.examPosts;
 };

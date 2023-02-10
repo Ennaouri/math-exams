@@ -6,10 +6,9 @@ import Hero from '../components/Hero'
 import PostCard from '../components/PostCard'
 import PostWidget from '../components/PostWidget'
 import FeaturedPosts from '../sections/FeaturedPost'
-import { getPosts } from '../services'
+import { getPosts, getFeaturedPosts } from '../services'
 
-const index = ({examPosts}) =>  {
-
+const index = ({examPosts, getFeaturedPosts}) =>  {
   return (
     <div>
         <Hero />
