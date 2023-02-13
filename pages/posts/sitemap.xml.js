@@ -1,15 +1,15 @@
 //pages/sitemap.xml.js
-const EXTERNAL_DATA_URL = 'https://maths-exams/posts';
+const EXTERNAL_DATA_URL = 'https://maths-exams.com/posts';
 
 function generateSiteMap(posts) {
   return `<?xml version="1.0" encoding="UTF-8"?>
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
      <!--We manually set the two URLs we know already-->
      <url>
-       <loc>https://maths-exams</loc>
+       <loc>https://maths-exams.com</loc>
      </url>
      <url>
-       <loc>https://maths-exams/posts/postez-vos-exercices-et-demandez-de-laide</loc>
+       <loc>https://maths-exams.com/posts/postez-vos-exercices-et-demandez-de-laide</loc>
      </url>
      ${posts
        .map(({ id }) => {
