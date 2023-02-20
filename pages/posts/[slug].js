@@ -34,7 +34,6 @@ const SinglePost = ({examPosts}) => {
       <AccordionItem key={index}>
           <AccordionHeader targetId={`${index+1}`}>
           {rubrique.title}
-          {console.log("rubrique est : ", rubrique)}
           </AccordionHeader>
           <AccordionBody accordionId={`${index+1}`}>
           <div dangerouslySetInnerHTML={{__html:rubrique.description.html}}
