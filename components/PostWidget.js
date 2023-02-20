@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import moment from 'moment';
 import Link from 'next/link';
 
@@ -27,11 +26,10 @@ const PostWidget = ({ categories, slug }) => {
       {relatedPosts.map((post, index) => (
         <div key={index} className="row items-center w-full mb-4 align-items-center categoriepointer">
           <div className="col-2">
-            <Image
+            <img
               alt={post.title}
               height="60px"
               width="60px"
-              unoptimized
               className=""
               src={post.thumbnail.url}
             />
