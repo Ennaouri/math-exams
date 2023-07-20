@@ -9,7 +9,7 @@ import FeaturedPosts from '../sections/FeaturedPost'
 import { getPosts, getFeaturedPosts } from '../services'
 import React, { useEffect } from 'react';
 
-const index = ({examPosts, getFeaturedPosts}) =>  {
+const Index = ({examPosts, getFeaturedPosts}) =>  {
   useEffect(() => {
     // Execute the script when the component mounts
     (adsbygoogle = window.adsbygoogle || []).push({});
@@ -30,7 +30,7 @@ const index = ({examPosts, getFeaturedPosts}) =>  {
             <div className='col-md-4'>
             <PostWidget />
             <Categories />
-            <ins class="adsbygoogle"
+            <ins className="adsbygoogle"
      style={{display:"block"}}
      data-ad-client="ca-pub-5587331919297301"
      data-ad-slot="5074960913"
@@ -43,7 +43,7 @@ const index = ({examPosts, getFeaturedPosts}) =>  {
     </div>
   )
 }
-export default index;
+export default Index;
 
 export async function getStaticProps() {
   
