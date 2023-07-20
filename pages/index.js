@@ -7,8 +7,13 @@ import PostCard from '../components/PostCard'
 import PostWidget from '../components/PostWidget'
 import FeaturedPosts from '../sections/FeaturedPost'
 import { getPosts, getFeaturedPosts } from '../services'
+import React, { useEffect } from 'react';
 
 const index = ({examPosts, getFeaturedPosts}) =>  {
+  useEffect(() => {
+    // Execute the script when the component mounts
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  }, []);
   return (
     <div>
         <Hero />
@@ -25,6 +30,12 @@ const index = ({examPosts, getFeaturedPosts}) =>  {
             <div className='col-md-4'>
             <PostWidget />
             <Categories />
+            <ins class="adsbygoogle"
+     style={{display:"block"}}
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="5074960913"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
             </div>
             <About />
           </div>
