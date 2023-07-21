@@ -45,7 +45,7 @@ const SinglePost = ({examPosts}) => {
     ))}
 
 </UncontrolledAccordion>
-<ins class="adsbygoogle"
+<ins className="adsbygoogle"
      style={{ display: "block", textAlign: "center" }}
      data-ad-layout="in-article"
      data-ad-format="fluid"
