@@ -45,6 +45,12 @@ const SinglePost = ({examPosts}) => {
     ))}
 
 </UncontrolledAccordion>
+<ins class="adsbygoogle"
+     style={{ display: "block", textAlign: "center" }}
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="5512454890"></ins>
 <CommentsForm slug={examPosts.slug} />
             <Comments slug={examPosts.slug} />
 </div>
