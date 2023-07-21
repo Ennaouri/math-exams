@@ -24,7 +24,6 @@ const Index = ({examPosts, getFeaturedPosts}) =>  {
             {examPosts.map((post, index) => (
               <div key={index}>
             <PostCard  post={post.node} />
-            {console.log(index)}
             {(index + 1) % 3 === 0 && index < examPosts.length - 1 && (
               <ins className="adsbygoogle"
               style={{display:"block"}}

@@ -7,8 +7,12 @@ import PostDetail from '../../components/PostDetails';
 import PostWidget from '../../components/PostWidget';
 import { getPosts, getPostDetails } from '../../services';
 import Style from '../../styles/SinglePost.module.css'
+import React, { useEffect } from 'react';
 const SinglePost = ({examPosts}) => {
-  
+  useEffect(() => {
+    // Execute the script when the component mounts
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  }, []);
     return (
       <div className='container m-auto p-2 mb-4 mt-4'>
       <div className='row'>
