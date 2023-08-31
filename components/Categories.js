@@ -13,7 +13,7 @@ const Categories = () => {
 
   return (
     <div className="bg-white p-4 pb-4 mb-4">
-      <h4>Categories</h4>
+      <h4>Catégories</h4>
       <hr />
       {categories.map((category, index) => (
         

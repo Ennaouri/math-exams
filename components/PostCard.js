@@ -14,7 +14,7 @@ const PostCard = ({post}) => {
           className="p-3"
         />
         <CardBody>
-          <CardTitle tag="h5">
+          <CardTitle tag="h2">
           {post.title}
           </CardTitle>
           <CardSubtitle

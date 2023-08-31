@@ -8,6 +8,14 @@ const PostWidget = ({ categories, slug }) => {
   const [relatedPosts, setRelatedPosts] = useState([]);
 
   useEffect(() => {
+    try{
+      if(window.hasOwnProperty('adsbygoogle')){
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    } catch(e){
+      console.error('could not initialize adsense ad')
+    }
+    
     if (slug) {
       getSimilarPosts(categories, slug).then((result) => {
         setRelatedPosts(result);
@@ -24,7 +32,8 @@ const PostWidget = ({ categories, slug }) => {
       <h4 >{slug ? 'Related Posts' : 'Recent Posts'}</h4>
       <hr/>
       {relatedPosts.map((post, index) => (
-        <div key={index} className="row items-center w-full mb-4 align-items-center categoriepointer">
+        <div key={index}>
+        <div  className="row items-center w-full mb-4 align-items-center categoriepointer">
           <div className="col-2">
             <img
               alt={post.title}
@@ -38,6 +47,15 @@ const PostWidget = ({ categories, slug }) => {
             <p><small>{moment(post.createdAt).format('MMM DD, YYYY')}</small></p>
             <Link href={`/posts/${post.slug}/`} className="" key={index}><small>{post.title}</small></Link>
           </div>
+        </div>
+        <div style={{ overflow : "hidden", margin: "5px"}}>
+        <ins className="adsbygoogle"
+     style={{display:"block"}}
+     data-ad-format="fluid"
+     data-ad-layout-key="-hq-g+0-6p+jg"
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="6742611200"></ins>
+        </div>
         </div>
       ))}
     </div>

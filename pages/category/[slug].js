@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { getCategories, getCategoryPost } from '../../services';
@@ -9,6 +9,17 @@ import Loader from '../../components/Loader';
 const CategoryPost = ({ posts }) => {
   const router = useRouter();
 
+  useEffect(() => {
+    // Execute the script when the component mounts
+    try{
+      if(window.hasOwnProperty('adsbygoogle')){
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    } catch(e){
+      console.error('could not initialize adsense ad')
+    }
+  }, []);
+
   if (router.isFallback) {
     return <Loader />;
   }
@@ -18,7 +29,17 @@ const CategoryPost = ({ posts }) => {
       <div className="row">
         <div className="col-md-8">
           {posts.map((post, index) => (
+            <div>
             <PostCard key={index} post={post.node} />
+            <div style={{ overflow : "hidden", margin: "5px"}}>
+<ins class="adsbygoogle"
+     style={{display:"block"}}
+     data-ad-format="fluid"
+     data-ad-layout-key="+3x+oy-1o-3y+u9"
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="9119408825"></ins>
+     </div>
+            </div>
           ))}
         </div>
         <div className="col-md-4">

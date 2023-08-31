@@ -8,10 +8,18 @@ import PostWidget from '../../components/PostWidget';
 import { getPosts, getPostDetails } from '../../services';
 import Style from '../../styles/SinglePost.module.css'
 import React, { useEffect } from 'react';
+
 const SinglePost = ({examPosts}) => {
+
   useEffect(() => {
     // Execute the script when the component mounts
-    (adsbygoogle = window.adsbygoogle || []).push({});
+        try{
+      if(window.hasOwnProperty('adsbygoogle')){
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    } catch(e){
+      console.error('could not initialize adsense ad')
+    }
   }, []);
     return (
       <div className='container m-auto p-2 mb-4 mt-4'>
@@ -37,7 +45,7 @@ const SinglePost = ({examPosts}) => {
     {examPosts.examDetails.map((rubrique,index) => (
       <AccordionItem key={index}>
           <AccordionHeader targetId={`${index+1}`}>
-          {rubrique.title}
+          <h2>{rubrique.title}</h2>
           </AccordionHeader>
           <AccordionBody accordionId={`${index+1}`}>
           <div dangerouslySetInnerHTML={{__html:rubrique.description.html}}
@@ -49,12 +57,14 @@ const SinglePost = ({examPosts}) => {
     ))}
 
 </UncontrolledAccordion>
+<div style={{ overflow : "hidden", margin: "5px"}}>
 <ins className="adsbygoogle"
      style={{ display: "block", textAlign: "center" }}
      data-ad-layout="in-article"
      data-ad-format="fluid"
      data-ad-client="ca-pub-5587331919297301"
      data-ad-slot="5512454890"></ins>
+     </div>
 <CommentsForm slug={examPosts.slug} />
             <Comments slug={examPosts.slug} />
 </div>

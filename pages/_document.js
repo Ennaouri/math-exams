@@ -7,9 +7,14 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-        <title>Solutions des examens du secondaire en mathématiques | Maths Exams</title>
-        <meta name="keywords" content='exams, bac, examens, concours, solution, correction examens' />
-          <meta name='description' content='les solutions de tous les examens de maths du secondaire qualifiants se trouvent désormé sur une seule plateforme avec des videos explicatifs et un contenu ecrit' />
+        <title>Solutions des examens du secondaire en maths</title>
+        <meta name="keywords" content='exams, exercices, lowdiscoverymaths, exercice, bac, examens, concours, solution, correction examens' />
+          <meta name='description' lang ='fr' content='les solutions de tous les examens de maths du secondaire qualifiants se trouvent désormais sur une seule plateforme avec des videos explicatifs' />
+          <meta http-equiv="Content-Language" content="fr"></meta>
+          <meta property="og:title" content="examens de maths" />
+<meta property="og:description" content="Correction des examens de maths" />
+<meta property="og:image" content="https://www.facebook.com/photo/?fbid=114326048262713&set=a.114326081596043" />
+<meta property="og:url" content="https://www.facebook.com/profile.php?id=100090559545163"></meta>
           <meta name="robots" content="index,follow" />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301"
      crossOrigin="anonymous"></script>
