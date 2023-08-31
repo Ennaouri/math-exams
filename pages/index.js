@@ -1,6 +1,5 @@
-"use client";
-
-import { ErrorBoundary } from "react-error-boundary";
+import Head from 'next/head'
+import Link from 'next/link'
 import About from '../components/About'
 import Categories from '../components/Categories'
 import Hero from '../components/Hero'
@@ -39,7 +38,6 @@ const Index = ({examPosts}) =>  {
   return (
     <div>
         <Hero />
-        <ErrorBoundary fallback={<div>Something went wrong</div>}>
         <div className='container'>
           <FeaturedPosts />
           <div className='row'>
@@ -77,7 +75,6 @@ const Index = ({examPosts}) =>  {
             <About />
           </div>
         </div>
-        </ErrorBoundary>
     </div>
   )
 }
