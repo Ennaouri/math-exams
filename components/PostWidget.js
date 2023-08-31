@@ -8,13 +8,13 @@ const PostWidget = ({ categories, slug }) => {
   const [relatedPosts, setRelatedPosts] = useState([]);
 
   useEffect(() => {
-    try{
+   /* try{
       if(window.hasOwnProperty('adsbygoogle')){
         (adsbygoogle = window.adsbygoogle || []).push({});
       }
     } catch(e){
       console.error('could not initialize adsense ad')
-    }
+    }*/
     
     if (slug) {
       getSimilarPosts(categories, slug).then((result) => {
@@ -55,6 +55,9 @@ const PostWidget = ({ categories, slug }) => {
      data-ad-layout-key="-hq-g+0-6p+jg"
      data-ad-client="ca-pub-5587331919297301"
      data-ad-slot="6742611200"></ins>
+     <script>
+  ;(adsbygoogle = window.adsbygoogle || []).push({})
+</script>
         </div>
         </div>
       ))}

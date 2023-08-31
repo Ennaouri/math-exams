@@ -9,7 +9,7 @@ import Loader from '../../components/Loader';
 const CategoryPost = ({ posts }) => {
   const router = useRouter();
 
-  useEffect(() => {
+ /* useEffect(() => {
     // Execute the script when the component mounts
     try{
       if(window.hasOwnProperty('adsbygoogle')){
@@ -18,7 +18,7 @@ const CategoryPost = ({ posts }) => {
     } catch(e){
       console.error('could not initialize adsense ad')
     }
-  }, []);
+  }, []);*/
 
   if (router.isFallback) {
     return <Loader />;
@@ -38,6 +38,9 @@ const CategoryPost = ({ posts }) => {
      data-ad-layout-key="+3x+oy-1o-3y+u9"
      data-ad-client="ca-pub-5587331919297301"
      data-ad-slot="9119408825"></ins>
+     <script>
+  ;(adsbygoogle = window.adsbygoogle || []).push({})
+</script>
      </div>
             </div>
           ))}
