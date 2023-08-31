@@ -10,16 +10,16 @@ import { getPosts} from '../services'
 import React, { useEffect } from 'react';
 
 const Index = ({examPosts}) =>  {
- /* useEffect(() => {
+  useEffect(() => {
     // Execute the script when the component mounts
     try{
-      if(window.hasOwnProperty('adsbygoogle')){
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      }
+      
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      
     } catch(e){
       console.error('could not initialize adsense ad')
     }
-  }, []);*/
+  }, []);
 
   const inArticleAds = ['9602021917', '2150179983']
  /* const handleScriptLoad = () => {
@@ -54,9 +54,6 @@ const Index = ({examPosts}) =>  {
               data-ad-slot="9602021917"
               data-full-width-responsive="true"
               ></ins>
-              <script>
-  ;(adsbygoogle = window.adsbygoogle || []).push({})
-</script>
               </div>
             )}
             </div>
@@ -73,9 +70,6 @@ const Index = ({examPosts}) =>  {
      data-ad-slot="5074960913"
      data-ad-format="auto"
      data-full-width-responsive="true"></ins>
-     <script>
-  ;(adsbygoogle = window.adsbygoogle || []).push({})
-</script>
      </div>
             </div>
             <About />

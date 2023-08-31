@@ -13,13 +13,13 @@ const SinglePost = ({examPosts}) => {
 
   useEffect(() => {
     // Execute the script when the component mounts
-        try{
-      if(window.hasOwnProperty('adsbygoogle')){
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      }
-    } catch(e){
-      console.error('could not initialize adsense ad')
-    }
+    try{
+      
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    
+  } catch(e){
+    console.error('could not initialize adsense ad')
+  }
   }, []);
     return (
       <div className='container m-auto p-2 mb-4 mt-4'>
