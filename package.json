@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@eisberg-labs/next-google-adsense": "^4.0.2",
     "@emailjs/browser": "^3.6.2",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
@@ -38,8 +39,6 @@
     "eslint-config-next": "12.2.2"
   },
   "engines": {
-    "node": "18.x"
+    "node": "16.x"
   }
-  
-  
 }

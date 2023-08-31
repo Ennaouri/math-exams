@@ -8,6 +8,7 @@ import PostWidget from '../components/PostWidget'
 import FeaturedPosts from '../sections/FeaturedPost'
 import { getPosts} from '../services'
 import React, { useEffect } from 'react';
+import Adsense, { AdUnit } from '@eisberg-labs/next-google-adsense'
 
 const Index = ({examPosts}) =>  {
   useEffect(() => {
@@ -46,15 +47,24 @@ const Index = ({examPosts}) =>  {
               <div key={index}>
             <PostCard  post={post.node} />
             {(index + 1) % 3 === 0 && index < examPosts.length - 1 && (
-              <div style={{ overflow : "hidden", margin: "5px"}}>
+              /*<div style={{ overflow : "hidden", margin: "5px"}}>
               <ins className="adsbygoogle"
               style={{display:"block"}}
               data-ad-format="auto"
               data-ad-client="ca-pub-5587331919297301"
-              data-ad-slot={inArticleAds[index]}
+              data-ad-slot="9602021917"
               data-full-width-responsive="true"
               ></ins>
-              </div>
+              </div>*/
+              <>
+                    <Adsense client_id='ca-pub-5587331919297301'/>
+      <AdUnit className="adsbygoogle"
+                  style={{"display":"block"}}
+                  data-ad-client="ca-pub-5587331919297301"
+                  data-ad-slot="9602021917"
+                  data-ad-format="auto"
+                  data-full-width-responsive="true"/>
+              </>
             )}
             </div>
 
@@ -64,12 +74,21 @@ const Index = ({examPosts}) =>  {
             <PostWidget />
             <Categories />
             <div style={{ overflow : "hidden", margin: "5px"}}>
-            <ins className="adsbygoogle"
+           {/* <ins className="adsbygoogle"
      style={{display:"block"}}
      data-ad-client="ca-pub-5587331919297301"
      data-ad-slot="5074960913"
      data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
+            data-full-width-responsive="true"></ins>*/}
+                          <>
+                    <Adsense client_id='ca-pub-5587331919297301'/>
+      <AdUnit className="adsbygoogle"
+                  style={{"display":"block"}}
+                  data-ad-client="ca-pub-5587331919297301"
+                  data-ad-slot="5074960913"
+                  data-ad-format="auto"
+                  data-full-width-responsive="true"/>
+              </>
      </div>
             </div>
             <About />
