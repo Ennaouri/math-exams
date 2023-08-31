@@ -29,10 +29,10 @@ const CategoryPost = ({ posts }) => {
       <div className="row">
         <div className="col-md-8">
           {posts.map((post, index) => (
-            <div>
+            <div key={index}>
             <PostCard key={index} post={post.node} />
             <div style={{ overflow : "hidden", margin: "5px"}}>
-<ins class="adsbygoogle"
+<ins className="adsbygoogle"
      style={{display:"block"}}
      data-ad-format="fluid"
      data-ad-layout-key="+3x+oy-1o-3y+u9"
