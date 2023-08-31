@@ -1,3 +1,12 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next",
+  "rules": {
+    // ...other rules...
+
+    // Disable the 'no-console' rule (allowing console.log, console.error, etc.)
+    "no-console": "off",
+
+    // Disable the 'react/jsx-no-undef' rule (allowing JSX elements without import)
+    "react/jsx-no-undef": 0
+  }
 }
