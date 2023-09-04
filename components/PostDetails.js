@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, CardImg, CardBody, CardTitle, CardSubtitle, CardText, Button} from "reactstrap"
+import {Card, CardImg, CardBody, CardTitle, CardSubtitle} from "reactstrap"
 import moment from 'moment';
 
 const PostDetail = ({ post }) => {

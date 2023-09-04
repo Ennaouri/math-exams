@@ -1,5 +1,3 @@
-import Head from 'next/head'
-import Link from 'next/link'
 import About from '../components/About'
 import Categories from '../components/Categories'
 import Hero from '../components/Hero'
@@ -22,20 +20,6 @@ const Index = ({examPosts}) =>  {
     }
   }, []);
 
-  const inArticleAds = ['9602021917', '2150179983']
- /* const handleScriptLoad = () => {
-    try{
-      if(window.adsbygoogle){
-        console.log("pushing ads")
-        adsbygoogle.push({})
-      }else{
-        scriptElement!.addEventListener("load", handleScriptLoad)
-        console.log("waiting until adsense lib is loaded")
-      }
-    } catch {
-      console.log("error in adsense : ", error)
-    }
-  }*/
   return (
     <div>
         <Hero />
@@ -62,7 +46,7 @@ const Index = ({examPosts}) =>  {
               style={{display:"block"}}
               data-ad-format="auto"
               data-ad-client="ca-pub-5587331919297301"
-              data-ad-slot={inArticleAds[index]}
+              data-ad-slot="9602021917"
               data-full-width-responsive="true"
               ></ins>
               </div>
