@@ -52,6 +52,14 @@ const SinglePost = ({examPosts}) => {
           
             className={Style.formatter}
             ></div>
+            <div style={{ overflow : "hidden", margin: "5px"}}>
+            <ins className="adsbygoogle"
+     style={{display:"block",textAlign:"center"}}
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="2599028663"></ins>
+     </div>
           </AccordionBody>
       </AccordionItem>
     ))}

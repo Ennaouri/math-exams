@@ -39,19 +39,29 @@ const Index = ({examPosts}) =>  {
     <div>
         <Hero />
         <div className='container'>
+        <div style={{ overflow : "hidden", margin: "5px"}}>
+        <ins className="adsbygoogle"
+     style={{display:"block", textAlign:"center"}}
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="1332094746"
+     data-full-width-responsive="true"
+     ></ins>
+     </div>
           <FeaturedPosts />
           <div className='row'>
             <div className='col-md-8'>
             {examPosts.map((post, index) => (
               <div key={index}>
             <PostCard  post={post.node} />
-            {(index + 1) % 3 === 0 && index < examPosts.length - 1 && (
+            {(index + 1) % 2 === 0 && index < examPosts.length - 1 && (
               <div style={{ overflow : "hidden", margin: "5px"}}>
               <ins className="adsbygoogle"
               style={{display:"block"}}
               data-ad-format="auto"
               data-ad-client="ca-pub-5587331919297301"
-              data-ad-slot="9602021917"
+              data-ad-slot={inArticleAds[index]}
               data-full-width-responsive="true"
               ></ins>
               </div>
@@ -62,6 +72,15 @@ const Index = ({examPosts}) =>  {
             </div>
             <div className='col-md-4'>
             <PostWidget />
+            <div style={{ overflow : "hidden", margin: "5px"}}>
+            <ins className="adsbygoogle"
+     style={{display:"block"}}
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="1112602893"
+     data-full-width-responsive="true"
+     ></ins>
+     </div>
             <Categories />
             <div style={{ overflow : "hidden", margin: "5px"}}>
             <ins className="adsbygoogle"

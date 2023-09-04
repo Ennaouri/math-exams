@@ -18,6 +18,14 @@ const Categories = () => {
       {categories.map((category, index) => (
         
         <div key={index} className="row items-center w-full mb-4 align-items-center categoriepointer">
+          <div style={{ overflow : "hidden", margin: "5px"}}>
+          <ins className="adsbygoogle"
+     style={{display:"block"}}
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="6921417058"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+     </div>
         <div className="col-2">
           <img
             alt={category.title}
