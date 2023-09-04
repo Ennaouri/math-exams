@@ -13,13 +13,14 @@ const SinglePost = ({examPosts}) => {
 
   useEffect(() => {
     // Execute the script when the component mounts
-    try{
-      
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    
-  } catch(e){
-    console.error('could not initialize adsense ad')
-  }
+    var ads = document.getElementsByClassName('adsbygoogle').length;
+    for (var i = 0; i < ads; i++) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.error('could not initialize adsense ad')
+      }
+    }
   }, []);
     return (
       <div className='container m-auto p-2 mb-4 mt-4'>

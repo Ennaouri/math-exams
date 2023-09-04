@@ -6,6 +6,14 @@ const Categories = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
+    var ads = document.getElementsByClassName('adsbygoogle').length;
+    for (var i = 0; i < ads; i++) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.error('could not initialize adsense ad')
+      }
+    }
     getCategories().then((newCategories) => {
       setCategories(newCategories);
     });
