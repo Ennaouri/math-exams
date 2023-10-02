@@ -83,7 +83,24 @@ const SinglePost = ({examPosts}) => {
           <div className="col-md-4">
             <div className="relative lg:sticky top-8">
               <PostWidget /* slug={post.slug} categories={post.categories.map((category) => category.slug)}  *//>
+              <div style={{ overflow : "hidden", margin: "5px"}}>
+            <ins className="adsbygoogle"
+     style={{display:"block"}}
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="1112602893"
+     data-full-width-responsive="true"
+     ></ins>
+     </div>
               <Categories />
+              <div style={{ overflow : "hidden", margin: "5px"}}>
+            <ins className="adsbygoogle"
+     style={{display:"block"}}
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="5074960913"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+     </div>
             </div>
           </div>
       </div>

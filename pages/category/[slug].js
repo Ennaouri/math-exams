@@ -32,20 +32,31 @@ const CategoryPost = ({ posts }) => {
           {posts.map((post, index) => (
             <div key={index}>
             <PostCard key={index} post={post.node} />
-            <div style={{ overflow : "hidden", margin: "5px"}}>
-<ins className="adsbygoogle"
-     style={{display:"block"}}
-     data-ad-format="fluid"
-     data-ad-layout-key="+3x+oy-1o-3y+u9"
-     data-ad-client="ca-pub-5587331919297301"
-     data-ad-slot="9119408825"></ins>
-     </div>
+            {(index + 1) % 2 === 0 && index < examPosts.length - 1 && (
+              <div style={{ overflow : "hidden", margin: "5px"}}>
+              <ins className="adsbygoogle"
+              style={{display:"block"}}
+              data-ad-format="auto"
+              data-ad-client="ca-pub-5587331919297301"
+              data-ad-slot="9602021917"
+              data-full-width-responsive="true"
+              ></ins>
+              </div>
+            )}
             </div>
           ))}
         </div>
         <div className="col-md-4">
           <div className="">
             <Categories />
+            <div style={{ overflow : "hidden", margin: "5px"}}>
+            <ins className="adsbygoogle"
+     style={{display:"block"}}
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="5074960913"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+     </div>
           </div>
         </div>
       </div>
