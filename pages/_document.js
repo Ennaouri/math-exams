@@ -10,7 +10,7 @@ export default class MyDocument extends Document {
         <title>Solutions des examens du secondaire en maths</title>
         <meta name="keywords" content='exams, exercices, lowdiscoverymaths, exercice, bac, examens, concours, solution, correction examens' />
           <meta name='description' lang ='fr' content='les solutions de tous les examens de maths du secondaire qualifiants se trouvent désormais sur une seule plateforme avec des videos explicatifs' />
-          <meta http-equiv="Content-Language" content="fr"></meta>
+          <meta httpEquiv="Content-Language" content="fr"></meta>
           <meta property="og:title" content="examens de maths" />
 <meta property="og:description" content="Correction des examens de maths" />
 <meta property="og:image" content="https://www.facebook.com/photo/?fbid=114326048262713&set=a.114326081596043" />

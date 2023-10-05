@@ -6,14 +6,9 @@ import {
   Nav,
   NavItem,
   NavLink,
-NavbarBrand,
-UncontrolledDropdown,
-DropdownToggle,
-DropdownMenu,
-DropdownItem} from 'reactstrap';
+NavbarBrand} from 'reactstrap';
 
   import { useState } from "react";
-import Link from 'next/link';
 const NavbarHeader = () => {
   const [isOpenn , setIsOpenn] = useState(false)
 
@@ -39,7 +34,7 @@ const NavbarHeader = () => {
         <NavItem>
           <NavLink href="/policy/" className="text-light bold fs-5"> Politique de confidentialité</NavLink>
         </NavItem>
-        <UncontrolledDropdown nav inNavbar >
+      {/*  <UncontrolledDropdown nav inNavbar >
           <DropdownToggle nav caret className="text-light bold fs-5">
             Niveau
           </DropdownToggle>
@@ -58,7 +53,7 @@ const NavbarHeader = () => {
               Olympiade
             </DropdownItem>
           </DropdownMenu>
-  </UncontrolledDropdown>
+  </UncontrolledDropdown>*/}
       </Nav>
     </Collapse>
   </Navbar>
