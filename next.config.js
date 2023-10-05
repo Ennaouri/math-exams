@@ -5,7 +5,7 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
-  reactStrictMode: false,
+  reactStrictMode: true,
   minify: false,
 }
 
