@@ -32,7 +32,7 @@ const CategoryPost = ({ posts }) => {
           {posts.map((post, index) => (
             <div key={index}>
             <PostCard key={index} post={post.node} />
-            {(index + 1) % 2 === 0 && index < examPosts.length - 1 && (
+            {(index + 1) % 2 === 0 && index < posts.length - 1 && (
               <div style={{ overflow : "hidden", margin: "5px"}}>
               <ins className="adsbygoogle"
               style={{display:"block"}}

@@ -141,6 +141,7 @@ export const getAdjacentPosts = async (createdAt, slug) => {
 };
 
 export const getCategoryPost = async (slug) => {
+  console.log(slug)
   const query = gql`
     query GetCategoryPost($slug: String!) {
         examPostsConnection(where: {categories_some: {slug: $slug}}) {
