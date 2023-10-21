@@ -30,15 +30,6 @@ const NavbarHeader = () => {
         <NavItem >
           <NavLink href="/about" className="text-light bold fs-5">About</NavLink>
         </NavItem>
-        <NavItem>
-          <NavLink href="/contactus/" className="text-light bold fs-5">Contact Us</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink href="/posts/postez-vos-exercices-et-demandez-de-laide/" className="text-light bold fs-5"> Poster Vos Exercices</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink href="/policy/" className="text-light bold fs-5"> Politique de confidentialité</NavLink>
-        </NavItem>
         <UncontrolledDropdown nav inNavbar >
           <DropdownToggle nav caret className="text-light bold fs-5">
             Niveau
@@ -48,10 +39,10 @@ const NavbarHeader = () => {
               Tronc Commun
             </DropdownItem>
             <DropdownItem>
-              1ere Année Bac
+            <Link href='/category/1-bac-sciences-experimentales-details/'>1ere Année Bac</Link>
             </DropdownItem>
             <DropdownItem>
-            <Link href='/category/examens-du-bac-pc-et-svt/'>2eme Année Bac</Link>
+            2eme année bac
             </DropdownItem>
             <DropdownItem divider />
             <DropdownItem>
@@ -59,6 +50,16 @@ const NavbarHeader = () => {
             </DropdownItem>
           </DropdownMenu>
   </UncontrolledDropdown>
+        <NavItem>
+          <NavLink href="/contactus/" className="text-light bold fs-5">Contact Us</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink href="/posts/postez-vos-exercices-et-demandez-de-laide/" className="text-light bold fs-5"> Poster Vos Exercices</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink href="/policy/" className="text-light bold fs-5"> Politique de confidentialité</NavLink>
+        </NavItem>
+
       </Nav>
     </Collapse>
   </Navbar>

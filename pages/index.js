@@ -56,7 +56,8 @@ const Index = ({examPosts}) =>  {
           ))}
             </div>
             <div className='col-md-4'>
-            <PostWidget />
+            <Categories />
+            
             <div style={{ overflow : "hidden", margin: "5px"}}>
             <ins className="adsbygoogle"
      style={{display:"block"}}
@@ -66,7 +67,7 @@ const Index = ({examPosts}) =>  {
      data-full-width-responsive="true"
      ></ins>
      </div>
-            <Categories />
+     <PostWidget />
             <div style={{ overflow : "hidden", margin: "5px"}}>
             <ins className="adsbygoogle"
      style={{display:"block"}}
