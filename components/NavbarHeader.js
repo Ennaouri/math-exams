@@ -39,10 +39,10 @@ const NavbarHeader = () => {
               Tronc Commun
             </DropdownItem>
             <DropdownItem>
-            <Link href='/category/1-bac-sciences-experimentales-details/'>1ere Année Bac</Link>
+              <Link href='/category/1-bac-sciences-experimentales-details/'>1ere Année Bac</Link>
             </DropdownItem>
             <DropdownItem>
-            2eme année bac
+              <Link href='/category/2eme-annee-bac-sciences-details/'>1ere Année Bac</Link>
             </DropdownItem>
             <DropdownItem divider />
             <DropdownItem>
