@@ -53,12 +53,8 @@ const NavbarHeader = () => {
         <NavItem>
           <NavLink href="/contactus/" className="text-light bold fs-5">Contact Us</NavLink>
         </NavItem>
-        <NavItem>
-          <NavLink href="/posts/postez-vos-exercices-et-demandez-de-laide/" className="text-light bold fs-5"> Poster Vos Exercices</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink href="/policy/" className="text-light bold fs-5"> Politique de confidentialité</NavLink>
-        </NavItem>
+
+
 
       </Nav>
     </Collapse>

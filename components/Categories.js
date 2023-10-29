@@ -4,7 +4,7 @@ import { getCategories } from '../services';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
-
+  
   useEffect(() => {
     var ads = document.getElementsByClassName('adsbygoogle').length;
     for (var i = 0; i < ads; i++) {
@@ -15,6 +15,7 @@ const Categories = () => {
       }
     }
     getCategories().then((newCategories) => {
+      console.log('new categories is : ',newCategories)
       setCategories(newCategories);
     });
   }, []);
