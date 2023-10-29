@@ -10,8 +10,8 @@ const Hero = () => {
         <div className="row align-items-center">
             <div className="col-md-8 text-center ">
         <div className={`mb-3 ` +Style.colz}>
-              <a href="https://www.facebook.com/profile.php?id=100090559545163"><FontAwesomeIcon icon={faFacebookSquare} style={{padding: "8px", width: '100px'}}/></a>
-              <a href="https://www.youtube.com/channel/UCyWGt2jLbZz4IKjlYjmBasw"><FontAwesomeIcon icon={faYoutubeSquare} style={{padding: "8px",width: '100px'}}/></a>
+              <a href="https://www.facebook.com/profile.php?id=100090559545163"><FontAwesomeIcon icon={faFacebookSquare} style={{padding: "8px", width: '50px'}}/></a>
+              <a href="https://www.youtube.com/channel/UCyWGt2jLbZz4IKjlYjmBasw"><FontAwesomeIcon icon={faYoutubeSquare} style={{padding: "8px",width: '50px'}}/></a>
               <a href="https://twitter.com/EnnaouriMohamm3"><FontAwesomeIcon icon={faTwitterSquare} style={{padding: "8px", width: '50px'}} /></a>
               <a href="https://www.instagram.com/simohammednouri/?hl=fr"><FontAwesomeIcon icon={faInstagramSquare} style={{padding: "8px", width: '50px'}}/></a>
               <a href="#"><FontAwesomeIcon icon={faGooglePlusSquare} style={{padding: "8px", width: '50px'}}/></a>

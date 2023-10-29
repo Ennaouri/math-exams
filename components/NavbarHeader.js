@@ -42,7 +42,7 @@ const NavbarHeader = () => {
               <Link href='/category/1-bac-sciences-experimentales-details/'>1ere Année Bac</Link>
             </DropdownItem>
             <DropdownItem>
-              <Link href='/category/2eme-annee-bac-sciences-details/'>1ere Année Bac</Link>
+              <Link href='/category/2eme-annee-bac-sciences-details/'>2eme Année Bac</Link>
             </DropdownItem>
             <DropdownItem divider />
             <DropdownItem>
