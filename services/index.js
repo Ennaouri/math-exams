@@ -36,15 +36,15 @@ query MyQuery {
 
 export const getCategories = async () => {
   const query = gql`
-query GetGategories {
-  categories(where: {slug_contains: "details"}) {
-    name
-    thumbnail {
-      url
+    query GetGategories {
+        categories {
+          name
+          slug
+          thumbnail {
+            url
+          }
+        }
     }
-    slug
-  }
-}
   `;
 
   const result = await request(graphqlAPI, query);

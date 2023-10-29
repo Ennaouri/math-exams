@@ -24,7 +24,7 @@ const Categories = () => {
     <div className="bg-white p-4 pb-4 mb-4">
       <h4>Catégories</h4>
       <hr />
-      {categories.map((category, index) => (
+      {categories.filter((category) =>  category.slug.includes('details')).map((category,index)=> (
         
         <div key={index} className="row items-center w-full mb-4 align-items-center categoriepointer">
           <div style={{ overflow : "hidden", margin: "5px"}}>
