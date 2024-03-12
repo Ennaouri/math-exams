@@ -1,0 +1,33 @@
+.carousel-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.card-container {
+  display: flex;
+  justify-content: space-between;
+  width: 800px; /* Total width of three cards */
+}
+
+.card {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  width: 250px; /* Width of each card */
+}
+
+.arrow {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  margin: 0 20px;
+  outline: none;
+}
+
+.arrow:hover {
+  color: #555;
+}

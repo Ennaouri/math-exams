@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id            Int             @id @default(autoincrement())
+  name          String
+  thumbnail     String
+  description   String
+  slug          String          @unique
+  created_at    DateTime        @default(now())
+  updated_at    DateTime
+  underCategories UnderCategory[]
+}
+
+model Post {
+  id               Int           @id @default(autoincrement())
+  name             String
+  thumbnail        String
+  description      String
+  slug             String        @unique
+  underCategory_id Int
+  created_at       DateTime      @default(now())
+  updated_at       DateTime
+  underCategory    UnderCategory @relation(fields: [underCategory_id], references: [id])
+  postDetails      PostDetails[]
+}
+
+model PostDetails {
+  id          Int      @id @default(autoincrement())
+  name        String
+  thumbnail   String
+  description String
+  slug        String   @unique
+  post_id     Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime
+  post        Post     @relation(fields: [post_id], references: [id])
+}
+
+model UnderCategory {
+  id          Int      @id @default(autoincrement())
+  name        String
+  thumbnail   String
+  description String
+  slug        String   @unique
+  category_id Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime
+  posts        Post[]
+  category    Category @relation(fields: [category_id], references: [id])
+}
