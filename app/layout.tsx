@@ -1,3 +1,4 @@
+import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import './globals.css'
 
@@ -19,7 +20,9 @@ export default function RootLayout({
 <Navbar />
 
         {children}
+        
         </main>
+       
 </main>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
         

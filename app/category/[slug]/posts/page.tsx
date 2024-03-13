@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 import Link from 'next/link'
 import React from 'react'
+import Card from '../../components/Card'
+import PostCard from '../../components/PostCard'
 
 
 const prisma = new PrismaClient()
@@ -26,27 +28,47 @@ export default async function CategoryPosts({params} : {params : {slug: string}}
   return (
     
 <>
-{posts.map((post) => (
-    <Link href={`/postdetails/${post.slug}`}>
-    <div className="mt-40 max-w-3xl bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-    <a href="#">
-        <img className="rounded-t-lg" src="/ThumbnailSerieExponentielle.png" alt="" />
-    </a>
-    <div className="p-5">
-        <a href="#">
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
-        </a>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-        <a href="#" className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-            Read more
-             <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-            </svg>
-        </a>
+<div className="container mx-auto flex flex-wrap py-6">
+    <section className="w-full md:w-2/3 flex flex-col items-center px-3">
+      {posts.map((post) =>(
+        <PostCard post={post} />
+      ))}
+
+            <div className="flex items-center py-8">
+                <a href="#" className="h-10 w-10 bg-blue-800 hover:bg-blue-600 font-semibold text-white text-sm flex items-center justify-center">1</a>
+                <a href="#" className="h-10 w-10 font-semibold text-gray-800 hover:bg-blue-600 hover:text-white text-sm flex items-center justify-center">2</a>
+                <a href="#" className="h-10 w-10 font-semibold text-gray-800 hover:text-gray-900 text-sm flex items-center justify-center ml-3">Next <i className="fas fa-arrow-right ml-2"></i></a>
+            </div>
+    </section>
+    <aside className="w-full md:w-1/3 flex flex-col items-center px-3">
+    <div className="w-full bg-white shadow flex flex-col my-4 p-6">
+                <p className="text-xl font-semibold pb-5">About Us</p>
+                <p className="pb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas mattis est eu odio sagittis tristique. Vestibulum ut finibus leo. In hac habitasse platea dictumst.</p>
+                <a href="#" className="w-full bg-blue-800 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-4">
+                    Get to know us
+                </a>
+            </div>
+            <div className="w-full bg-white shadow flex flex-col my-4 p-6">
+                <p className="text-xl font-semibold pb-5">Instagram</p>
+                <div className="grid grid-cols-3 gap-3">
+                    <img className="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=1" />
+                    <img className="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=2" />
+                    <img className="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=3" />
+                    <img className="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=4" />
+                    <img className="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=5" />
+                    <img className="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=6" />
+                    <img className="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=7" />
+                    <img className="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=8" />
+                    <img className="hover:opacity-75" src="https://source.unsplash.com/collection/1346951/150x150?sig=9" />
+                </div>
+                <a href="#" className="w-full bg-blue-800 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-6">
+                    <i className="fab fa-instagram mr-2"></i> Follow @dgrzyb
+                </a>
+            </div>
+    </aside>
+
     </div>
-</div>
-</Link>
-))}
+
 
 </>
   )
