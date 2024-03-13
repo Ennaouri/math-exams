@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import './Carousel.css';
 import { PrismaClient } from '@prisma/client';
 import CarouselCard from '../components/CarouselCard';
+import Card from '../components/Card';
 
 interface Card {
   id: number;
@@ -12,33 +13,48 @@ interface Card {
 }
 
 const prisma = new PrismaClient()
-const fetchCategories = async () => {
-  
-    const categories = await prisma.category.findMany()
-  
-    if(!categories){
-      throw Error
-    }
-  return categories
+const fetchCategoryUndercatgories = async (slug : string) => {
+  const category = await prisma.category.findUnique({
+      where : {
+          slug
+      },
+      select : {
+          underCategories: true
+      }
+  })
+
+  if(!category){
+      throw new Error
+  }
+  return category.underCategories
 }
 
-const cardsData: Card[] = [
-  { id: 1, title: 'Card 1', content: 'Content for card 1' },
-  { id: 2, title: 'Card 2', content: 'Content for card 2' },
-  { id: 3, title: 'Card 3', content: 'Content for card 3' },
-  { id: 4, title: 'Card 4', content: 'Content for card 4' },
-  { id: 5, title: 'Card 5', content: 'Content for card 5' },
-  { id: 6, title: 'Card 6', content: 'Content for card 6' },
-];
 
-const Carousel: React.FC = async() => {
-  const categories = await fetchCategories()
+
+const Carousel = async({params} : {params : {slug : string}}) => {
+  const categories = await fetchCategoryUndercatgories(params.slug)
 
   return (
+    <>
     <div className="carousel-container">
       <CarouselCard  categories={categories}/>
     </div>
+    <div className='flex'>
+    <div className='basis-1/3'>{categories.map((category) => (
+        <Card category={category}/>
+      ))}</div>
+      <div className='flex'>
+      {categories.map((category) => (
+        <Card category={category}/>
+      ))}
+      </div>
+
+      
+      </div>
+    
+    </>
   );
 };
 
 export default Carousel;
+

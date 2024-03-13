@@ -16,7 +16,7 @@ interface Props {
   categories : CategoryCardType[];
 }
 
-export default async function CarouselCard({categories}: Props) {
+export default  function CarouselCard({categories}: Props) {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   
 

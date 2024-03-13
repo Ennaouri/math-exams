@@ -35,11 +35,16 @@ export default async function Home() {
 
     <main>
       <Header />
-      <div className="py-3 px-36 mt-10 flex flex-wrap">
+      <div className='flex '>
+        <div className='basis-1/3'>{categories.map((category) => (
+        <Card category={category}/>
+      ))}</div>
+      <div className=" flex flex-wrap">
       {categories.map((category) => (
         <Card category={category}/>
       ))}
       
+      </div>
       </div>
     </main>
   )
