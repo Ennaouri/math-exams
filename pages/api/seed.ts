@@ -22,9 +22,8 @@ export default async function handler(
   const postDetails = await prisma.postDetails.findMany();
   const underCategories = await prisma.underCategory.findMany()
 
-  await prisma.category.createMany({
-    data: [
-      // INDIAN //
+  await prisma.category.create({
+    data: 
       {
         name: "'2eme année bac science PC et SVT'",
         thumbnail:
@@ -36,7 +35,7 @@ export default async function handler(
         updated_at: "21:30:00.000Z",
         slug: "2bacsciencepcetsvt"
       }
-    ]
+    
     })
  
 }

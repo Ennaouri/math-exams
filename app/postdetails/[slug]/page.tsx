@@ -36,7 +36,7 @@ export default async function PostDetails({params} : {params : {slug: string}}) 
         <div className="block sm:hidden">
             <a
                 href="#"
-                className="block md:hidden text-base font-bold uppercase text-center flex justify-center items-center"
+                className=" md:hidden text-base font-bold uppercase text-center flex justify-center items-center"
                 
             >
                 Topics <i className='fas ml-2 fa-chevron-up'></i>
