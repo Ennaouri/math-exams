@@ -13,10 +13,10 @@ export interface CategoryCardType {
 }
 
 interface Props {
-  categories : CategoryCardType[];
+  underCategories : CategoryCardType[];
 }
 
-export default  function CarouselCard({categories}: Props) {
+export default  function CarouselCard({underCategories}: Props) {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   
 
@@ -31,14 +31,14 @@ export default  function CarouselCard({categories}: Props) {
   const nextSlide = () => {
     setCurrentCardIndex((prevIndex) => {
       const nextIndex = prevIndex + 3;
-      return nextIndex >= categories.length ? 0 : nextIndex;
+      return nextIndex >= underCategories.length ? 0 : nextIndex;
     });
   };
 
   const prevSlide = () => {
     setCurrentCardIndex((prevIndex) => {
       const nextIndex = prevIndex - 3;
-      return nextIndex < 0 ? categories.length - 3 : nextIndex;
+      return nextIndex < 0 ? underCategories.length - 3 : nextIndex;
     });
   };
   return (
@@ -47,7 +47,7 @@ export default  function CarouselCard({categories}: Props) {
         &#10094;
       </button>
       <div className="card-container">
-        {categories.slice(currentCardIndex, currentCardIndex + 3).map((card) => (
+        {underCategories.slice(currentCardIndex, currentCardIndex + 3).map((card) => (
           <div
           className="w-64 h-72 m-3 rounded overflow-hidden border cursor-pointer"
         >

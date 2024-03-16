@@ -32,30 +32,17 @@ const fetchCategoryUndercatgories = async (slug : string) => {
 
 
 const Carousel = async({params} : {params : {slug : string}}) => {
-  const categories = await fetchCategoryUndercatgories(params.slug)
+  const underCategories = await fetchCategoryUndercatgories(params.slug)
 
   return (
     <>
     <div className="carousel-container">
-      <CarouselCard  categories={categories}/>
+      <CarouselCard  underCategories={underCategories}/>
     </div>
-    {/*<div className='flex'>
-    <div className='basis-1/3'>
-      {categories.map((category) => (
-        <Card category={category}/>
-      ))}</div>
-      <div className='flex'>
-      {categories.map((category) => (
-        <Card category={category}/>
-      ))}
-      </div>
-
-      
-      </div>*/}
       <div className="container mx-auto flex flex-wrap py-6">
     <section className="w-full md:w-2/3 flex flex-col items-center px-3">
-      {categories.map((category) =>(
-        <Card category={category} />
+      {underCategories.map((underCategory) =>(
+        <Card underCategory={underCategory} />
       ))}
 
             <div className="flex items-center py-8">

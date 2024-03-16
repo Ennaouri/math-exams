@@ -1,11 +1,11 @@
-import Footer from './components/Footer'
-import Navbar from './components/Navbar'
-import './globals.css'
+
+import Navbar from "./components/Navbar";
+import "./globals.css";
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -15,18 +15,15 @@ export default function RootLayout({
       */}
       <head />
       <body>
-      <main className="bg-gray-100 min-h-screen w-screen">
-  <main className="max-w-screen-xl m-auto bg-white">
-<Navbar />
+        <main className="bg-gray-100 min-h-screen w-screen">
+          <main className="max-w-screen-xl m-auto bg-white">
+            <Navbar />
 
-        {children}
-        
+            {children}
+          </main>
         </main>
-       
-</main>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-        
       </body>
     </html>
-  )
+  );
 }
