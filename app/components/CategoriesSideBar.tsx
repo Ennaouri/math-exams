@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import { CategoryCardType } from "../page";
+import { CategoryCardType } from "../layout";
+import Link from "next/link";
 
 export default function CategoriesSideBar({
   categories,
@@ -14,7 +15,7 @@ export default function CategoriesSideBar({
       </h3>
       <div className="space-y-2">
         {categories.map((category) => (
-          <a
+          <Link
             href={`/category/${category.slug}`}
             className="flex leading-4 items-center text-gray-700 font-semibold text-sm uppercase transition hover:text-blue-500"
           >
@@ -22,7 +23,7 @@ export default function CategoriesSideBar({
               <i className="far fa-folder-open"></i>
             </span>
             <span>{category.name}</span>
-          </a>
+          </Link>
         ))}
       </div>
     </div>

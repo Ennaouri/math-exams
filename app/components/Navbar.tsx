@@ -32,15 +32,13 @@ export default function Navbar() {
                     <Link href="/category/troncommun" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Tronc Commun</Link>
                   </li>
                   <li>
-                    <Link href="/category/1erebac" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">1ere Année Bac</Link>
+                    <Link href="/category/1bacscienceexperimentales" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">1ere Année Bac Sciences Expérimentales</Link>
                   </li>
                   <li>
-                    <Link href="/category/2emebac" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">2eme Année Bac</Link>
+                    <Link href="/category/2bacsciencepcetsvt" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">2eme Année Bac PC et SVT</Link>
                   </li>
                 </ul>
-                <div className="py-1">
-                  <Link href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</Link>
-                </div>
+               
             </div>
         </li>
         <li>

@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import CategoriesSideBar from "./components/CategoriesSideBar";
-import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import RandomPosts from "./components/RandomPosts";
@@ -8,6 +7,7 @@ import RightSide from "./components/RightSide";
 import "./globals.css";
 import CarouselCard from "./components/CarouselCard";
 import "./Carousel.css";
+import Footer from "./components/Footer";
 
 export interface CategoryCardType {
   id: number;
@@ -68,6 +68,8 @@ export default async function RootLayout({
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
+
+      
       <head />
       <body>
         <main className="bg-gray-100 min-h-screen w-screen">
@@ -92,6 +94,7 @@ export default async function RootLayout({
                 </div>
               </main>
             </main>
+            <Footer />
           </main>
         </main>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>

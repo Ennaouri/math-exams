@@ -1,5 +1,6 @@
 "use client";
 import { Post } from "@prisma/client";
+import Link from "next/link";
 import React from "react";
 
 
@@ -14,7 +15,7 @@ export default function RandomPosts({ posts }: { posts: Post[] }) {
       </h3>
       <div className="space-y-4">
         {posts.map((post) => (
-          <a href={`/postdetails/${post.slug}`} className="flex group">
+          <Link href={`/postdetails/${post.slug}`} className="flex group">
             <div className="flex-shrink-0">
               <img
                 src={post.thumbnail}
@@ -32,7 +33,7 @@ export default function RandomPosts({ posts }: { posts: Post[] }) {
                 {post.created_at.toDateString()}
               </div>
             </div>
-          </a>
+          </Link>
         ))}
 
       </div>

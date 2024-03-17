@@ -18,13 +18,7 @@ interface Props {
 export default function CarouselCard({ underCategories }: Props) {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [currentCardIndex]);
+ 
 
   const nextSlide = () => {
     setCurrentCardIndex((prevIndex) => {
