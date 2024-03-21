@@ -8,6 +8,7 @@ import "./globals.css";
 import CarouselCard from "./components/CarouselCard";
 import "./Carousel.css";
 import Footer from "./components/Footer";
+import Head from "./head";
 
 export interface CategoryCardType {
   id: number;
@@ -68,8 +69,7 @@ export default async function RootLayout({
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
-
-      
+      <Head />
       <head />
       <body>
         <main className="bg-gray-100 min-h-screen w-screen">
@@ -83,7 +83,7 @@ export default async function RootLayout({
                   <CarouselCard underCategories={undercategories} />
                 </div>
                 <div className="container mx-auto  flex flex-wrap lg:flex-nowrap">
-                  <div className="w-3/12 hidden xl:block">
+                  <div className="w-1/4 hidden xl:block flex-none">
                     <CategoriesSideBar categories={categories} />
 
                     <RandomPosts posts={randomPosts} />
@@ -97,7 +97,7 @@ export default async function RootLayout({
             <Footer />
           </main>
         </main>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+       
       </body>
     </html>
   );

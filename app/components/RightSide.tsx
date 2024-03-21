@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 export default function RightSide({ undercategories }: { undercategories: UnderCategory[] }) {
   return (
-    <div className="lg:w-3/12 w-full mt-8 lg:mt-0">
+    <div className="lg:w-3/12 w-1/4 mt-8 lg:mt-0 flex-none">
                 <SocialMedias />
 
                 <div className="w-full mt-8 bg-white shadow-sm rounded-sm p-4 ">
