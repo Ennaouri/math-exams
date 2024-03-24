@@ -79,7 +79,7 @@ export default async function PostDetails({
                           data-twe-parent="#accordionExample"
                         >
                           <div className="px-5 py-4">
-                            <div className="paragraph atag"
+                            <div className="paragraph atag video-container"
                               dangerouslySetInnerHTML={{
                                 __html: post.description,
                               }}

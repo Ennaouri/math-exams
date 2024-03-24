@@ -58,4 +58,24 @@ a:active {
 iframe {
   margin-top: 15px;
   margin-top: 15px;
+  width: 100%;
+  box-sizing: border-box;
+    
 }
+
+.box-video.open .video-container{
+  opacity: 1;
+  -webkit-transition: all .6s .8s;
+  transition: all .6s .8s;
+}
+
+@media only screen and (max-device-width : 640px) {
+
+  iframe {
+    height: 56.25vw;
+  }
+}
+
+
+
+
