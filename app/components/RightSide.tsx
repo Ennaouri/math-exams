@@ -7,10 +7,10 @@ import Link from 'next/link'
 
 export default function RightSide({ undercategories }: { undercategories: UnderCategory[] }) {
   return (
-    <div className="lg:w-3/12 w-1/4 mt-8 lg:mt-0 flex-none">
+    <div >
                 <SocialMedias />
 
-                <div className="w-full mt-8 bg-white shadow-sm rounded-sm p-4 ">
+                <div className=" w-full bg-white shadow-sm rounded-sm p-4">
                     <h3 className="text-xl font-semibold text-gray-700 mb-3 font-roboto">Under Categories</h3>
                     <div className="space-y-4">
                         {undercategories.toReversed().slice(0, 4).map((underCategory) => (

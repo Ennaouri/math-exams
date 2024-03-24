@@ -9,7 +9,7 @@ export default function CategoriesSideBar({
   categories: CategoryCardType[];
 }) {
   return (
-    <div className="w-full bg-white shadow-sm rounded-sm p-4 ">
+    <div className=" w-full bg-white shadow-sm rounded-sm p-4 ">
       <h3 className="text-xl font-semibold text-gray-700 mb-3 font-roboto">
         Categories
       </h3>

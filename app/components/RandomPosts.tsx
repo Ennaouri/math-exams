@@ -9,7 +9,7 @@ export default function RandomPosts({ posts }: { posts: Post[] }) {
   
 
   return (
-    <div className="w-full mt-8 bg-white shadow-sm rounded-sm p-4 ">
+    <div className="w-full mt-8 bg-white shadow-sm rounded-sm p-4">
       <h3 className="text-xl font-semibold text-gray-700 mb-3 font-roboto">
         Random Posts
       </h3>

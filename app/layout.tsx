@@ -83,14 +83,17 @@ export default async function RootLayout({
                   <CarouselCard underCategories={undercategories} />
                 </div>
                 <div className="container mx-auto  flex flex-wrap lg:flex-nowrap">
-                  <div className="w-1/4 hidden xl:block flex-none">
+                  <div className="w-3/12 hidden xl:block">
                     <CategoriesSideBar categories={categories} />
 
                     <RandomPosts posts={randomPosts} />
                   </div>
-
-                  {children}
+                <div className="xl:w-6/12 lg:w-9/12 w-full  xl:ml-6 lg:mr-6">
+                {children}
+                </div>
+                 <div className="lg:w-3/12 w-full mt-8 lg:mt-0">
                   <RightSide undercategories={undercategories} />
+                  </div>
                 </div>
               </main>
             </main>

@@ -31,7 +31,7 @@ export default async function PostDetails({
   });
   return (
     <>
-      <div className="xl:w-6/12 lg:w-9/12 w-full  xl:ml-6 lg:mr-6">
+      <div className="">
         <div className="rounded-sm overflow-hidden bg-white shadow-sm">
           <div className="">
             <img src={post?.thumbnail} className="w-full h-96 " />

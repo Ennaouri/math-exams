@@ -19,8 +19,6 @@ export default async function Home() {
   const posts = await fetchPosts();
 
   return (
-    <>
       <MainContent posts={posts} />
-    </>
   );
 }

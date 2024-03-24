@@ -1,21 +1,22 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Category {
-  id            Int             @id @default(autoincrement())
-  name          String
-  thumbnail     String
-  description   String
-  slug          String          @unique
-  created_at    DateTime        @default(now())
-  updated_at    DateTime
+  id              Int             @id @default(autoincrement())
+  name            String
+  thumbnail       String
+  description     String
+  slug            String          @unique
+  created_at      DateTime        @default(now())
+  updated_at      DateTime
   underCategories UnderCategory[]
 }
 
@@ -53,6 +54,6 @@ model UnderCategory {
   category_id Int
   created_at  DateTime @default(now())
   updated_at  DateTime
-  posts        Post[]
+  posts       Post[]
   category    Category @relation(fields: [category_id], references: [id])
 }
