@@ -34,13 +34,13 @@ export default function CarouselCard({ underCategories }: Props) {
     });
   };
   return (
-    <>
+    <div className="card-container" >
       <button className="arrow left" onClick={prevSlide}>
         &#10094;
       </button>
-      <div className="card-container">
+      <div className="carousel-container">
         {underCategories
-          .slice(currentCardIndex, currentCardIndex + 3)
+          .slice(currentCardIndex, currentCardIndex + 4)
           .map((card) => (
             <div className="w-64 h-72 m-3 rounded overflow-hidden border cursor-pointer">
               <Link href={`/category/${card.slug}`}>
@@ -55,6 +55,6 @@ export default function CarouselCard({ underCategories }: Props) {
       <button className="arrow right" onClick={nextSlide}>
         &#10095;
       </button>
-    </>
+    </div>
   );
 }

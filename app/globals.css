@@ -111,3 +111,8 @@ a {
 }
 
 
+@media (max-width: 600px) {
+  .card-container {
+    display: none;
+  }
+}

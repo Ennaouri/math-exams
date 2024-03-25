@@ -6,10 +6,15 @@
 }
 
 .card-container {
-  display: flex;
   justify-content: space-between;
-  width: 800px; /* Total width of three cards */
+  width: 100%; /* Total width of three cards */
 }
+
+/* @media (max-width: 600px) {
+  .card-container {
+    display: none;
+  }
+} */
 
 .card {
   background-color: #f0f0f0;

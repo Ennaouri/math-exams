@@ -6,7 +6,7 @@ import RandomPosts from "./components/RandomPosts";
 import RightSide from "./components/RightSide";
 import "./globals.css";
 import CarouselCard from "./components/CarouselCard";
-import "./Carousel.css";
+import "./category/[slug]/Carousel.css";
 import Footer from "./components/Footer";
 import Head from "./head";
 
@@ -83,7 +83,7 @@ export default async function RootLayout({
                   <CarouselCard underCategories={undercategories} />
                 </div>
                 <div className="container mx-auto  flex flex-wrap lg:flex-nowrap">
-                  <div className="w-3/12 hidden xl:block">
+                  <div className="w-full xl:w-3/12 hidden xl:block">
                     <CategoriesSideBar categories={categories} />
 
                     <RandomPosts posts={randomPosts} />

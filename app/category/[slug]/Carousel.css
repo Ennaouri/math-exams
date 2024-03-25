@@ -8,7 +8,10 @@
 .card-container {
   display: flex;
   justify-content: space-between;
-  width: 800px; /* Total width of three cards */
+}
+
+.carousel-mobile{
+  display: flex;
 }
 
 .card {
@@ -17,6 +20,12 @@
   border-radius: 8px;
   padding: 20px;
   width: 250px; /* Width of each card */
+}
+
+@media (max-width: 600px) {
+  .card-container {
+    display: none;
+  }
 }
 
 .arrow {

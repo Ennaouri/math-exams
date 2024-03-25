@@ -37,7 +37,7 @@ const Carousel = async({params} : {params : {slug : string}}) => {
 
   return (
     <>
-    <div className="xl:w-6/12 lg:w-9/12 w-full  xl:ml-6 lg:mr-6">
+    <div >
          <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
         <h5 className="text-base uppercase font-semibold font-roboto">Under Categories</h5>
         

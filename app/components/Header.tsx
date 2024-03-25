@@ -8,7 +8,7 @@ export default function Header() {
       <h1 className="text-white text-5xl font-bold mb-2">
         Mathématiques Du Secondaire
       </h1>
-      <SearchBar />
+      {/* <SearchBar /> */}
     </div>
   </div>
   )
