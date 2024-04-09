@@ -43,7 +43,7 @@ export default function CarouselCard({ underCategories }: Props) {
           .slice(currentCardIndex, currentCardIndex + 4)
           .map((card) => (
             <div className="w-64 h-72 m-3 rounded overflow-hidden border cursor-pointer">
-              <Link href={`/category/${card.slug}`}>
+              <Link href={`/category/${card.slug}/posts`}>
                 <img src={card.thumbnail} alt="" className="w-full h-36" />
                 <div className="p-1">
                   <h3 className="font-bold text-2xl mb-2">{card.name}</h3>

@@ -8,7 +8,15 @@ import "./globals.css";
 import CarouselCard from "./components/CarouselCard";
 import "./category/[slug]/Carousel.css";
 import Footer from "./components/Footer";
-import Head from "./head";
+import type { Metadata } from 'next'
+ 
+export const metadata: Metadata = {
+  title: 'MatheMatiques Du Secondaire',
+  description: 'les solutions de tous les examens de maths du secondaire qualifiants se trouvent désormais sur une seule plateforme avec des videos explicatifs',
+}
+ 
+
+
 
 export interface CategoryCardType {
   id: number;
@@ -65,19 +73,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
-      <Head />
-      <head />
       <body>
         <main className="bg-gray-100 min-h-screen w-screen">
           <main className="max-w-screen-xl m-auto bg-white">
             <main>
               <Navbar />
               <Header />
-
               <main className="pt-12 bg-gray-100 pb-12">
                 <div className="carousel-container">
                   <CarouselCard underCategories={undercategories} />

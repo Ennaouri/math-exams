@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link';
-import { CategoryCardType } from '../../page';
 import { PrismaClient } from '@prisma/client';
+import { CategoryCardType } from '../../layout';
 
 
 interface Props {

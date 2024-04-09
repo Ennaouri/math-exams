@@ -23,7 +23,7 @@ export default function MainContent({ posts }: { posts: Post[] }) {
       <FirstCard post={recentPost} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        {posts.toReversed().map((post) => (
+        {posts.map((post) => (
           <SmallCard post={post} />
         ))}
       </div>

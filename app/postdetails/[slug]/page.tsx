@@ -2,7 +2,38 @@ import { PrismaClient } from "@prisma/client";
 import React from "react";
 import "./postDetails.css"
 
-const prisma = new PrismaClient();
+import type { Metadata, ResolvingMetadata } from 'next'
+ 
+type Props = {
+  params: { slug: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+const prisma = new PrismaClient()
+
+const fetchPost = async (slug: string) => {
+  const post = await prisma.post.findUnique({
+    where: {
+      slug,
+    }
+  });
+  if (!post) {
+    throw new Error();
+  }
+  return post;
+};
+ 
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const id = params.slug
+  const post = await fetchPost(id)
+  return {
+    title: post.name
+  }
+}
 
 const fetchPostDetails = async (slug: string) => {
   const post = await prisma.post.findUnique({
@@ -18,6 +49,7 @@ const fetchPostDetails = async (slug: string) => {
   }
   return post.postDetails;
 };
+
 export default async function PostDetails({
   params,
 }: {

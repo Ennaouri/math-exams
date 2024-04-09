@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://maths-exams.com
+
+# Sitemaps
+Sitemap: https://maths-exams.com/sitemap.xml

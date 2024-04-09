@@ -1,6 +1,6 @@
 import React from 'react'
-import { CategoryCardType } from '../page'
 import Link from 'next/link';
+import { CategoryCardType } from '../layout';
 
 
 interface Props {

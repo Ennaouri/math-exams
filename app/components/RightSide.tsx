@@ -13,7 +13,7 @@ export default function RightSide({ undercategories }: { undercategories: UnderC
                 <div className=" w-full bg-white shadow-sm rounded-sm p-4">
                     <h3 className="text-xl font-semibold text-gray-700 mb-3 font-roboto">Under Categories</h3>
                     <div className="space-y-4">
-                        {undercategories.toReversed().slice(0, 4).map((underCategory) => (
+                        {undercategories.slice(0, 4).map((underCategory) => (
                             <Link href={`/category/${underCategory.slug}/posts`} className="flex group">
                             <div className="flex-shrink-0">
                                 <img src={underCategory.thumbnail} className="h-14 w-20 lg:w-14 xl:w-20 rounded object-cover"/>
