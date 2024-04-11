@@ -1,4 +1,4 @@
-"use client";
+
 import { PrismaClient } from "@prisma/client";
 import React, { useEffect } from "react";
 import "./postDetails.css";
@@ -12,7 +12,8 @@ type Props = {
 
 const prisma = new PrismaClient();
 
-useEffect(() => {
+
+/* useEffect(() => {
   // Execute the script when the component mounts
   var ads = document.getElementsByClassName("adsbygoogle").length;
   for (var i = 0; i < ads; i++) {
@@ -22,8 +23,7 @@ useEffect(() => {
       console.error("could not initialize adsense ad");
     }
   }
-}, []);
-
+}, []); */
 const fetchPost = async (slug: string) => {
   const post = await prisma.post.findUnique({
     where: {
