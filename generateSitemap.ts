@@ -1,4 +1,4 @@
-import axios from 'axios';
+/* import axios from 'axios';
 import { js2xml, Element as XmlElement } from 'xml-js';
 import fs from 'fs';
 
@@ -45,3 +45,4 @@ generateSitemap().then(() => {
 }).catch(error => {
   console.error('Error generating sitemap:', error);
 });
+ */
