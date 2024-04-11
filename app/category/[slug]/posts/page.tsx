@@ -3,38 +3,7 @@ import React from 'react'
 import SmallCard from '../../../components/SmallCard'
 
 
-import type { Metadata, ResolvingMetadata } from 'next'
- 
-type Props = {
-  params: { slug: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
 const prisma = new PrismaClient()
-
-const fetchUnderCategory = async(slug: string) =>{
-  const underCategory = await prisma.underCategory.findUnique({
-      where:{
-          slug
-      }
-  })
-  if(!underCategory){
-      throw new Error("error")
-  }
-  return underCategory
-}
- 
-export async function generateMetadata(
-  { params, searchParams }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  // read route params
-  const id = params.slug
- const category = await fetchUnderCategory(id)
-  return {
-    title: `UnderCategory Posts | ${category.name}`
-  }
-}
 
 const fetchPosts = async(slug: string) =>{
     const underCategories = await prisma.underCategory.findUnique({

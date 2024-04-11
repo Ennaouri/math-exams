@@ -8,15 +8,8 @@ import "./globals.css";
 import CarouselCard from "./components/CarouselCard";
 import "./category/[slug]/Carousel.css";
 import Footer from "./components/Footer";
-import type { Metadata } from 'next'
- 
-export const metadata: Metadata = {
-  title: 'MatheMatiques Du Secondaire',
-  description: 'les solutions de tous les examens de maths du secondaire qualifiants se trouvent désormais sur une seule plateforme avec des videos explicatifs',
-}
- 
-
-
+import type { Metadata } from "next";
+import Head from "./head";
 
 export interface CategoryCardType {
   id: number;
@@ -73,6 +66,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <Head />
       <body>
         <main className="bg-gray-100 min-h-screen w-screen">
           <main className="max-w-screen-xl m-auto bg-white">
@@ -86,14 +80,33 @@ export default async function RootLayout({
                 <div className="container mx-auto  flex flex-wrap lg:flex-nowrap">
                   <div className="w-full xl:w-3/12 hidden xl:block">
                     <CategoriesSideBar categories={categories} />
-
+                    <div style={{ overflow: "hidden", margin: "5px" }}>
+                      <ins
+                        className="adsbygoogle"
+                        style={{ display: "block" }}
+                        data-ad-format="autorelaxed"
+                        data-ad-client="ca-pub-5587331919297301"
+                        data-ad-slot="1112602893"
+                        data-full-width-responsive="true"
+                      ></ins>
+                    </div>
                     <RandomPosts posts={randomPosts} />
                   </div>
-                <div className="xl:w-6/12 lg:w-9/12 w-full  xl:ml-6 lg:mr-6">
-                {children}
-                </div>
-                 <div className="lg:w-3/12 w-full mt-8 lg:mt-0">
-                  <RightSide undercategories={undercategories} />
+                  <div className="xl:w-6/12 lg:w-9/12 w-full  xl:ml-6 lg:mr-6">
+                    {children}
+                  </div>
+                  <div className="lg:w-3/12 w-full mt-8 lg:mt-0">
+                    <RightSide undercategories={undercategories} />
+                    <div style={{ overflow: "hidden", margin: "5px" }}>
+                      <ins
+                        className="adsbygoogle"
+                        style={{ display: "block" }}
+                        data-ad-client="ca-pub-5587331919297301"
+                        data-ad-slot="5074960913"
+                        data-ad-format="auto"
+                        data-full-width-responsive="true"
+                      ></ins>
+                    </div>
                   </div>
                 </div>
               </main>
@@ -101,7 +114,6 @@ export default async function RootLayout({
             <Footer />
           </main>
         </main>
-       
       </body>
     </html>
   );
