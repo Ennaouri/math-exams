@@ -10,6 +10,7 @@ const fetchPosts = async () => {
 
 export default async function Home() {
   const posts = await fetchPosts();
+  console.log("posts are : ", posts)
 
   return (
       <MainContent posts={posts} />
