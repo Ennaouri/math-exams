@@ -22,7 +22,7 @@ const fetchCategory = async (slug : string) => {
   return category
 }
  
-export async function generateMetadata(
+/* export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
@@ -31,7 +31,7 @@ export async function generateMetadata(
   return {
     title: `Category | ${id}`
   }
-}
+} */
 
 export default function CategoryLayout({
   children,
