@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+/* import { PrismaClient } from "@prisma/client"
 import { MetadataRoute } from "next"
 
  const prisma = new PrismaClient()
@@ -20,4 +20,4 @@ export default async function sitemap({
     url: `https://maths-exams.com/category/${category.slug}`,
     lastModified: category.updated_at,
   }))
-}
+} */
