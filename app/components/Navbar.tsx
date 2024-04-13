@@ -92,7 +92,7 @@ export default function Navbar() {
                 >
                   <li>
                     <Link
-                      href="/category/troncommun"
+                      href="/category/tronccommunsciences"
                       className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
                       Tronc Commun
@@ -100,7 +100,7 @@ export default function Navbar() {
                   </li>
                   <li>
                     <Link
-                      href="/category/1bacscienceexperimentales"
+                      href="/category/1eresciencesexperimentales"
                       className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
                       1ere Année Bac Sciences Expérimentales
@@ -108,7 +108,7 @@ export default function Navbar() {
                   </li>
                   <li>
                     <Link
-                      href="/category/2bacsciencepcetsvt"
+                      href="/category/2emebacsvtetpc"
                       className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
                       2eme Année Bac PC et SVT
