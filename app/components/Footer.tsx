@@ -28,7 +28,7 @@ export default function Footer() {
                           <Link href="/category/examens" className="mb-4 hover:underline">Examens 2eme Bac</Link>
                       </li>
                       <li>
-                          <Link href="/privacypolicies" className="mb-4 hover:underline">Privacy Policy</Link>
+                          <Link href="/privacypolicy" className="mb-4 hover:underline">Privacy Policy</Link>
                       </li>
                   </ul>
               </div>

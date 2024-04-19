@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 
 const fetchPosts = async () => {
   const posts = await prisma.post.findMany();
-  console.log("inside posts : ", posts)
   if(!posts){
     throw new Error("no posts found")
 }
@@ -14,7 +13,6 @@ const fetchPosts = async () => {
 
 export default async function Home() {
   const posts = await fetchPosts();
-  console.log("posts are : ", posts)
 
   return (
       <MainContent posts={posts} />
