@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import React, { useEffect } from "react";
 import "./postDetails.css";
 
+
 import type { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
