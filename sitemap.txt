@@ -1,0 +1,95 @@
+// pages/sitemap.ts
+
+import { GetServerSideProps } from "next";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    // Fetch your website's routes from Prisma (adjust the query as needed)
+    const categories = await prisma.category.findMany();
+    const posts = await prisma.post.findMany();
+
+    // Construct the sitemap XML
+    const baseUrl = "https://maths-exams.com"; // Replace with your actual base URL
+    const urls = [
+      { loc: baseUrl, lastmod: new Date(), changefreq: "monthly", priority: 1 },
+      // Add more static routes here
+      ...categories.map((category) => ({
+        loc: `${baseUrl}/category/${category.slug}`,
+        lastmod: new Date(),
+        changefreq: "weekly",
+        priority: 0.8,
+      })),
+      ...posts.map((post) => ({
+        loc: `${baseUrl}/postdetails/${post.slug}`,
+        lastmod: new Date(),
+        changefreq: "daily",
+        priority: 0.6,
+      })),
+    ];
+
+    const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      <url>
+      <loc>https://maths-exams.com/</loc>
+      <lastmod>2024-04-19</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.8</priority>
+    </url>
+    <url>
+    <loc>https://maths-exams.com/about/</loc>
+    <lastmod>2024-04-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://maths-exams.com/contactus</loc>
+    <lastmod>2024-04-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+  <loc>https://maths-exams.com/contactus</loc>
+  <lastmod>2024-04-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+<loc>https://maths-exams.com/privacypolicy</loc>
+<lastmod>2024-04-19</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+        ${urls
+          .map(
+            (url) => `
+          <url>
+            <loc>${url.loc}</loc>
+            <lastmod>${url.lastmod.toISOString()}</lastmod>
+            <changefreq>${url.changefreq}</changefreq>
+            <priority>${url.priority}</priority>
+          </url>`
+          )
+          .join("")}
+      </urlset>`;
+
+    return {
+      props: {
+        sitemapXml,
+      },
+    };
+  } catch (error) {
+    console.error("Error generating sitemap:", error);
+    return {
+      notFound: true,
+    };
+  }
+};
+
+const SitemapPage: React.FC<{ sitemapXml: string }> = ({ sitemapXml }) => {
+  return sitemapXml; // Return the sitemap XML directly
+};
+
+export default SitemapPage;
