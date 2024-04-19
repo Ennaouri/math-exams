@@ -36,6 +36,6 @@ export default async function Sitemap() {
         routes: allRoutes,
         isTrailingSlashRequired: false,
         targetDirectory: 'public/',
-        pagesDirectory: __dirname + '/app',
+        pagesDirectory: __dirname + '../app/pages',
       });
 }
