@@ -114,6 +114,14 @@ export default function Navbar() {
                       2eme Année Bac PC et SVT
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      href="/category/1erebaccommerce"
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
+                      1ere Année Bac Commerce
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </li>
