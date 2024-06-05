@@ -13,12 +13,31 @@ async function generateSitemap(req: NextApiRequest, res: NextApiResponse) {
   // Fetch your website's routes from Prisma (adjust the query as needed)
   const categories = await prisma.category.findMany();
   const postDetails = await prisma.post.findMany();
+  const fetchPosts = async(slug: string) =>{
+    const underCategories = await prisma.underCategory.findUnique({
+        where:{
+            slug
+        },
+        select:{
+            posts: true
+        }
+    })
+    if(!underCategories){
+        throw new Error("error")
+    }
+    return underCategories.posts
+}
+const underCategories = await prisma.underCategory.findMany();
 
   const dynamicRoutes = [
     // Generate URLs for categories
     ...categories.map((category) => `https://maths-exams.com/category/${category.slug}`),
     // Generate URLs for post details
     ...postDetails.map((post) => `https://maths-exams.com/postdetails/${post.slug}`),
+
+    ...underCategories.map((underCategory) => `https://maths-exams.com/category/${underCategory.slug}/posts`)
+
+
   ];
 
   
@@ -50,13 +69,6 @@ async function generateSitemap(req: NextApiRequest, res: NextApiResponse) {
 
     // Generate XML
     const sitemap = await streamToPromise(pipeline);
-
-      // Convert the stream to a string
-      const xmlString = await streamToPromise(smStream).then(data => data.toString());
-
-      // Write the XML string to a file in the public folder
-      const filePath = path.join(process.cwd(), 'public', 'sitemap.xml');
-      fs.writeFileSync(filePath, xmlString);
     
     // Set headers
     res.setHeader('Content-Type', 'application/xml');

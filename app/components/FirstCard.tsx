@@ -13,7 +13,7 @@ export default function FirstCard({ post }: { post: Post }) {
         />
       </Link>
       <div className="p-4 pb-5">
-        <Link href="view.html">
+        <Link href={`/postdetails/${post.slug}`}>
           <h2 className="block text-2xl font-semibold text-gray-700 hover:text-blue-500 transition font-roboto">
             {post.name}
           </h2>

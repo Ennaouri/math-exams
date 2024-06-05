@@ -5,7 +5,7 @@ div.paragraph p {
   margin-top: 32px;
 }
 
-#headingOne{
+#headingOne {
   font-weight: 700;
   font-size: 1.25rem;
   line-height: 2.5rem;
@@ -57,25 +57,19 @@ a:active {
 
 iframe {
   margin-top: 15px;
-  margin-top: 15px;
+  margin-bottom: 15px;
   width: 100%;
   box-sizing: border-box;
-    
 }
 
-.box-video.open .video-container{
+.box-video.open .video-container {
   opacity: 1;
-  -webkit-transition: all .6s .8s;
-  transition: all .6s .8s;
+  -webkit-transition: all 0.6s 0.8s;
+  transition: all 0.6s 0.8s;
 }
 
-@media only screen and (max-device-width : 640px) {
-
+@media only screen and (max-device-width: 640px) {
   iframe {
     height: 56.25vw;
   }
 }
-
-
-
-

@@ -9,7 +9,6 @@ type Props = {
 
 const prisma = new PrismaClient()
 const fetchCategory = async (slug : string) => {
-  console.log("slug is : ", slug)
   const category = await prisma.category.findUnique({
       where : {
           slug

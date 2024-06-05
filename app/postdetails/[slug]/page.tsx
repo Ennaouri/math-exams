@@ -1,4 +1,3 @@
-
 import { PrismaClient } from "@prisma/client";
 import React, { useEffect } from "react";
 import "./postDetails.css";
@@ -11,7 +10,6 @@ type Props = {
 };
 
 const prisma = new PrismaClient();
-
 
 /* useEffect(() => {
   // Execute the script when the component mounts
@@ -127,7 +125,7 @@ export default async function PostDetails({
                             <div
                               className="paragraph atag video-container"
                               dangerouslySetInnerHTML={{
-                                __html: post.description,
+                                __html: `<p>${post.description}</p>`,
                               }}
                             ></div>
                             <div style={{ overflow: "hidden", margin: "5px" }}>
