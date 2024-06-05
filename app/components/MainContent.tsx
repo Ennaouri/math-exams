@@ -49,6 +49,10 @@ export default function MainContent({ posts }: { posts: Post[] }) {
                   data-ad-slot="5295729441"
                   data-full-width-responsive="true"
                 ></ins>
+              </div>
+            )}
+            {(index + 1) % 2 === 0 && index < posts.length - 1 && (
+              <div style={{ overflow: "hidden", margin: "5px" }}>
                 <ins
                   className="adsbygoogle"
                   style={{ display: "block" }}
