@@ -122,6 +122,14 @@ export default function Navbar() {
                       1ere Année Bac Commerce
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      href="/category/concours"
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
+                      Concours
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </li>

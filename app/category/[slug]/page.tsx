@@ -33,6 +33,7 @@ const fetchCategoryUndercatgories = async (slug : string) => {
 
 
 const Carousel = async({params} : {params : {slug : string}}) => {
+  
   const underCategories = await fetchCategoryUndercatgories(params.slug)
 
   return (
@@ -45,8 +46,25 @@ const Carousel = async({params} : {params : {slug : string}}) => {
      
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-      {underCategories.map((underCategory) =>(
-        <SmallCard undercategory={underCategory} />
+      {underCategories.map((underCategory, index) =>(
+        
+        <div key={index}>
+            
+            {(index+1 ) % 3 === 0 && index < underCategories.length - 1 ? (
+              <div style={{ overflow: "hidden", margin: "5px" }}>
+                <ins
+                  className="adsbygoogle"
+                  style={{ display: "block" }}
+                  data-ad-format="fluid"
+                  data-ad-layout-key="+1s+qf+1+f+9b"
+                  data-ad-client="ca-pub-5587331919297301"
+                  data-ad-slot="5295729441"
+                  data-full-width-responsive="true"
+                ></ins>
+              </div>
+            ) : <SmallCard undercategory={underCategory}  />}
+            
+          </div>
       ))}
       </div>
     </div>
