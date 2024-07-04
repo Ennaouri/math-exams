@@ -10,13 +10,14 @@ export default function FirstCard({ post }: { post: Post }) {
         <img
           src={post.thumbnail}
           className="w-full h-96 object-cover transform hover:scale-110 transition duration-500"
+          alt={post.name}
         />
       </Link>
       <div className="p-4 pb-5">
         <Link href={`/postdetails/${post.slug}`}>
-          <h2 className="block text-2xl font-semibold text-gray-700 hover:text-blue-500 transition font-roboto">
+          <p className="block text-2xl font-semibold text-gray-700 hover:text-blue-500 transition font-roboto">
             {post.name}
-          </h2>
+          </p>
         </Link>
 
         <p className="text-gray-500 text-sm mt-2">{post.description}</p>

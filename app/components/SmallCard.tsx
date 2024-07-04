@@ -14,13 +14,14 @@ export default function SmallCard({ post }: { post: Post }) {
         <img
           src={post.thumbnail}
           className="w-full h-60  transform hover:scale-110 transition duration-500 "
+          alt={post.name}
         />
       </Link>
       <div className="mt-3">
         <Link href={`/postdetails/${post.slug}`}>
-          <h2 className="block text-xl font-semibold text-gray-700 hover:text-blue-500 transition font-roboto">
+          <p className="block text-xl font-semibold text-gray-700 hover:text-blue-500 transition font-roboto">
             {post.name}
-          </h2>
+          </p>
         </Link>
         <div className="mt-2 flex space-x-3">
           {/* <div className="flex text-gray-400 text-sm items-center" >
