@@ -152,6 +152,7 @@ export default async function PostDetails({
           </div>
         </div>
       </div>
+      <script dangerouslySetInnerHTML={{ __html: "(window.adsbygoogle = window.adsbygoogle || []).push({});" }} />
     </>
   );
 }
