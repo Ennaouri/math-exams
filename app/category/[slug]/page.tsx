@@ -1,6 +1,5 @@
-
-
-import React, { useState, useEffect } from 'react';
+"use client";
+import React, { useEffect } from "react";
 import './Carousel.css';
 import { PrismaClient } from '@prisma/client';
 import CarouselCard from '../../components/CarouselCard';
@@ -33,6 +32,17 @@ const fetchCategoryUndercatgories = async (slug : string) => {
 
 
 const Carousel = async({params} : {params : {slug : string}}) => {
+  useEffect(() => {
+    // Execute the script when the component mounts
+    var ads = document.getElementsByClassName("adsbygoogle").length;
+    for (var i = 0; i < ads; i++) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.error("could not initialize adsense ad");
+      }
+    }
+  }, []);
   
   const underCategories = await fetchCategoryUndercatgories(params.slug)
 
@@ -68,7 +78,7 @@ const Carousel = async({params} : {params : {slug : string}}) => {
       ))}
       </div>
     </div>
-    <script dangerouslySetInnerHTML={{ __html: "(window.adsbygoogle = window.adsbygoogle || []).push({});" }} />   
+            
     </>
   );
 };

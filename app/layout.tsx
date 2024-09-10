@@ -114,7 +114,7 @@ export default async function RootLayout({
             <Footer />
           </main>
         </main>
-        <script dangerouslySetInnerHTML={{ __html: "(window.adsbygoogle = window.adsbygoogle || []).push({});" }} />
+        
       </body>
     </html>
   );
