@@ -68,10 +68,7 @@ const Carousel = async({params} : {params : {slug : string}}) => {
       ))}
       </div>
     </div>
-    
-      
-
-            
+    <script dangerouslySetInnerHTML={{ __html: "(window.adsbygoogle = window.adsbygoogle || []).push({});" }} />   
     </>
   );
 };
