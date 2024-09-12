@@ -52,15 +52,18 @@ const Carousel = async({params} : {params : {slug : string}}) => {
             
             {(index+1 ) % 3 === 0 && index < underCategories.length - 1 ? (
               <div style={{ overflow: "hidden", margin: "5px" }}>
-                <ins
-                  className="adsbygoogle"
-                  style={{ display: "block" }}
-                  data-ad-format="fluid"
-                  data-ad-layout-key="+1s+qf+1+f+9b"
-                  data-ad-client="ca-pub-5587331919297301"
-                  data-ad-slot="5295729441"
-                  data-full-width-responsive="true"
-                ></ins>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301"
+     crossOrigin="anonymous"></script>
+
+<ins className="adsbygoogle"
+     style={{ display: "block" }}
+     data-ad-client="ca-pub-5587331919297301"
+     data-ad-slot="2730381444"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
               </div>
             ) : <SmallCard undercategory={underCategory}  />}
             

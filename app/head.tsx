@@ -1,3 +1,4 @@
+import Script from 'next/script';
 import { GA_TRACKING_ID } from '../lib/gtag'
 
 export default function Head() {
@@ -18,8 +19,8 @@ export default function Head() {
 <meta property="og:url" content="https://www.facebook.com/profile.php?id=100090559545163"></meta>
           <meta name="robots" content="index,follow" />
           <link rel="canonical" href="https://maths-exams.com/postdetails/correctionexamennational2024juinpcetsvt" />
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301"
-     crossOrigin="anonymous"></script>
+          <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301"
+     crossOrigin="anonymous" strategy="lazyOnload" />
         <script
                   async
                   src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}

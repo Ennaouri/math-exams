@@ -41,6 +41,7 @@ export default function CategoryLayout({
     <>
       {children}
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script dangerouslySetInnerHTML={{ __html: "(window.adsbygoogle = window.adsbygoogle || []).push({});" }} />
   </>
   )
 }

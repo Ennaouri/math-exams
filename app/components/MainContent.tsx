@@ -24,6 +24,7 @@ export default function MainContent({ posts }: { posts: Post[] }) {
       }
     }
   }, []);
+  
   const recentPost = getRecentPost(posts);
   return (
     <div>
