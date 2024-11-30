@@ -70,7 +70,6 @@ export default async function PostDetails({
   const sortedPosts = postdetails.sort((a, b) => {
     return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
   });
-  console.log("Sorted Posts:", sortedPosts);
   
   const post = await prisma.post.findUnique({
     where: {
@@ -135,6 +134,7 @@ export default async function PostDetails({
                             ></div>
 {/*       <iframe className="pdfIframe" src="https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf" title="PDF Viewer" />
  */}    
+ {/* <object data="https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf" type="application/pdf"><a href="https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf">Cours continuité</a></object> */}
                             <div style={{ overflow: "hidden", margin: "5px" }}>
                               <ins
                                 className="adsbygoogle"

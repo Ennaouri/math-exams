@@ -1,9 +1,4 @@
-import {
-  AccordionBody,
-  AccordionHeader,
-  AccordionItem,
-  UncontrolledAccordion,
-} from "reactstrap";
+
 const About = () => {
   return (
     <div className="container m-auto p-2 mb-4 mt-4">
