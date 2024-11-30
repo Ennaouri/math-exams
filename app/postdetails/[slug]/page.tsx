@@ -131,10 +131,10 @@ export default async function PostDetails({
                                 __html: `<p>${post.description}</p>`,
                               }}
                             ></div>
-<iframe className="pdfIframe" src="https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf" title="PDF Viewer" />
+<iframe className="pdfIframe" src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf" title="PDF Viewer" />
     <p>Espace 1</p>
  <object  data="coursContinuité.pdf" type="application/pdf"  width="100%" height="600px" >
-    <embed src="https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf" width="100%" height="600px"/> 
+    <embed src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf" width="100%" height="600px"/> 
 </object>
 <p>Espace 2</p>
 <iframe src="https://drive.google.com/file/d/1qfxiLZLABs3OFacJohKQVnYDEynsO8Ko/view?usp=sharing"  ></iframe>
@@ -150,7 +150,7 @@ export default async function PostDetails({
 <p>Espace 4</p>
 <div >
   <embed
-    src="https://drive.google.com/file/d/1qfxiLZLABs3OFacJohKQVnYDEynsO8Ko/view?usp=sharing"
+    src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://drive.google.com/file/d/1qfxiLZLABs3OFacJohKQVnYDEynsO8Ko/view?usp=sharing"
     type="application/pdf"
     width="100%"
     height="100%"
