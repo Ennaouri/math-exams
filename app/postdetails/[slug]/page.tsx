@@ -67,6 +67,11 @@ export default async function PostDetails({
   params: { slug: string };
 }) {
   const postdetails = await fetchPostDetails(params.slug);
+  const sortedPosts = postdetails.sort((a, b) => {
+    return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+  });
+  console.log("Sorted Posts:", sortedPosts);
+  
   const post = await prisma.post.findUnique({
     where: {
       slug: params.slug,
@@ -79,26 +84,26 @@ export default async function PostDetails({
           <div className="">
             <img src={post?.thumbnail} className="w-full h-96 " alt={post?.name}/>
           </div>
-          <div className="p-4 pb-5">
-            <h2 className="block text-2xl font-semibold text-gray-700 font-roboto">
+          <div className=" pb-5">
+            <h2 className="px-5 block text-2xl font-semibold text-gray-700 font-roboto">
               {post?.name}
             </h2>
-            <div className="mt-2 flex space-x-4">
+            <div className="px-5 mt-2 flex space-x-4">
               <div className="flex text-gray-400 text-sm items-center">
                 <span className="mr-2 text-xs">
                   <i className="far fa-user"></i>
                 </span>
                 Cours
               </div>
-              <div className="flex text-gray-400 text-sm items-center">
+              <div className="px-5 flex text-gray-400 text-sm items-center">
                 <span className="mr-2 text-xs">
                   <i className="far fa-clock"></i>
                 </span>
                 {post?.created_at.toDateString()}
               </div>
             </div>
-            <div id="accordionExample">
-              {postdetails.map((post) => (
+            <div id="accordionExample" className="px-1 md:px-5 ">
+              {sortedPosts.map((post) => (
                 <div className="rounded-t-lg   bg-white dark:border-neutral-600 dark:bg-body-dark">
                   <div
                     id="collapseOne"
@@ -108,9 +113,9 @@ export default async function PostDetails({
                     aria-labelledby="headingOne"
                     data-twe-parent="#accordionExample"
                   >
-                    <div className="px-5 py-4">
+                    <div className="py-4">
                       <div className="rounded-t-lg  bg-white">
-                        <h2 className="mb-0" id="headingOne">
+                        <h2 className="px-5 mb-0" id="headingOne">
                           {post.name}
                         </h2>
                         <div
@@ -121,13 +126,15 @@ export default async function PostDetails({
                           aria-labelledby="headingOne"
                           data-twe-parent="#accordionExample"
                         >
-                          <div className="px-5 py-4">
+                          <div className="py-4">
                             <div
                               className="paragraph atag video-container"
                               dangerouslySetInnerHTML={{
                                 __html: `<p>${post.description}</p>`,
                               }}
                             ></div>
+{/*       <iframe className="pdfIframe" src="https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf" title="PDF Viewer" />
+ */}    
                             <div style={{ overflow: "hidden", margin: "5px" }}>
                               <ins
                                 className="adsbygoogle"
