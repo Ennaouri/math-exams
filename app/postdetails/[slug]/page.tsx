@@ -134,7 +134,9 @@ export default async function PostDetails({
                             ></div>
 {/*       <iframe className="pdfIframe" src="https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf" title="PDF Viewer" />
  */}    
- {/* <object data="https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf" type="application/pdf"><a href="https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf">Cours continuité</a></object> */}
+ <object  type="application/pdf"  width="100%" height="600px" >
+    <embed src="https://taalimma-my.sharepoint.com/:b:/g/personal/mohammed_ennaouri_taalim_ma/EZiH_b25ZQFBk75waZ_mB1sB1ECRymrC58stXLGRNTaMsA?e=ZsciUK" width="100%" height="600px"/> 
+</object>
                             <div style={{ overflow: "hidden", margin: "5px" }}>
                               <ins
                                 className="adsbygoogle"
