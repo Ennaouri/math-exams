@@ -3,6 +3,7 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  reactStrictMode: true,
   images: {
     domains: ['img.freepik.com', 'veterinaire-tour-hassan.com'],
   },

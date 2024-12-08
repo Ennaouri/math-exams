@@ -128,14 +128,15 @@ export default async function PostDetails({
                             <div
                               className="paragraph atag video-container"
                               dangerouslySetInnerHTML={{
-                                __html: `<p>${post.description}</p>`,
+                                __html: `<div>${post.description}</div>`,
                               }}
                             ></div>
-{/* <iframe className="pdfIframe" src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf" title="PDF Viewer" />
+{/* <iframe className="pdfIframe" src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/primitives_compressed-lplYikkNoQPWZM8UaSx5uJOu2N58xo.pdf" title="Viewer" />
  */}    
- {/* <object  data="coursContinuité.pdf" type="application/pdf"  width="100%" height="600px" >
+ {/* <object  data="coursContinuité.pdf" type="application/pdf"  width="100%" height="80vh" >
     <embed src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/CoursContinuit%C3%A9_compressed_compressed-dJMKiZ4XJtcOC2Wr6b9Mv2sCAWNLZb.pdf" width="100%" height="600px"/> 
 </object> */}
+{/* <object data="https://drive.google.com/viewerng/viewer?embedded=true&url=https://iwetzulq4xcy3rqa.public.blob.vercel-storage.com/S%C3%A9rie2bacEtudeDeFonction-compress%C3%A9-Z7FcSGpMT5Kh1C5rsCtby5OUITtR1v.pdf" type="application/pdf"></object> */}
 
 
 

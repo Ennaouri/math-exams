@@ -91,12 +91,16 @@ export default async function RootLayout({
                       ></ins>
                     </div>
                     <RandomPosts posts={randomPosts} />
+                    <div className="mt-4">
+                      <RightSide undercategories={undercategories} />
+                    </div>
+                    
                   </div>
-                  <div className="xl:w-6/12 lg:w-9/12 w-full  xl:ml-6 lg:mr-6">
+                  <div className="xl:w-9/12 lg:w-9/12 w-full  xl:ml-6 lg:mr-6">
                     {children}
                   </div>
-                  <div className="lg:w-3/12 w-full mt-8 lg:mt-0">
-                    <RightSide undercategories={undercategories} />
+                  {/* <div className="lg:w-3/12 w-full mt-8 lg:mt-0">
+                    
                     <div style={{ overflow: "hidden", margin: "5px" }}>
                       <ins
                         className="adsbygoogle"
@@ -107,7 +111,7 @@ export default async function RootLayout({
                         data-full-width-responsive="true"
                       ></ins>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </main>
             </main>

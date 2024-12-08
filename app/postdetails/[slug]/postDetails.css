@@ -75,7 +75,13 @@ iframe {
   }
 }
 
-object{
+object, .pdfIframe{
+  height: 85vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+iframe[title="Viewer"]{
   height: 85vh;
   width: 100%;
   overflow: hidden;
