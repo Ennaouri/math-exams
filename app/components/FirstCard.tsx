@@ -5,11 +5,11 @@ import React from "react";
 
 export default function FirstCard({ post }: { post: Post }) {
   return (
-    <div className="rounded-sm overflow-hidden bg-white shadow-sm">
+    <div className="rounded-sm overflow-hidden bg-white shadow-sm mx-4">
       <Link href={`/postdetails/${post.slug}`} className="block rounded-md overflow-hidden">
         <img
           src={post.thumbnail}
-          className="w-full h-96 object-cover transform hover:scale-110 transition duration-500"
+          className="w-full h-96 object-fill transform hover:scale-110 transition duration-500"
           alt={post.name}
         />
       </Link>

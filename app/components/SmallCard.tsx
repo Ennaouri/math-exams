@@ -6,7 +6,7 @@ import React from "react";
 
 export default function SmallCard({ post }: { post: Post }) {
   return (
-    <div className="rounded-sm bg-white p-4 pb-5 shadow-sm h-[400px]">
+    <div className="rounded-sm bg-white p-4 pb-5 shadow-sm h-full">
       <Link
         href={`/postdetails/${post.slug}`}
         className="block rounded-md overflow-hidden"
