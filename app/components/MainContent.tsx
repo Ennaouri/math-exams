@@ -48,32 +48,21 @@ export default function MainContent({ posts }: { posts: Post[] }) {
         {posts.map((post, index) => (
           <div key={index}>
             
-            {/* {(index+1 ) % 3 === 0 && index < posts.length - 1 ? (
-              <div style={{ overflow: "hidden", margin: "5px" }}>
-                <ins
-                  className="adsbygoogle"
-                  style={{ display: "block" }}
-                  data-ad-format="fluid"
-                  data-ad-layout-key="+1s+qf+1+f+9b"
-                  data-ad-client="ca-pub-5587331919297301"
-                  data-ad-slot="5295729441"
-                  data-full-width-responsive="true"
-                ></ins>
-              </div>
-            ) : */} <SmallCard post={post} />
-            <div style={{ overflow: "hidden", margin: "5px" }}>
-                <ins
-                  className="adsbygoogle"
-                  style={{ display: "block" }}
-                  data-ad-format="fluid"
-                  data-ad-layout-key="+1s+qf+1+f+9b"
-                  data-ad-client="ca-pub-5587331919297301"
-                  data-ad-slot="5295729441"
-                  data-full-width-responsive="true"
-                ></ins>
-              </div>
+            <SmallCard post={post} />
+            
           </div>
         ))}
+        <div style={{ overflow: "hidden", margin: "5px" }}>
+                <ins
+                  className="adsbygoogle"
+                  style={{ display: "block" }}
+                  data-ad-format="fluid"
+                  data-ad-layout-key="+1s+qf+1+f+9b"
+                  data-ad-client="ca-pub-5587331919297301"
+                  data-ad-slot="5295729441"
+                  data-full-width-responsive="true"
+                ></ins>
+              </div>
       </div>
     </div>
   );

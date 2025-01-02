@@ -34,8 +34,12 @@ export default async function CategoryPosts({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         {posts.map((post, index) => (
           <div key={index}>
-            {(index + 1) % 3 === 0 && index < posts.length - 1 ? (
-              <div style={{ overflow: "hidden", margin: "5px" }}>
+              <SmallCard post={post} />
+             
+          </div>
+          
+        ))}
+        <div style={{ overflow: "hidden", margin: "5px" }}>
                 <ins
                   className="adsbygoogle"
                   style={{ display: "block" }}
@@ -46,11 +50,6 @@ export default async function CategoryPosts({
                   data-full-width-responsive="true"
                 ></ins>
               </div>
-            ) : 
-              <SmallCard post={post} />}
-             
-          </div>
-        ))}
       </div>
       
     </div>
