@@ -14,8 +14,8 @@ export default function RandomPosts({ posts }: { posts: Post[] }) {
         Random Posts
       </h3>
       <div className="space-y-4">
-        {posts.map((post) => (
-          <Link href={`/postdetails/${post.slug}`} className="flex group">
+        {posts.map((post, index) => (
+          <Link href={`/postdetails/${post.slug}`} className="flex group" key={index}>
             <div className="flex-shrink-0">
               <img
                 src={post.thumbnail}

@@ -14,8 +14,8 @@ export default function CategoriesSideBar({
         Categories
       </h3>
       <div className="space-y-2">
-        {categories.map((category) => (
-          <Link
+        {categories.map((category, index) => (
+          <Link key={index}
             href={`/category/${category.slug}`}
             className="flex leading-4 items-center text-gray-700 font-semibold text-sm uppercase transition hover:text-blue-500"
           >
