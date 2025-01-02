@@ -31,11 +31,10 @@ export default async function CategoryPosts({
           Populaires Postes
         </h5>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         {posts.map((post, index) => (
           <div key={index}>
-            {/* {(index + 1) % 3 === 0 && index < posts.length - 1 ? (
+            {(index + 1) % 3 === 0 && index < posts.length - 1 ? (
               <div style={{ overflow: "hidden", margin: "5px" }}>
                 <ins
                   className="adsbygoogle"
@@ -47,22 +46,14 @@ export default async function CategoryPosts({
                   data-full-width-responsive="true"
                 ></ins>
               </div>
-            ) :  */}
-              <SmallCard post={post} />
-              <div style={{ overflow: "hidden", margin: "5px" }}>
-                <ins
-                  className="adsbygoogle"
-                  style={{ display: "block" }}
-                  data-ad-format="fluid"
-                  data-ad-layout-key="+1s+qf+1+f+9b"
-                  data-ad-client="ca-pub-5587331919297301"
-                  data-ad-slot="5295729441"
-                  data-full-width-responsive="true"
-                ></ins>
-              </div>
+            ) : 
+              <SmallCard post={post} />}
+             
           </div>
         ))}
       </div>
+      
     </div>
   );
 }
+
