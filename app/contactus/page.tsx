@@ -64,7 +64,7 @@ const ContactForm = () => {
             Contact <span className="text-blue-600">Us</span>
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            We'd love to hear from you! Please fill out the form below to get in touch.
+          Nous aimerions avoir de vos nouvelles ! Veuillez remplir le formulaire ci-dessous pour nous contacter.
           </p>
         </div>
 
