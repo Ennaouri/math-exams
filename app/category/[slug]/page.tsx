@@ -41,13 +41,13 @@ const Carousel = async ({ params }: { params: { slug: string } }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          {underCategories.map((underCategory, index) => 
-            <div key={index}>
-              
-                <SmallCard undercategory={underCategory} />
-                </div>
-              )}
-           
+          {underCategories.map((underCategory, index) => (
+           <div key={index}>
+                       
+                       <SmallCard undercategory={underCategory} />
+                       
+                     </div>
+                   ))}
           
         </div>
       </div>
