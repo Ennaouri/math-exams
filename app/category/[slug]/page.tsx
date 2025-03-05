@@ -41,33 +41,14 @@ const Carousel = async ({ params }: { params: { slug: string } }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          {underCategories.map((underCategory, index) => (
+          {underCategories.map((underCategory, index) => 
             <div key={index}>
-              {(index + 1) % 3 === 0 && index < underCategories.length - 1 ? (
-                <div style={{ overflow: "hidden", margin: "5px" }}>
-                  <script
-                    async
-                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301"
-                    crossOrigin="anonymous"
-                  ></script>
-
-                  <ins
-                    className="adsbygoogle"
-                    style={{ display: "block" }}
-                    data-ad-client="ca-pub-5587331919297301"
-                    data-ad-slot="2730381444"
-                    data-ad-format="auto"
-                    data-full-width-responsive="true"
-                  ></ins>
-                  <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                  </script>
-                </div>
-              ) : (
+              
                 <SmallCard undercategory={underCategory} />
+                </div>
               )}
-            </div>
-          ))}
+           
+          
         </div>
       </div>
     </>
