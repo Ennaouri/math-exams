@@ -3,12 +3,14 @@
 import { initFlowbite } from "flowbite";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function Navbar() {
   useEffect(() => {
     initFlowbite();
   }, []);
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session, status } = useSession();
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
@@ -170,6 +172,38 @@ export default function Navbar() {
                 Contact Us
               </Link>
             </li>
+            {status === "loading" ? null : session ? (
+              <>
+                {(session.user as any)?.role === "admin" && (
+                  <li>
+                    <Link
+                      href="/admin"
+                      onClick={closeNavbar}
+                      className="block py-2 px-3 text-blue-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500"
+                    >
+                      Admin
+                    </Link>
+                  </li>
+                )}
+                <li>
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <li>
+                <button
+                  onClick={() => signIn()}
+                  className="block py-2 px-3 text-blue-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500"
+                >
+                  Login
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       </div>
