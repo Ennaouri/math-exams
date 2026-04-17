@@ -40,3 +40,12 @@ export interface PostDetails {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface User {
+  id: number;
+  email: string;
+  password: string;
+  name: string;
+  role: 'admin' | 'user';
+  created_at: Date;
+}

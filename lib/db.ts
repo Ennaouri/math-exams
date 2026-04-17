@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import pg from 'pg';
-import { Category, UnderCategory, Post, PostDetails } from './types';
+import { Category, UnderCategory, Post, PostDetails, User } from './types';
+import crypto from 'crypto';
 
 const { Pool } = pg;
 
@@ -9,6 +10,7 @@ const pool = new Pool({
 });
 
 export const sql = pool;
+export { pool };
 
 export async function getCategories(): Promise<Category[]> {
   const result = await pool.query('SELECT * FROM category');
@@ -62,4 +64,44 @@ export async function getPostDetailsByPostSlug(slug: string): Promise<PostDetail
     [slug]
   );
   return result.rows as PostDetails[];
+}
+
+function hashPassword(password: string): string {
+  return crypto.createHash('sha256').update(password).digest('hex');
+}
+
+export async function authenticateUser(email: string, password: string): Promise<User | null> {
+  const hashedPassword = hashPassword(password);
+  const result = await pool.query(
+    'SELECT * FROM users WHERE email = $1 AND password = $2',
+    [email, hashedPassword]
+  );
+  if (result.rows.length === 0) return null;
+  const user = result.rows[0] as User;
+  delete (user as any).password;
+  return user;
+}
+
+export async function createUser(email: string, password: string, name: string, role: 'admin' | 'user' = 'user'): Promise<User> {
+  const hashedPassword = hashPassword(password);
+  const result = await pool.query(
+    'INSERT INTO users (email, password, name, role) VALUES ($1, $2, $3, $4) RETURNING *',
+    [email, hashedPassword, name, role]
+  );
+  const user = result.rows[0] as User;
+  delete (user as any).password;
+  return user;
+}
+
+export async function getUserByEmail(email: string): Promise<User | null> {
+  const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+  if (result.rows.length === 0) return null;
+  const user = result.rows[0] as User;
+  delete (user as any).password;
+  return user;
+}
+
+export async function getAllUsers(): Promise<User[]> {
+  const result = await pool.query('SELECT id, email, name, role, created_at FROM users');
+  return result.rows as User[];
 }

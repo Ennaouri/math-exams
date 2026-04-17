@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import type { Metadata } from "next";
 import Head from "./head";
 import { getCategories, getPosts, getUnderCategories } from "@/lib/db";
+import { Providers } from "./providers";
 
 export const dynamic = 'force-dynamic';
 
@@ -44,6 +45,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <Head />
+      <Providers>
       <body>
         <main className="bg-gray-100 min-h-screen w-screen">
           <main className="max-w-screen-xl m-auto bg-white">
@@ -85,6 +87,7 @@ export default async function RootLayout({
         </main>
         
       </body>
+      </Providers>
     </html>
   );
 }
