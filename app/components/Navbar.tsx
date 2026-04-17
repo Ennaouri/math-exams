@@ -10,7 +10,15 @@ export default function Navbar() {
     initFlowbite();
   }, []);
   const [isOpen, setIsOpen] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
   const { data: session, status } = useSession();
+
+  useEffect(() => {
+    fetch('/api/categories')
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error('Error loading categories:', err));
+  }, []);
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
@@ -106,51 +114,17 @@ export default function Navbar() {
                   className="py-2 text-sm text-gray-700 dark:text-gray-400"
                   aria-labelledby="dropdownLargeButton"
                 >
-                  <li>
-                    <Link
-                      href="/category/tronccommunsciences"
-                      onClick={closeNavbar}
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Tronc Commun
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/category/1eresciencesexperimentales"
-                      onClick={closeNavbar}
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      1ere Année Bac Sciences Expérimentales
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/category/2emebacsvtetpc"
-                      onClick={closeNavbar}
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      2eme Année Bac PC et SVT
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/category/1erebaccommerce"
-                      onClick={closeNavbar}
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      1ere Année Bac Commerce
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/category/concours"
-                      onClick={closeNavbar}
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Concours
-                    </Link>
-                  </li>
+                  {categories.map((category) => (
+                    <li key={category.id}>
+                      <Link
+                        href={`/category/${category.slug}`}
+                        onClick={closeNavbar}
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        {category.name}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </li>
