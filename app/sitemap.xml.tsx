@@ -1,4 +1,4 @@
-import { sql } from '@/lib/db';
+import { pool } from '@/lib/db';
 import { GetServerSideProps } from "next";
 
 export default function Sitemap(){
@@ -16,9 +16,17 @@ export const getServerSideProps: GetServerSideProps<{}> = async (ctx) => {
   }
 }
 
+interface Category {
+  slug: string;
+}
+
+interface Post {
+  slug: string;
+}
+
 async function generateSitemap():  Promise<string>{
-  const categoriesResult = await sql`SELECT slug FROM category`;
-  const postsResult = await sql`SELECT slug FROM post`;
+  const categoriesResult = await pool.query<Category>('SELECT slug FROM category');
+  const postsResult = await pool.query<Post>('SELECT slug FROM post');
 
   const dynamicRoutes = [
     ...categoriesResult.rows.map((c) => `https://maths-exams.com/category/${c.slug}`),

@@ -1,7 +1,7 @@
 import { SitemapStream, streamToPromise } from 'sitemap';
 import { createGzip } from 'zlib';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { sql } from '@/lib/db';
+import { pool } from '@/lib/db';
 
 interface Category {
   slug: string;
@@ -22,28 +22,13 @@ interface PostWithPosts {
 
 async function generateSitemap(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const categoriesResult = await sql<Category>`SELECT slug FROM category`;
-    const postsResult = await sql<Post>`SELECT slug FROM post`;
-    const underCategoriesResult = await sql<UnderCategory>`SELECT slug FROM under_category`;
+    const categoriesResult = await pool.query<Category>('SELECT slug FROM category');
+    const postsResult = await pool.query<Post>('SELECT slug FROM post');
+    const underCategoriesResult = await pool.query<UnderCategory>('SELECT slug FROM under_category');
 
     const categories = categoriesResult.rows;
     const postDetails = postsResult.rows;
     const underCategories = underCategoriesResult.rows;
-
-    const fetchPosts = async (slug: string): Promise<Post[]> => {
-      const result = await sql<PostWithPosts>`
-        SELECT p.slug, json_agg(json_build_object('slug', pt.slug)) as posts
-        FROM under_category uc
-        JOIN post p ON p.under_category_id = uc.id
-        LEFT JOIN post_details pt ON pt.post_id = p.id
-        WHERE uc.slug = ${slug}
-        GROUP BY p.id
-      `;
-      if (result.rows.length === 0) {
-        throw new Error('error');
-      }
-      return result.rows.flatMap(row => row.posts || []);
-    };
 
     const dynamicRoutes = [
       ...categories.map((category) => `https://maths-exams.com/category/${category.slug}`),

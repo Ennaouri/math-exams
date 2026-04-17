@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const result = await pool.query('SELECT * FROM category ORDER BY id');
     return NextResponse.json(result.rows);
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     );
 
     return NextResponse.json(result.rows[0]);
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
