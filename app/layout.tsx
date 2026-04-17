@@ -65,6 +65,7 @@ export default async function RootLayout({
                         data-ad-client="ca-pub-5587331919297301"
                         data-ad-slot="1112602893"
                         data-full-width-responsive="true"
+                        data-ad-status="unfilled"
                       ></ins>
                     </div>
                     <RandomPosts posts={randomPosts} />
