@@ -20,6 +20,99 @@ export async function generateMetadata(
   };
 }
 
+function getYouTubeEmbedId(url: string): string | null {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
+function renderContent(postDetail: any) {
+  const { thumbnail, description } = postDetail;
+
+  const isYouTube = thumbnail?.includes('youtube.com') || thumbnail?.includes('youtu.be');
+  const isPdf = thumbnail?.toLowerCase().endsWith('.pdf');
+  const isVideo = thumbnail?.match(/\.(mp4|webm|mov)$/i);
+  const isImage = thumbnail?.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+
+  if (isYouTube || getYouTubeEmbedId(thumbnail || '')) {
+    const youtubeId = isYouTube ? getYouTubeEmbedId(thumbnail) : getYouTubeEmbedId(thumbnail || '');
+    return (
+      <div className="video-container">
+        <iframe
+          width="100%"
+          height="400"
+          src={`https://www.youtube.com/embed/${youtubeId}`}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          title="YouTube video"
+        ></iframe>
+      </div>
+    );
+  }
+
+  if (isPdf) {
+    return (
+      <div className="pdf-container">
+        <div className="pdf-preview">
+          <iframe
+            src={thumbnail}
+            width="100%"
+            height="500"
+            style={{ border: 'none' }}
+            title="PDF Viewer"
+          ></iframe>
+          <a
+            href={thumbnail}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Download PDF
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  if (isVideo) {
+    return (
+      <div className="video-container">
+        <video
+          controls
+          width="100%"
+          className="rounded-lg"
+          preload="metadata"
+        >
+          <source src={thumbnail} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    );
+  }
+
+  if (isImage) {
+    return (
+      <div className="mt-4">
+        <img
+          src={thumbnail}
+          alt={postDetail.name}
+          className="w-full max-h-[600px] object-contain rounded-lg"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="paragraph atag"
+      dangerouslySetInnerHTML={{
+        __html: description || '',
+      }}
+    />
+  );
+}
+
 export default async function PostDetails({
   params,
 }: {
@@ -82,12 +175,16 @@ export default async function PostDetails({
                           data-twe-parent="#accordionExample"
                         >
                           <div className="py-4">
-                            <div
-                              className="paragraph atag video-container"
-                              dangerouslySetInnerHTML={{
-                                __html: `<div>${postDetail.description}</div>`,
-                              }}
-                            ></div>
+                            {renderContent(postDetail)}
+                            
+                            {postDetail.description && !postDetail.thumbnail && (
+                              <div
+                                className="paragraph atag"
+                                dangerouslySetInnerHTML={{
+                                  __html: `<div>${postDetail.description}</div>`,
+                                }}
+                              />
+                            )}
 
                             <div style={{ overflow: "hidden", margin: "5px" }}>
                               <ins
