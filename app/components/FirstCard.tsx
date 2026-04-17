@@ -1,5 +1,5 @@
 "use client";
-import { Post } from "@prisma/client";
+import { Post } from "@/lib/types";
 import Link from "next/link";
 import React from "react";
 
@@ -32,7 +32,7 @@ export default function FirstCard({ post }: { post: Post }) {
             <span className="mr-2 text-xs">
               <i className="far fa-clock"></i>
             </span>
-            {post.created_at.toDateString()}
+            {new Date(post.created_at).toDateString()}
           </div>
         </div>
       </div>

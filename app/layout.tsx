@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import CategoriesSideBar from "./components/CategoriesSideBar";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
@@ -10,6 +9,9 @@ import "./category/[slug]/Carousel.css";
 import Footer from "./components/Footer";
 import type { Metadata } from "next";
 import Head from "./head";
+import { getCategories, getPosts, getUnderCategories } from "@/lib/db";
+
+export const dynamic = 'force-dynamic';
 
 export interface CategoryCardType {
   id: number;
@@ -18,31 +20,6 @@ export interface CategoryCardType {
   description: string;
   slug: string;
 }
-const prisma = new PrismaClient();
-
-const fetchCategories = async (): Promise<CategoryCardType[]> => {
-  const categories = await prisma.category.findMany({
-    select: {
-      id: true,
-      name: true,
-      thumbnail: true,
-      description: true,
-      slug: true,
-    },
-  });
-
-  return categories;
-};
-
-const fetchPosts = async () => {
-  const posts = await prisma.post.findMany();
-  return posts;
-};
-
-const fetchUnderCategories = async () => {
-  const undercategories = await prisma.underCategory.findMany();
-  return undercategories;
-};
 
 const getRandomInt = (max: number) => {
   return Math.floor(Math.random() * max);
@@ -53,9 +30,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const categories = await fetchCategories();
-  const posts = await fetchPosts();
-  const undercategories = await fetchUnderCategories();
+  const categories = await getCategories();
+  const posts = await getPosts();
+  const undercategories = await getUnderCategories();
 
   const randomPosts1 = posts[getRandomInt(posts.length)];
   const randomPosts2 = posts[getRandomInt(posts.length)];
@@ -99,19 +76,6 @@ export default async function RootLayout({
                   <div className="xl:w-9/12 lg:w-9/12 w-full  xl:ml-6 lg:mr-6">
                     {children}
                   </div>
-                  {/* <div className="lg:w-3/12 w-full mt-8 lg:mt-0">
-                    
-                    <div style={{ overflow: "hidden", margin: "5px" }}>
-                      <ins
-                        className="adsbygoogle"
-                        style={{ display: "block" }}
-                        data-ad-client="ca-pub-5587331919297301"
-                        data-ad-slot="5074960913"
-                        data-ad-format="auto"
-                        data-full-width-responsive="true"
-                      ></ins>
-                    </div>
-                  </div> */}
                 </div>
               </main>
             </main>

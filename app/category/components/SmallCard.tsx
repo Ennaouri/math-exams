@@ -1,6 +1,6 @@
 "use client";
 
-import { UnderCategory } from "@prisma/client";
+import { UnderCategory } from "@/lib/types";
 import Link from "next/link";
 import React from "react";
 
@@ -30,7 +30,7 @@ export default function SmallCard({ undercategory }: { undercategory: UnderCateg
             <span className="mr-2 text-xs">
               <i className="far fa-clock"></i>
             </span>
-            {undercategory.created_at.toDateString()}
+            {new Date(undercategory.created_at).toDateString()}
           </div>
         </div>
       </div>

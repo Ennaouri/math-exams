@@ -10,7 +10,7 @@
     "generate-sitemap": "ts-node app/generateSitemap.ts",
     "start": "next start",
     "lint": "next lint",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build"
+    "vercel-build": "next build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -18,7 +18,6 @@
     "@material-tailwind/react": "^2.1.9",
     "@next/font": "14.1.3",
     "@pdftron/webviewer": "^10.7.3",
-    "@prisma/client": "^4.16.2",
     "@react-pdf-viewer/core": "^3.12.0",
     "@react-pdf-viewer/default-layout": "^3.12.0",
     "@react-pdf/renderer": "^3.4.2",
@@ -26,6 +25,7 @@
     "@types/react": "18.2.64",
     "@types/react-dom": "18.2.21",
     "@types/swiper": "^6.0.0",
+    "@vercel/blob": "^0.22.0",
     "@vercel/postgres": "^0.7.2",
     "emailjs-com": "^3.2.0",
     "flowbite": "^2.3.0",
@@ -45,10 +45,12 @@
     "typescript": "5.4.2"
   },
   "devDependencies": {
+    "@types/pg": "^8.20.0",
     "@types/react-slick": "^0.23.13",
     "autoprefixer": "^10.4.13",
+    "dotenv": "^17.4.2",
+    "pg": "^8.20.0",
     "postcss": "^8.4.20",
-    "prisma": "^5.11.0",
     "tailwindcss": "^3.2.4"
   },
   "engines": {

@@ -1,6 +1,6 @@
 'use client'
 
-import { Post, UnderCategory } from '@prisma/client'
+import { UnderCategory } from '@/lib/types'
 import React from 'react'
 import SocialMedias from './SocialMedias'
 import Link from 'next/link'
@@ -25,7 +25,7 @@ export default function RightSide({ undercategories }: { undercategories: UnderC
                                 </h5>
                                 <div className="flex text-gray-400 text-sm items-center">
                                     <span className="mr-1 text-xs"><i className="far fa-clock"></i></span>
-                                    {underCategory.created_at.toDateString()}
+                                    {new Date(underCategory.created_at).toDateString()}
                                 </div>
                             </div>
                         </Link>

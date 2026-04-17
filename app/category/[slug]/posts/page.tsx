@@ -1,30 +1,16 @@
-import { PrismaClient } from "@prisma/client";
 import React from "react";
 import SmallCard from "../../../components/SmallCard";
+import { getPostsByUnderCategorySlug } from "@/lib/db";
 
-const prisma = new PrismaClient();
+export const dynamic = 'force-dynamic';
 
-const fetchPosts = async (slug: string) => {
-  const underCategories = await prisma.underCategory.findUnique({
-    where: {
-      slug,
-    },
-    select: {
-      posts: true,
-    },
-  });
-  if (!underCategories) {
-    throw new Error("error");
-  }
-  return underCategories.posts;
-};
 export default async function CategoryPosts({
   params,
 }: {
   params: { slug: string };
 }) {
-  const posts = await fetchPosts(params.slug);
-  // return categories
+  const posts = await getPostsByUnderCategorySlug(params.slug);
+
   return (
     <div>
       <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
@@ -36,9 +22,7 @@ export default async function CategoryPosts({
         {posts.map((post, index) => (
           <div key={index}>
               <SmallCard post={post} />
-             
           </div>
-          
         ))}
         <div style={{ overflow: "hidden", margin: "5px" }}>
                 <ins
@@ -56,4 +40,3 @@ export default async function CategoryPosts({
     </div>
   );
 }
-

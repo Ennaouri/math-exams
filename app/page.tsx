@@ -1,18 +1,10 @@
-import { PrismaClient } from "@prisma/client";
 import MainContent from "./components/MainContent";
+import { getPosts } from "@/lib/db";
 
-const prisma = new PrismaClient();
-
-const fetchPosts = async () => {
-  const posts = await prisma.post.findMany();
-  if(!posts){
-    throw new Error("no posts found")
-}
-  return posts;
-};
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const posts = await fetchPosts();
+  const posts = await getPosts();
 
   return (
       <MainContent posts={posts} />

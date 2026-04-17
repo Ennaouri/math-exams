@@ -1,8 +1,6 @@
 import React from 'react'
 import Link from 'next/link';
-import { Category, UnderCategory } from '@prisma/client';
-
-
+import { Category } from '@/lib/types';
 
 export default function UnderCategoryCard({underCategory}: {underCategory : Category}) {
   return (

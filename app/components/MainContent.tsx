@@ -1,5 +1,5 @@
 "use client";
-import { Post } from "@prisma/client";
+import { Post } from "@/lib/types";
 import React, { useEffect } from "react";
 import FirstCard from "./FirstCard";
 import SmallCard from "./SmallCard";
@@ -7,7 +7,7 @@ import SmallCard from "./SmallCard";
 const getRecentPost = (posts: Post[]) => {
   let minIndex: number[] = [];
   posts.forEach((post) => {
-    minIndex.push(Date.now() - post.created_at.getTime());
+    minIndex.push(Date.now() - new Date(post.created_at).getTime());
   });
   return posts[minIndex.indexOf(Math.min.apply(null, minIndex))];
 };
@@ -23,7 +23,6 @@ export default function MainContent({ posts }: { posts: Post[] }) {
                             console.log('The body does not have a transparent background color.');
                         }
                       }
-    // Execute the script when the component mounts
     var ads = document.getElementsByClassName("adsbygoogle").length;
     for (var i = 0; i < ads; i++) {
       try {

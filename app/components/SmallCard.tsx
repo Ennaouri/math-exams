@@ -1,6 +1,6 @@
 "use client";
 
-import { Post } from "@prisma/client";
+import { Post } from "@/lib/types";
 import Link from "next/link";
 import React from "react";
 
@@ -24,18 +24,11 @@ export default function SmallCard({ post }: { post: Post }) {
           </p>
         </Link>
         <div className="mt-2 flex space-x-3">
-          {/* <div className="flex text-gray-400 text-sm items-center" >
-            <span className="mr-2 text-xs">
-              <i className="far fa-user"></i>
-            </span>
-            {post.description}
-          </div> */}
-          
           <div className="flex text-gray-400 text-sm items-center">
             <span className="mr-2 text-xs">
               <i className="far fa-clock"></i>
             </span>
-            {post.created_at.toDateString()}
+            {new Date(post.created_at).toDateString()}
           </div>
         </div>
       </div>

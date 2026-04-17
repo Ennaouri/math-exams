@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
+  experimental: {},
   reactStrictMode: true,
   images: {
     domains: ['img.freepik.com', 'veterinaire-tour-hassan.com'],
