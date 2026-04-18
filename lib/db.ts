@@ -73,7 +73,7 @@ function hashPassword(password: string): string {
 export async function authenticateUser(email: string, password: string): Promise<User | null> {
   const hashedPassword = hashPassword(password);
   const result = await pool.query(
-    'SELECT * FROM "Users" WHERE email = $1 AND password = $2',
+    'SELECT * FROM users WHERE email = $1 AND password = $2',
     [email, hashedPassword]
   );
   if (result.rows.length === 0) return null;
@@ -85,7 +85,7 @@ export async function authenticateUser(email: string, password: string): Promise
 export async function createUser(email: string, password: string, name: string, role: 'admin' | 'user' = 'user'): Promise<User> {
   const hashedPassword = hashPassword(password);
   const result = await pool.query(
-    'INSERT INTO "Users" (email, password, name, role) VALUES ($1, $2, $3, $4) RETURNING *',
+    'INSERT INTO users (email, password, name, role) VALUES ($1, $2, $3, $4) RETURNING *',
     [email, hashedPassword, name, role]
   );
   const user = result.rows[0] as User;
@@ -94,7 +94,7 @@ export async function createUser(email: string, password: string, name: string, 
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
-  const result = await pool.query('SELECT * FROM "Users" WHERE email = $1', [email]);
+  const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
   if (result.rows.length === 0) return null;
   const user = result.rows[0] as User;
   delete (user as any).password;
@@ -102,6 +102,6 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  const result = await pool.query('SELECT id, email, name, role, created_at FROM "Users"');
+  const result = await pool.query('SELECT id, email, name, role, created_at FROM users');
   return result.rows as User[];
 }

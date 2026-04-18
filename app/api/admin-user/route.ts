@@ -14,19 +14,19 @@ export async function POST(request: NextRequest) {
     const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
 
     const existingUser = await pool.query(
-      'SELECT * FROM "Users" WHERE email = $1',
+      'SELECT * FROM users WHERE email = $1',
       [email]
     );
 
     if (existingUser.rows.length > 0) {
       await pool.query(
-        'UPDATE "Users" SET password = $1, role = $2 WHERE email = $3',
+        'UPDATE users SET password = $1, role = $2 WHERE email = $3',
         [hashedPassword, 'admin', email]
       );
       return NextResponse.json({ success: true, message: 'User updated to admin' });
     } else {
       await pool.query(
-        'INSERT INTO "Users" (email, password, name, role) VALUES ($1, $2, $3, $4)',
+        'INSERT INTO users (email, password, name, role) VALUES ($1, $2, $3, $4)',
         [email, hashedPassword, 'Admin', 'admin']
       );
       return NextResponse.json({ success: true, message: 'Admin user created' });
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const result = await pool.query('SELECT id, email, name, role, created_at FROM "Users"');
+    const result = await pool.query('SELECT id, email, name, role, created_at FROM users');
     return NextResponse.json(result.rows);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
