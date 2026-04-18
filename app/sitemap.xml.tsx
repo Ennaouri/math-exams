@@ -25,8 +25,8 @@ interface Post {
 }
 
 async function generateSitemap():  Promise<string>{
-  const categoriesResult = await pool.query<Category>('SELECT slug FROM category');
-  const postsResult = await pool.query<Post>('SELECT slug FROM post');
+  const categoriesResult = await pool.query<Category>('SELECT slug FROM "Category"');
+  const postsResult = await pool.query<Post>('SELECT slug FROM "Post"');
 
   const dynamicRoutes = [
     ...categoriesResult.rows.map((c) => `https://maths-exams.com/category/${c.slug}`),
