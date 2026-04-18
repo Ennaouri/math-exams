@@ -14,16 +14,21 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
-        const user = await authenticateUser(credentials.email, credentials.password);
-        if (!user) {
+        try {
+          const user = await authenticateUser(credentials.email, credentials.password);
+          if (!user) {
+            return null;
+          }
+          return {
+            id: user.id.toString(),
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error('Auth error:', error);
           return null;
         }
-        return {
-          id: user.id.toString(),
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
       },
     }),
   ],
@@ -49,4 +54,5 @@ export const authOptions: NextAuthOptions = {
     maxAge: 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-do-not-use-in-production',
+  debug: true,
 };
