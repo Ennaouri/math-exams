@@ -2,6 +2,9 @@ import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { authenticateUser } from './db';
 
+// Force a specific secret value - replace this with your own secret
+const AUTH_SECRET = process.env.NEXTAUTH_SECRET || 'mathsexams2024secretkeyproduction';
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -53,6 +56,5 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
     maxAge: 24 * 60 * 60,
   },
-  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-do-not-use-in-production',
-  debug: true,
+  secret: AUTH_SECRET,
 };
