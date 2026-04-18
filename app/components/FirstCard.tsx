@@ -3,7 +3,15 @@ import { Post } from "@/lib/types";
 import Link from "next/link";
 import React from "react";
 
-export default function FirstCard({ post }: { post: Post }) {
+export default function FirstCard({ post }: { post: Post | null }) {
+  if (!post || !post.slug) {
+    return (
+      <div className="rounded-sm overflow-hidden bg-white shadow-sm mx-4 p-4">
+        <p className="text-gray-500 text-center">No recent post available.</p>
+      </div>
+    );
+  }
+  
   return (
     <div className="rounded-sm overflow-hidden bg-white shadow-sm mx-4">
       <Link href={`/postdetails/${post.slug}`} className="block rounded-md overflow-hidden">

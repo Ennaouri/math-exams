@@ -5,6 +5,10 @@ import Link from "next/link";
 import React from "react";
 
 export default function SmallCard({ post }: { post: Post }) {
+  if (!post || !post.slug) {
+    return null;
+  }
+  
   return (
     <div className="rounded-sm bg-white p-4 pb-5 shadow-sm h-full">
       <Link

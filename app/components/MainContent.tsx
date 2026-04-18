@@ -5,6 +5,8 @@ import FirstCard from "./FirstCard";
 import SmallCard from "./SmallCard";
 
 const getRecentPost = (posts: Post[]) => {
+  if (!posts || posts.length === 0) return null;
+  
   let minIndex: number[] = [];
   posts.forEach((post) => {
     minIndex.push(Date.now() - new Date(post.created_at).getTime());
@@ -34,6 +36,17 @@ export default function MainContent({ posts }: { posts: Post[] }) {
   }, []);
   
   const recentPost = getRecentPost(posts);
+  
+  if (!posts || posts.length === 0) {
+    return (
+      <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
+        <h5 className="text-base uppercase font-semibold font-roboto">
+          No posts available yet.
+        </h5>
+      </div>
+    );
+  }
+  
   return (
     <div>
       <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
@@ -41,27 +54,15 @@ export default function MainContent({ posts }: { posts: Post[] }) {
           Postes Populaires
         </h5>
       </div>
-      <FirstCard post={recentPost} />
+      {recentPost && <FirstCard post={recentPost} />}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         {posts.map((post, index) => (
           <div key={index}>
             
             <SmallCard post={post} />
-            
           </div>
         ))}
-        <div style={{ overflow: "hidden", margin: "5px" }}>
-                <ins
-                  className="adsbygoogle"
-                  style={{ display: "block" }}
-                  data-ad-format="fluid"
-                  data-ad-layout-key="+1s+qf+1+f+9b"
-                  data-ad-client="ca-pub-5587331919297301"
-                  data-ad-slot="5295729441"
-                  data-full-width-responsive="true"
-                ></ins>
-              </div>
       </div>
     </div>
   );
