@@ -22,9 +22,9 @@ interface PostWithPosts {
 
 async function generateSitemap(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const categoriesResult = await pool.query<Category>('SELECT slug FROM category');
-    const postsResult = await pool.query<Post>('SELECT slug FROM post');
-    const underCategoriesResult = await pool.query<UnderCategory>('SELECT slug FROM under_category');
+    const categoriesResult = await pool.query<Category>('SELECT slug FROM "Category"');
+    const postsResult = await pool.query<Post>('SELECT slug FROM "Post"');
+    const underCategoriesResult = await pool.query<UnderCategory>('SELECT slug FROM "UnderCategory"');
 
     const categories = categoriesResult.rows;
     const postDetails = postsResult.rows;

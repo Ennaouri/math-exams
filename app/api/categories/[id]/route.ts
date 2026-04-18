@@ -11,7 +11,7 @@ export async function PUT(
     const id = parseInt(params.id);
 
     const result = await pool.query(
-      'UPDATE category SET name = $1, description = $2, slug = $3, thumbnail = $4 WHERE id = $5 RETURNING *',
+      'UPDATE "Category" SET name = $1, description = $2, slug = $3, thumbnail = $4 WHERE id = $5 RETURNING *',
       [name, description, slug, thumbnail, id]
     );
 
@@ -28,7 +28,7 @@ export async function DELETE(
   try {
     const id = parseInt(params.id);
 
-    await pool.query('DELETE FROM category WHERE id = $1', [id]);
+    await pool.query('DELETE FROM "Category" WHERE id = $1', [id]);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
