@@ -2,8 +2,15 @@ import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { authenticateUser } from './db';
 
-// Force a specific secret value - replace this with your own secret
-const AUTH_SECRET = process.env.NEXTAUTH_SECRET || 'mathsexams2024secretkeyproduction';
+// Generate a proper secret - in production, always use environment variable
+const getAuthSecret = () => {
+  const envSecret = process.env.NEXTAUTH_SECRET;
+  if (envSecret && envSecret.length > 10) {
+    return envSecret;
+  }
+  // Fallback for development only
+  return 'development-secret-do-not-use-in-production-12345678';
+};
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -56,5 +63,5 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
     maxAge: 24 * 60 * 60,
   },
-  secret: AUTH_SECRET,
+  secret: getAuthSecret(),
 };
