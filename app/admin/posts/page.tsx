@@ -170,6 +170,7 @@ export default function PostsPage() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Under Category</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thumbnail</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
             </tr>
           </thead>
@@ -179,6 +180,13 @@ export default function PostsPage() {
                 <td className="px-6 py-4">{post.id}</td>
                 <td className="px-6 py-4">{post.name}</td>
                 <td className="px-6 py-4">{post.under_category_name || post.underCategoryId}</td>
+                <td className="px-6 py-4">
+                  {post.thumbnail && (
+                    post.thumbnail.match(/\.(mp4|webm)$/i)
+                      ? <video src={post.thumbnail} className="w-16 h-16 object-cover" />
+                      : <img src={post.thumbnail} alt={post.name} className="w-16 h-16 object-cover" />
+                  )}
+                </td>
                 <td className="px-6 py-4">
                   <button onClick={() => handleEdit(post)} className="text-blue-500 mr-2">Edit</button>
                   <button onClick={() => handleDelete(post.id)} className="text-red-500">Delete</button>

@@ -4,8 +4,6 @@ import Navbar from "./components/Navbar";
 import RandomPosts from "./components/RandomPosts";
 import RightSide from "./components/RightSide";
 import "./globals.css";
-import CarouselCard from "./components/CarouselCard";
-import "./category/[slug]/Carousel.css";
 import Footer from "./components/Footer";
 import type { Metadata } from "next";
 import Head from "./head";
@@ -53,9 +51,6 @@ export default async function RootLayout({
               <Navbar />
               <Header />
               <main className="pt-12 bg-gray-100 pb-12">
-                <div className="carousel-container">
-                  <CarouselCard underCategories={undercategories} />
-                </div>
                 <div className="container mx-auto  flex flex-wrap lg:flex-nowrap">
                   <div className="w-full xl:w-3/12 hidden xl:block">
                     <CategoriesSideBar categories={categories} />

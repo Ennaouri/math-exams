@@ -166,6 +166,7 @@ export default function UnderCategoriesPage() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thumbnail</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
             </tr>
           </thead>
@@ -175,6 +176,11 @@ export default function UnderCategoriesPage() {
                 <td className="px-6 py-4">{item.id}</td>
                 <td className="px-6 py-4">{item.name}</td>
                 <td className="px-6 py-4">{item.category_name || item.category_id}</td>
+                <td className="px-6 py-4">
+                  {item.thumbnail && (
+                    <img src={item.thumbnail} alt={item.name} className="w-16 h-16 object-cover" />
+                  )}
+                </td>
                 <td className="px-6 py-4">
                   <button onClick={() => handleEdit(item)} className="text-blue-500 mr-2">Edit</button>
                   <button onClick={() => handleDelete(item.id)} className="text-red-500">Delete</button>
