@@ -29,7 +29,7 @@ export async function getUnderCategories(): Promise<UnderCategory[]> {
 
 export async function getUnderCategoriesByCategorySlug(slug: string): Promise<UnderCategory[]> {
   const result = await pool.query(
-    'SELECT uc.* FROM "UnderCategory" uc JOIN "Category" c ON c.id = uc."categoryId" WHERE c.slug = $1',
+    'SELECT uc.* FROM "UnderCategory" uc JOIN "Category" c ON c.id = uc.category_id WHERE c.slug = $1',
     [slug]
   );
   return result.rows as UnderCategory[];
@@ -47,7 +47,7 @@ export async function getPosts(): Promise<Post[]> {
 
 export async function getPostsByUnderCategorySlug(slug: string): Promise<Post[]> {
   const result = await pool.query(
-    'SELECT p.* FROM "Post" p JOIN "UnderCategory" uc ON uc.id = p."underCategoryId" WHERE uc.slug = $1',
+    'SELECT p.* FROM "Post" p JOIN "UnderCategory" uc ON uc.id = p."under_category_id" WHERE uc.slug = $1',
     [slug]
   );
   return result.rows as Post[];
@@ -60,7 +60,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
 export async function getPostDetailsByPostSlug(slug: string): Promise<PostDetails[]> {
   const result = await pool.query(
-    'SELECT pd.* FROM "PostDetails" pd JOIN "Post" p ON p.id = pd."postId" WHERE p.slug = $1',
+    'SELECT pd.* FROM "PostDetails" pd JOIN "Post" p ON p.id = pd.post_id WHERE p.slug = $1',
     [slug]
   );
   return result.rows as PostDetails[];
