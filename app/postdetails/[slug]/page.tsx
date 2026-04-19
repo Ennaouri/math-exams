@@ -129,9 +129,6 @@ export default async function PostDetails({
     <>
       <div className="">
         <div className="rounded-sm overflow-hidden bg-white shadow-sm">
-          <div className="">
-            <img src={post?.thumbnail} className="w-full h-96 " alt={post?.name}/>
-          </div>
           <div className=" pb-5">
             <h2 className="px-5 block text-2xl font-semibold text-gray-700 font-roboto">
               {post?.name}
