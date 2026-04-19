@@ -47,5 +47,7 @@ export interface User {
   password: string;
   name: string;
   role: 'admin' | 'user';
+  metadata?: string;
+  image?: string;
   created_at: Date;
 }

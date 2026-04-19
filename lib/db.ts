@@ -82,12 +82,43 @@ export async function authenticateUser(email: string, password: string): Promise
   return user;
 }
 
-export async function createUser(email: string, password: string, name: string, role: 'admin' | 'user' = 'user'): Promise<User> {
+export async function createUser(email: string, password: string, name: string, role: 'admin' | 'user' = 'user', metadata?: string): Promise<User> {
   const hashedPassword = password ? hashPassword(password) : '';
   const result = await pool.query(
-    'INSERT INTO users (email, password, name, role) VALUES ($1, $2, $3, $4) RETURNING *',
-    [email, hashedPassword, name, role]
+    'INSERT INTO users (email, password, name, role, metadata) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+    [email, hashedPassword, name, role, metadata || null]
   );
+  const user = result.rows[0] as User;
+  delete (user as any).password;
+  return user;
+}
+
+export async function updateUser(id: number, data: { name?: string; metadata?: string; image?: string }): Promise<User | null> {
+  const updates: string[] = [];
+  const values: any[] = [];
+  let paramIndex = 1;
+
+  if (data.name !== undefined) {
+    updates.push(`name = $${paramIndex++}`);
+    values.push(data.name);
+  }
+  if (data.metadata !== undefined) {
+    updates.push(`metadata = $${paramIndex++}`);
+    values.push(data.metadata);
+  }
+  if (data.image !== undefined) {
+    updates.push(`image = $${paramIndex++}`);
+    values.push(data.image);
+  }
+
+  if (updates.length === 0) return null;
+
+  values.push(id);
+  const result = await pool.query(
+    `UPDATE users SET ${updates.join(', ')} WHERE id = $${paramIndex} RETURNING *`,
+    values
+  );
+  if (result.rows.length === 0) return null;
   const user = result.rows[0] as User;
   delete (user as any).password;
   return user;
@@ -95,6 +126,14 @@ export async function createUser(email: string, password: string, name: string, 
 
 export async function getUserByEmail(email: string): Promise<User | null> {
   const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+  if (result.rows.length === 0) return null;
+  const user = result.rows[0] as User;
+  delete (user as any).password;
+  return user;
+}
+
+export async function getUserById(id: number): Promise<User | null> {
+  const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
   if (result.rows.length === 0) return null;
   const user = result.rows[0] as User;
   delete (user as any).password;

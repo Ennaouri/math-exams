@@ -3,7 +3,7 @@ import { createUser, getUserByEmail } from '@/lib/db';
 
 export async function POST(request: Request) {
   try {
-    const { email, password, name } = await request.json();
+    const { email, password, name, role, niveau } = await request.json();
 
     if (!email || !password || !name) {
       return NextResponse.json(
@@ -20,7 +20,8 @@ export async function POST(request: Request) {
       );
     }
 
-    const user = await createUser(email, password, name, 'user');
+    const userMeta = JSON.stringify({ role, niveau });
+    const user = await createUser(email, password, name, 'user', userMeta);
     
     return NextResponse.json({
       id: user.id,

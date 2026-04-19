@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,6 +10,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [role, setRole] = useState<'etudiant' | 'enseignant'>('etudiant');
+  const [niveau, setNiveau] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -37,7 +38,7 @@ export default function LoginPage() {
         const res = await fetch('/api/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, name }),
+          body: JSON.stringify({ email, password, name, role, niveau }),
         });
 
         const data = await res.json();
@@ -102,18 +103,53 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit}>
           {!isLogin && (
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required={!isLogin}
-              />
-            </div>
+            <>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  required={!isLogin}
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Je suis
+                </label>
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value as 'etudiant' | 'enseignant')}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                  <option value="etudiant">Étudiant</option>
+                  <option value="enseignant">Enseignant</option>
+                </select>
+              </div>
+
+              {role === 'etudiant' && (
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Niveau où vous étudiez
+                  </label>
+                  <select
+                    value={niveau}
+                    onChange={(e) => setNiveau(e.target.value)}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required={role === 'etudiant'}
+                  >
+                    <option value="">Sélectionner votre niveau</option>
+                    <option value="tronc-commun">Tronc Commun</option>
+                    <option value="1re-annee-bac">1re année bac</option>
+                    <option value="2eme-annee-bac">2eme année bac</option>
+                  </select>
+                </div>
+              )}
+            </>
           )}
 
           <div className="mb-4">
