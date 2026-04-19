@@ -3,11 +3,14 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,17 +20,42 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const result = await signIn('credentials', {
-        redirect: false,
-        email,
-        password,
-      });
+      if (isLogin) {
+        const result = await signIn('credentials', {
+          redirect: false,
+          email,
+          password,
+        });
 
-      if (result?.error) {
-        setError('Invalid email or password');
+        if (result?.error) {
+          setError('Invalid email or password');
+        } else {
+          router.push('/profile');
+          router.refresh();
+        }
       } else {
-        router.push('/admin');
-        router.refresh();
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, name }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.error || 'Registration failed');
+        } else {
+          const result = await signIn('credentials', {
+            redirect: false,
+            email,
+            password,
+          });
+          if (result?.error) {
+            setError('Registration successful but login failed');
+          } else {
+            router.push('/profile');
+            router.refresh();
+          }
+        }
       }
     } catch {
       setError('An error occurred');
@@ -37,13 +65,15 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/' });
+    signIn('google', { callbackUrl: '/profile' });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          {isLogin ? 'Login' : 'Create Account'}
+        </h1>
         
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -71,6 +101,21 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit}>
+          {!isLogin && (
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Name
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                required={!isLogin}
+              />
+            </div>
+          )}
+
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Email
@@ -102,9 +147,27 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? (isLogin ? 'Logging in...' : 'Creating account...') : (isLogin ? 'Login' : 'Create Account')}
           </button>
         </form>
+
+        <div className="mt-4 text-center">
+          {isLogin ? (
+            <p className="text-gray-600">
+              Don't have an account?{' '}
+              <button onClick={() => { setIsLogin(false); setError(''); }} className="text-blue-500 hover:text-blue-700 font-semibold">
+                Sign up
+              </button>
+            </p>
+          ) : (
+            <p className="text-gray-600">
+              Already have an account?{' '}
+              <button onClick={() => { setIsLogin(true); setError(''); }} className="text-blue-500 hover:text-blue-700 font-semibold">
+                Login
+              </button>
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

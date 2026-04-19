@@ -1,15 +1,13 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
-import { authenticateUser } from './db';
+import { authenticateUser, createUser, getUserByEmail } from './db';
 
-// Generate a proper secret - in production, always use environment variable
 const getAuthSecret = () => {
   const envSecret = process.env.NEXTAUTH_SECRET;
   if (envSecret && envSecret.length > 10) {
     return envSecret;
   }
-  // Fallback for development only
   return 'development-secret-do-not-use-in-production-12345678';
 };
 
@@ -48,7 +46,18 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account, profile }) {
+      if (account && profile) {
+        const email = profile.email;
+        if (email) {
+          let dbUser = await getUserByEmail(email);
+          if (!dbUser) {
+            dbUser = await createUser(email, '', profile.name || 'Google User', 'user');
+          }
+          token.id = dbUser.id;
+          token.role = dbUser.role;
+        }
+      }
       if (user) {
         token.role = (user as any).role || 'user';
       }
@@ -56,6 +65,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session?.user) {
+        (session.user as any).id = token.id;
         (session.user as any).role = token.role || 'user';
       }
       return session;

@@ -83,7 +83,7 @@ export async function authenticateUser(email: string, password: string): Promise
 }
 
 export async function createUser(email: string, password: string, name: string, role: 'admin' | 'user' = 'user'): Promise<User> {
-  const hashedPassword = hashPassword(password);
+  const hashedPassword = password ? hashPassword(password) : '';
   const result = await pool.query(
     'INSERT INTO users (email, password, name, role) VALUES ($1, $2, $3, $4) RETURNING *',
     [email, hashedPassword, name, role]
