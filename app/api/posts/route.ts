@@ -20,11 +20,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, description, slug, thumbnail, underCategoryId } = body;
     const result = await pool.query(
-      'INSERT INTO post (name, description, slug, thumbnail, "underCategory_id") VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      'INSERT INTO "Post" (name, description, slug, thumbnail, "underCategory_id", created_at, updated_at) VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING *',
       [name, description, slug, thumbnail, underCategoryId]
     );
     return NextResponse.json(result.rows[0]);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('POST /api/posts error:', error);
+    return NextResponse.json({ error: error.message, code: error.code }, { status: 500 });
   }
 }

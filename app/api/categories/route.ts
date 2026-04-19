@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const { name, description, slug, thumbnail } = body;
 
     const result = await pool.query(
-      'INSERT INTO "Category" (name, description, slug, thumbnail) VALUES ($1, $2, $3, $4) RETURNING *',
+      'INSERT INTO "Category" (name, description, slug, thumbnail, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING *',
       [name, description, slug, thumbnail]
     );
 
