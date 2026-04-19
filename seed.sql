@@ -33,7 +33,7 @@ INSERT INTO under_category (name, thumbnail, description, slug, category_id) VAL
 ('Analytical Chemistry', 'https://img.freepik.com/free-vector/analytical-chemistry-concept_114360-4271.jpg', 'Chemical analysis methods', 'analytical-chemistry', 3);
 
 -- Insert posts for Algebra
-INSERT INTO post (name, thumbnail, description, slug, under_category_id) VALUES
+INSERT INTO post (name, thumbnail, description, slug, "underCategory_id") VALUES
 ('Algebra Basics Quiz', 'https://img.freepik.com/free-vector/math-quiz_114360-4350.jpg', 'Test your algebra basics', 'algebra-basics-quiz', 1),
 ('Linear Equations Practice', 'https://img.freepik.com/free-vector/linear-equations_114360-4348.jpg', 'Practice linear equations', 'linear-equations-practice', 1),
 ('Quadratic Functions Exam', 'https://img.freepik.com/free-vector/quadratic-functions_114360-4346.jpg', 'Quadratic functions test', 'quadratic-functions-exam', 1),
@@ -41,21 +41,21 @@ INSERT INTO post (name, thumbnail, description, slug, under_category_id) VALUES
 ('Factorization Practice', 'https://img.freepik.com/free-vector/factorization_114360-4342.jpg', 'Learn factorization', 'factorization-practice', 1);
 
 -- Insert posts for Calculus
-INSERT INTO post (name, thumbnail, description, slug, under_category_id) VALUES
+INSERT INTO post (name, thumbnail, description, slug, "underCategory_id") VALUES
 ('Derivatives Quiz', 'https://img.freepik.com/free-vector/derivatives_114360-4335.jpg', 'Test your derivatives', 'derivatives-quiz', 2),
 ('Integrals Practice Exam', 'https://img.freepik.com/free-vector/integrals_114360-4333.jpg', 'Integration practice', 'integrals-practice-exam', 2),
 ('Limits and Continuity', 'https://img.freepik.com/free-vector/limits_114360-4331.jpg', 'Limits and continuity test', 'limits-and-continuity', 2),
 ('Differential Equations', 'https://img.freepik.com/free-vector/differential-equations_114360-4329.jpg', 'Differential equations solved', 'differential-equations', 2);
 
 -- Insert posts for Geometry
-INSERT INTO post (name, thumbnail, description, slug, under_category_id) VALUES
+INSERT INTO post (name, thumbnail, description, slug, "underCategory_id") VALUES
 ('2D Geometry Test', 'https://img.freepik.com/free-vector/2d-geometry_114360-4332.jpg', 'Two-dimensional geometry', '2d-geometry-test', 3),
 ('3D Geometry Quiz', 'https://img.freepik.com/free-vector/3d-geometry_114360-4330.jpg', 'Three-dimensional shapes', '3d-geometry-quiz', 3),
 ('Circles and Angles', 'https://img.freepik.com/free-vector/circles-angles_114360-4328.jpg', 'Circle theorems', 'circles-and-angles', 3),
 ('Triangle Properties', 'https://img.freepik.com/free-vector/triangles_114360-4326.jpg', 'Triangle exercises', 'triangle-properties', 3);
 
 -- Insert posts for Mechanics
-INSERT INTO post (name, thumbnail, description, slug, under_category_id) VALUES
+INSERT INTO post (name, thumbnail, description, slug, "underCategory_id") VALUES
 ('Newton Laws Quiz', 'https://img.freepik.com/free-vector/newton-laws_114360-4275.jpg', 'Test Newton laws', 'newton-laws-quiz', 6),
 ('Kinematics Practice', 'https://img.freepik.com/free-vector/kinematics_114360-4273.jpg', 'Motion calculations', 'kinematics-practice', 6),
 ('Work and Energy', 'https://img.freepik.com/free-vector/work-energy_114360-4271.jpg', 'Work and energy exam', 'work-and-energy', 6),

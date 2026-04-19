@@ -59,7 +59,7 @@ async function setupDatabase() {
         thumbnail TEXT,
         description TEXT,
         slug VARCHAR(255) UNIQUE NOT NULL,
-        under_category_id INTEGER REFERENCES under_category(id) ON DELETE CASCADE,
+        "underCategory_id" INTEGER REFERENCES under_category(id) ON DELETE CASCADE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )

@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS post (
   thumbnail VARCHAR(500),
   description TEXT,
   slug VARCHAR(255) UNIQUE NOT NULL,
-  under_category_id INTEGER REFERENCES under_category(id),
+  "underCategory_id" INTEGER REFERENCES under_category(id),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

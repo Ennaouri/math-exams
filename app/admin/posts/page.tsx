@@ -8,7 +8,7 @@ interface Post {
   description: string;
   slug: string;
   thumbnail: string;
-  under_category_id: number;
+  underCategoryId: number;
   under_category_name?: string;
 }
 
@@ -25,7 +25,7 @@ export default function PostsPage() {
     description: '',
     slug: '',
     thumbnail: '',
-    under_category_id: 0,
+    underCategoryId: 0,
   });
 
   useEffect(() => {
@@ -100,13 +100,13 @@ export default function PostsPage() {
       description: item.description,
       slug: item.slug,
       thumbnail: item.thumbnail,
-      under_category_id: item.under_category_id,
+      underCategoryId: item.underCategoryId,
     });
     setShowForm(true);
   };
 
   const resetForm = () => {
-    setFormData({ name: '', description: '', slug: '', thumbnail: '', under_category_id: 0 });
+    setFormData({ name: '', description: '', slug: '', thumbnail: '', underCategoryId: 0 });
     setEditingItem(null);
     setShowForm(false);
   };
@@ -135,7 +135,7 @@ export default function PostsPage() {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Under Category</label>
-                <select value={formData.under_category_id} onChange={(e) => setFormData({ ...formData, under_category_id: parseInt(e.target.value) })} className="w-full border p-2 rounded" required>
+                <select value={formData.underCategoryId} onChange={(e) => setFormData({ ...formData, underCategoryId: parseInt(e.target.value) })} className="w-full border p-2 rounded" required>
                   <option value="">Select</option>
                   {underCategories.map((uc) => <option key={uc.id} value={uc.id}>{uc.name}</option>)}
                 </select>
@@ -178,7 +178,7 @@ export default function PostsPage() {
               <tr key={post.id}>
                 <td className="px-6 py-4">{post.id}</td>
                 <td className="px-6 py-4">{post.name}</td>
-                <td className="px-6 py-4">{post.under_category_name || post.under_category_id}</td>
+                <td className="px-6 py-4">{post.under_category_name || post.underCategoryId}</td>
                 <td className="px-6 py-4">
                   <button onClick={() => handleEdit(post)} className="text-blue-500 mr-2">Edit</button>
                   <button onClick={() => handleDelete(post.id)} className="text-red-500">Delete</button>

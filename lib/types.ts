@@ -25,7 +25,7 @@ export interface Post {
   thumbnail: string;
   description: string;
   slug: string;
-  under_category_id: number;
+  underCategoryId: number;
   created_at: Date;
   updated_at: Date;
 }
