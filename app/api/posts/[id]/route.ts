@@ -7,7 +7,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const { name, description, slug, thumbnail, under_category_id } = body;
     const id = parseInt(params.id);
     const result = await pool.query(
-      'UPDATE "Post" SET name = $1, description = $2, slug = $3, thumbnail = $4, under_category_id = $5 WHERE id = $6 RETURNING *',
+      'UPDATE "Post" SET name = $1, description = $2, slug = $3, thumbnail = $4, "underCategoryId" = $5 WHERE id = $6 RETURNING *',
       [name, description, slug, thumbnail, under_category_id, id]
     );
     return NextResponse.json(result.rows[0]);
