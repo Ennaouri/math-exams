@@ -6,7 +6,7 @@ export async function GET() {
     const result = await pool.query(`
       SELECT p.*, uc.name as under_category_name 
       FROM "Post" p 
-      LEFT JOIN "UnderCategory" uc ON uc.id = p.under_category_id 
+      LEFT JOIN "UnderCategory" uc ON uc.id = p."under_category_id" 
       ORDER BY p.id
     `);
     return NextResponse.json(result.rows);
