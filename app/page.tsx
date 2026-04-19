@@ -1,11 +1,9 @@
-import MainContent from "./components/MainContent";
-import { getPosts, getCategories } from "@/lib/db";
+import { getCategories } from "@/lib/db";
 import Link from "next/link";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const posts = await getPosts();
   const categories = await getCategories();
 
   return (
@@ -36,10 +34,6 @@ export default async function Home() {
             </div>
           </Link>
         ))}
-      </div>
-
-      <div className="mt-8">
-        <MainContent posts={posts} />
       </div>
     </div>
   );

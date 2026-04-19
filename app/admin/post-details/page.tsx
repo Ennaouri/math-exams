@@ -172,7 +172,6 @@ export default function PostDetailsPage() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Post</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">File</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
             </tr>
           </thead>
@@ -182,15 +181,6 @@ export default function PostDetailsPage() {
                 <td className="px-6 py-4">{detail.id}</td>
                 <td className="px-6 py-4">{detail.name}</td>
                 <td className="px-6 py-4">{detail.post_name || detail.post_id}</td>
-                <td className="px-6 py-4">
-                  {detail.thumbnail && (
-                    detail.thumbnail.match(/\.(mp4|webm)$/i)
-                      ? <video src={detail.thumbnail} className="w-16 h-16 object-cover" />
-                      : detail.thumbnail.match(/\.pdf$/i)
-                      ? <a href={detail.thumbnail} target="_blank" className="text-blue-500 text-xs">PDF</a>
-                      : <img src={detail.thumbnail} alt={detail.name} className="w-16 h-16 object-cover" />
-                  )}
-                </td>
                 <td className="px-6 py-4">
                   <button onClick={() => handleEdit(detail)} className="text-blue-500 mr-2">Edit</button>
                   <button onClick={() => handleDelete(detail.id)} className="text-red-500">Delete</button>

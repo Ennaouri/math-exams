@@ -10,6 +10,7 @@ interface Post {
   thumbnail: string;
   underCategoryId: number;
   under_category_name?: string;
+  attribute?: string;
 }
 
 export default function PostsPage() {
@@ -26,6 +27,7 @@ export default function PostsPage() {
     slug: '',
     thumbnail: '',
     underCategoryId: 0,
+    attribute: '',
   });
 
   useEffect(() => {
@@ -101,12 +103,13 @@ export default function PostsPage() {
       slug: item.slug,
       thumbnail: item.thumbnail,
       underCategoryId: item.underCategoryId,
+      attribute: item.attribute || '',
     });
     setShowForm(true);
   };
 
   const resetForm = () => {
-    setFormData({ name: '', description: '', slug: '', thumbnail: '', underCategoryId: 0 });
+    setFormData({ name: '', description: '', slug: '', thumbnail: '', underCategoryId: 0, attribute: '' });
     setEditingItem(null);
     setShowForm(false);
   };
@@ -141,6 +144,17 @@ export default function PostsPage() {
                 </select>
               </div>
               <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Type</label>
+                <select value={formData.attribute} onChange={(e) => setFormData({ ...formData, attribute: e.target.value })} className="w-full border p-2 rounded">
+                  <option value="">Select type</option>
+                  <option value="cours">Cours</option>
+                  <option value="exercices">Exercices</option>
+                  <option value="devoir">Devoir</option>
+                  <option value="examens">Examens</option>
+                  <option value="concours">Concours</option>
+                </select>
+              </div>
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Description</label>
                 <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full border p-2 rounded" rows={3} />
               </div>
@@ -169,6 +183,7 @@ export default function PostsPage() {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Under Category</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thumbnail</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
@@ -179,6 +194,13 @@ export default function PostsPage() {
               <tr key={post.id}>
                 <td className="px-6 py-4">{post.id}</td>
                 <td className="px-6 py-4">{post.name}</td>
+                <td className="px-6 py-4">
+                  {post.attribute && (
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                      {post.attribute}
+                    </span>
+                  )}
+                </td>
                 <td className="px-6 py-4">{post.under_category_name || post.underCategoryId}</td>
                 <td className="px-6 py-4">
                   {post.thumbnail && (

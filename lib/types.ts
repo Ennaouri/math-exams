@@ -26,6 +26,7 @@ export interface Post {
   description: string;
   slug: string;
   underCategoryId: number;
+  attribute?: string;
   created_at: Date;
   updated_at: Date;
 }
