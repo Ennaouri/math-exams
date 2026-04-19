@@ -13,54 +13,54 @@ export const sql = pool;
 export { pool };
 
 export async function getCategories(): Promise<Category[]> {
-  const result = await pool.query('SELECT * FROM "Category"');
+  const result = await pool.query('SELECT * FROM category');
   return result.rows as Category[];
 }
 
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {
-  const result = await pool.query('SELECT * FROM "Category" WHERE slug = $1', [slug]);
+  const result = await pool.query('SELECT * FROM category WHERE slug = $1', [slug]);
   return (result.rows[0] as Category) ?? null;
 }
 
 export async function getUnderCategories(): Promise<UnderCategory[]> {
-  const result = await pool.query('SELECT * FROM "UnderCategory"');
+  const result = await pool.query('SELECT * FROM under_category');
   return result.rows as UnderCategory[];
 }
 
 export async function getUnderCategoriesByCategorySlug(slug: string): Promise<UnderCategory[]> {
   const result = await pool.query(
-    'SELECT uc.* FROM "UnderCategory" uc JOIN "Category" c ON c.id = uc.category_id WHERE c.slug = $1',
+    'SELECT uc.* FROM under_category uc JOIN category c ON c.id = uc.category_id WHERE c.slug = $1',
     [slug]
   );
   return result.rows as UnderCategory[];
 }
 
 export async function getUnderCategoryBySlug(slug: string): Promise<UnderCategory | null> {
-  const result = await pool.query('SELECT * FROM "UnderCategory" WHERE slug = $1', [slug]);
+  const result = await pool.query('SELECT * FROM under_category WHERE slug = $1', [slug]);
   return (result.rows[0] as UnderCategory) ?? null;
 }
 
 export async function getPosts(): Promise<Post[]> {
-  const result = await pool.query('SELECT * FROM "Post"');
+  const result = await pool.query('SELECT * FROM post');
   return result.rows as Post[];
 }
 
 export async function getPostsByUnderCategorySlug(slug: string): Promise<Post[]> {
   const result = await pool.query(
-    'SELECT p.* FROM "Post" p JOIN "UnderCategory" uc ON uc.id = p.under_category_id WHERE uc.slug = $1',
+    'SELECT p.* FROM post p JOIN under_category uc ON uc.id = p.under_category_id WHERE uc.slug = $1',
     [slug]
   );
   return result.rows as Post[];
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const result = await pool.query('SELECT * FROM "Post" WHERE slug = $1', [slug]);
+  const result = await pool.query('SELECT * FROM post WHERE slug = $1', [slug]);
   return (result.rows[0] as Post) ?? null;
 }
 
 export async function getPostDetailsByPostSlug(slug: string): Promise<PostDetails[]> {
   const result = await pool.query(
-    'SELECT pd.* FROM "PostDetails" pd JOIN "Post" p ON p.id = pd.post_id WHERE p.slug = $1',
+    'SELECT pd.* FROM post_details pd JOIN post p ON p.id = pd.post_id WHERE p.slug = $1',
     [slug]
   );
   return result.rows as PostDetails[];
