@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
 
 const GA_PROPERTY_ID = process.env.GA_PROPERTY_ID;
+const GA_CREDS = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
 const analyticsDataClient = new BetaAnalyticsDataClient({
-  credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS || "{}"),
+  credentials: GA_CREDS ? JSON.parse(GA_CREDS) : undefined,
 });
 
 export async function GET() {
