@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
@@ -12,8 +12,19 @@ export default function LoginPage() {
   const [name, setName] = useState('');
   const [role, setRole] = useState<'etudiant' | 'enseignant'>('etudiant');
   const [niveau, setNiveau] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('savedEmail');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +42,11 @@ export default function LoginPage() {
         if (result?.error) {
           setError('Invalid email or password');
         } else {
+          if (rememberMe) {
+            localStorage.setItem('savedEmail', email);
+          } else {
+            localStorage.removeItem('savedEmail');
+          }
           router.push('/profile');
           router.refresh();
         }
@@ -178,6 +194,27 @@ export default function LoginPage() {
             />
           </div>
 
+          <div className="flex items-center justify-between mb-6">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span className="ml-2 text-sm text-gray-600">Se souvenir de moi</span>
+            </label>
+            {isLogin && (
+              <button
+                type="button"
+                onClick={() => { setShowForgotPassword(true); setError(''); }}
+                className="text-sm text-blue-600 hover:text-blue-700 font-semibold"
+              >
+                Mot de passe oublié ?
+              </button>
+            )}
+          </div>
+
           <button
             type="submit"
             disabled={loading}
@@ -205,6 +242,84 @@ export default function LoginPage() {
           )}
         </div>
       </div>
+
+      {showForgotPassword && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+            <h2 className="text-2xl font-bold mb-4">Réinitialiser mot de passe</h2>
+            {resetSent ? (
+              <div className="text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="text-gray-600 mb-4">
+                  Un email de réinitialisation a été envoyé à votre adresse.
+                </p>
+                <button
+                  onClick={() => { setShowForgotPassword(false); setResetSent(false); }}
+                  className="text-blue-600 font-semibold"
+                >
+                  Retour à la connexion
+                </button>
+              </div>
+            ) : (
+              <>
+                <p className="text-gray-600 mb-4">
+                  Entrez votre email pour recevoir un lien de réinitialisation.
+                </p>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Votre email"
+                  className="w-full border rounded py-2 px-3 mb-4"
+                />
+                <div className="flex gap-4">
+                  <button
+                    type="button"
+                    onClick={() => { setShowForgotPassword(false); setResetSent(false); }}
+                    className="flex-1 bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!email) {
+                        setError('Email requis');
+                        return;
+                      }
+                      setLoading(true);
+                      try {
+                        const res = await fetch('/api/forgot-password', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ email }),
+                        });
+                        if (res.ok) {
+                          setResetSent(true);
+                        } else {
+                          setError('Email non trouvé');
+                        }
+                      } catch {
+                        setError('Erreur');
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                    disabled={loading}
+                    className="flex-1 bg-blue-500 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+                  >
+                    {loading ? 'Envoi...' : 'Envoyer'}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

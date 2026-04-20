@@ -4,6 +4,8 @@ import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+type ChangePasswordMode = 'idle' | 'change' | 'verifying';
+
 interface UserData {
   id: number;
   email: string;
@@ -19,6 +21,12 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [passwordMode, setPasswordMode] = useState<ChangePasswordMode>('idle');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -167,6 +175,97 @@ export default function ProfilePage() {
               >
                 Sign Out
               </button>
+            </div>
+
+            <div className="mt-8 border-t pt-6">
+              <h2 className="text-xl font-bold mb-4">Changer le mot de passe</h2>
+              
+              {passwordMode === 'idle' && (
+                <button
+                  onClick={() => setPasswordMode('change')}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded transition-colors"
+                >
+                  Changer mon mot de passe
+                </button>
+              )}
+
+              {passwordMode === 'change' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Mot de passe actuel</label>
+                    <input
+                      type="password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      className="w-full border rounded py-2 px-3"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Nouveau mot de passe</label>
+                    <input
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full border rounded py-2 px-3"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Confirmer le mot de passe</label>
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="w-full border rounded py-2 px-3"
+                    />
+                  </div>
+                  
+                  {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
+                  {passwordSuccess && <p className="text-green-500 text-sm">Mot de passe modifié !</p>}
+                  
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => { setPasswordMode('idle'); setPasswordError(''); setPasswordSuccess(false); }}
+                      className="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (newPassword !== confirmPassword) {
+                          setPasswordError('Les mots de passe ne correspondent pas');
+                          return;
+                        }
+                        if (newPassword.length < 6) {
+                          setPasswordError('Le mot de passe doit contenir au moins 6 caractères');
+                          return;
+                        }
+                        try {
+                          const res = await fetch('/api/change-password', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ currentPassword, newPassword }),
+                          });
+                          if (res.ok) {
+                            setPasswordSuccess(true);
+                            setPasswordMode('idle');
+                            setCurrentPassword('');
+                            setNewPassword('');
+                            setConfirmPassword('');
+                          } else {
+                            const data = await res.json();
+                            setPasswordError(data.error || 'Erreur');
+                          }
+                        } catch {
+                          setPasswordError('Erreur');
+                        }
+                      }}
+                      className="bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+                    >
+                      Enregistrer
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
