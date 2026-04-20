@@ -1,8 +1,32 @@
 import React from "react";
 import { getUnderCategoriesByCategorySlug, getPostsByUnderCategorySlug, getCategoryBySlug, getUnderCategoryBySlug } from "@/lib/db";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
+
+type CategoryProps = {
+  params: { slug: string[] };
+};
+
+export async function generateMetadata({ params }: CategoryProps): Promise<Metadata> {
+  const categorySlug = params.slug[0];
+  const underCategorySlug = params.slug[1];
+  
+  if (underCategorySlug) {
+    const underCategory = await getUnderCategoryBySlug(underCategorySlug);
+    return {
+      title: underCategory?.name || "Catégorie",
+      description: underCategory?.description || "Examens et exercices de mathématiques",
+    };
+  }
+  
+  const category = await getCategoryBySlug(categorySlug);
+  return {
+    title: category?.name || "Catégorie",
+    description: category?.description || "Examens et exercices de mathématiques",
+  };
+}
 
 export default async function CategoryPage({
   params,

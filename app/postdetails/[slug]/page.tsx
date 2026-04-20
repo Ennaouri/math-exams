@@ -15,8 +15,27 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
+  const postdetails = await getPostDetailsByPostSlug(params.slug);
+  const firstDetail = postdetails[0];
+  
   return {
     title: post?.name ?? 'Post',
+    description: post?.description || "Solution détaillée de l'examen de mathématiques",
+    openGraph: {
+      title: post?.name ?? 'Examens de Maths',
+      description: post?.description || "Solution détaillée de l'examen de mathématiques",
+      url: `https://maths-exams.com/postdetails/${params.slug}`,
+      type: 'article',
+      publishedTime: post?.created_at?.toISOString(),
+      modifiedTime: post?.updated_at?.toISOString() || post?.created_at?.toISOString(),
+      images: firstDetail?.thumbnail ? [{ url: firstDetail.thumbnail }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post?.name ?? 'Examens de Maths',
+      description: post?.description || "Solution détaillée de l'examen de mathématiques",
+      images: firstDetail?.thumbnail ? [firstDetail.thumbnail] : [],
+    },
   };
 }
 
@@ -125,8 +144,40 @@ export default async function PostDetails({
   
   const post = await getPostBySlug(params.slug);
   
+  const jsonLd = post ? {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.name,
+    "description": post.description || "Examens et concours de mathématiques",
+    "datePublished": post.created_at?.toISOString(),
+    "dateModified": post.updated_at?.toISOString() || post.created_at?.toISOString(),
+    "author": {
+      "@type": "Organization",
+      "name": "Maths-Exams",
+      "url": "https://maths-exams.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Maths-Exams",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://maths-exams.com/logo.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://maths-exams.com/postdetails/${params.slug}`
+    }
+  } : null;
+
   return (
     <>
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
       <div className="">
         <div className="rounded-sm overflow-hidden bg-white shadow-sm">
           <div className=" pb-5">

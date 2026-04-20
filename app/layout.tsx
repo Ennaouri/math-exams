@@ -6,11 +6,57 @@ import RightSide from "./components/RightSide";
 import "./globals.css";
 import Footer from "./components/Footer";
 import type { Metadata } from "next";
-import Head from "./head";
 import { getCategories, getPosts, getUnderCategories } from "@/lib/db";
 import { Providers } from "./providers";
+import Script from "next/script";
+import { GA_TRACKING_ID } from "@/lib/gtag";
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: {
+    default: "Mathématiques Du Secondaire | Examens | Exercice | Concours",
+    template: "%s | Maths-Exams",
+  },
+  description: "Les solutions de tous les examens de maths du secondaire qualifiants (BAC) ainsi que la correction des concours des grandes écoles. Vidéos explicatifs et corrections détaillées.",
+  keywords: ["maths", "Mathématiques", "exams", "Secondaire", "exercices", "bac", "examens", "concours", "solution", "correction", "tronc commun", "1ere", "maths bac"],
+  metadataBase: new URL("https://maths-exams.com"),
+  alternates: {
+    canonical: "https://maths-exams.com",
+    languages: {
+      fr: "https://maths-exams.com",
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    url: "https://maths-exams.com",
+    siteName: "Maths-Exams",
+    title: "Mathématiques Du Secondaire | Examens | Exercice | Concours",
+    description: "Les solutions de tous les examens de maths du secondaire qualifiants (BAC) ainsi que la correction des concours des grandes écoles.",
+    images: [
+      {
+        url: "https://maths-exams.com/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Maths-Exams - Examens et Concours de Mathématiques",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mathématiques Du Secondaire | Examens | Exercice | Concours",
+    description: "Les solutions de tous les examens de maths du secondaire qualifiants (BAC) ainsi que la correction des concours des grandes écoles.",
+    images: ["https://maths-exams.com/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  verification: {
+    google: "google-site-verification-code",
+  },
+};
 
 export interface CategoryCardType {
   id: number;
@@ -41,8 +87,15 @@ export default async function RootLayout({
   const randomPosts = [randomPosts1, randomPosts2, randomPosts3, randomPosts4];
 
   return (
-    <html lang="en">
-      <Head />
+    <html lang="fr">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
+      <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301" crossOrigin="anonymous" strategy="lazyOnload" />
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} strategy="afterInteractive" />
+      <Script id="gtag-init" strategy="afterInteractive">
+        {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_TRACKING_ID}');`}
+      </Script>
       <Providers>
       <body>
         <main className="bg-gray-100 min-h-screen w-screen">
