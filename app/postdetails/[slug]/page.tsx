@@ -72,13 +72,13 @@ function renderContent(postDetail: any) {
 
   if (isPdf) {
     return (
-      <div className="pdf-container">
+      <div className="pdf-container" style={{ minHeight: '80vh' }}>
         <div className="pdf-preview">
           <iframe
             src={thumbnail}
             width="100%"
-            height="500"
-            style={{ border: 'none' }}
+            height="800"
+            style={{ border: 'none', minHeight: '70vh' }}
             title="PDF Viewer"
           ></iframe>
           <a
