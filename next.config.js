@@ -36,6 +36,7 @@ const nextConfig = {
   env: {
     GA_PROPERTY_ID: process.env.GA_PROPERTY_ID,
     GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
   },
 }
 
