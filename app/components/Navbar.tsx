@@ -148,17 +148,15 @@ export default function Navbar() {
             </li>
             {status === "loading" ? null : session ? (
               <>
-                {(session.user as any)?.role === "admin" && (
-                  <li>
-                    <Link
-                      href="/admin"
-                      onClick={closeNavbar}
-                      className="block py-2 px-3 text-blue-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500"
-                    >
-                      Admin
-                    </Link>
-                  </li>
-                )}
+                <li>
+                  <Link
+                    href="/admin"
+                    onClick={closeNavbar}
+                    className="block py-2 px-3 text-blue-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500"
+                  >
+                    {(session.user as any)?.role === "admin" ? "Admin" : "Dashboard"}
+                  </Link>
+                </li>
                 <li className="relative">
                   <button
                     id="profileDropdown"
@@ -185,11 +183,23 @@ export default function Navbar() {
                   </button>
                   <div
                     id="profileMenu"
-                    className="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700 dark:divide-gray-600 absolute right-0 mt-2"
+                    className="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-64 dark:bg-gray-700 dark:divide-gray-600 absolute right-0 mt-2"
                   >
                     <div className="px-4 py-3">
                       <p className="text-sm text-gray-900 dark:text-white font-semibold">{session.user?.name}</p>
                       <p className="text-sm text-gray-500 truncate dark:text-gray-300">{session.user?.email}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                          (session.user as any)?.role === "admin" 
+                            ? "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
+                            : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                        }`}>
+                          {(session.user as any)?.role === "admin" ? "Admin" : "User"}
+                        </span>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                          Verified
+                        </span>
+                      </div>
                     </div>
                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-400">
                       <li>
@@ -198,15 +208,37 @@ export default function Navbar() {
                           onClick={closeNavbar}
                           className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                         >
-                          Profile
+                          <span className="flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Profile
+                          </span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          href="/profile#favorites"
+                          onClick={closeNavbar}
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >
+                          <span className="flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.682l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                            Favorites
+                          </span>
                         </Link>
                       </li>
                     </ul>
                     <div className="py-2">
                       <button
                         onClick={() => signOut({ callbackUrl: "/" })}
-                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-400"
+                        className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-400"
                       >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
                         Sign out
                       </button>
                     </div>

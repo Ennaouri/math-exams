@@ -28,6 +28,9 @@ export const authOptions: NextAuthOptions = {
           if (!user) {
             return null;
           }
+          if ((user as any).needsVerification) {
+            (user as any).needsVerification = false;
+          }
           return {
             id: user.id.toString(),
             email: user.email,
@@ -52,7 +55,17 @@ export const authOptions: NextAuthOptions = {
         if (email) {
           let dbUser = await getUserByEmail(email);
           if (!dbUser) {
-            dbUser = await createUser(email, '', profile.name || 'Google User', 'user');
+            const userMeta = JSON.stringify({ role: 'user', emailVerified: true });
+            dbUser = await createUser(email, '', profile.name || 'Google User', 'user', userMeta);
+          } else if (dbUser.metadata) {
+            const meta = JSON.parse(dbUser.metadata);
+            if (meta.emailVerified === false) {
+              meta.emailVerified = true;
+              delete meta.verifyToken;
+              delete meta.verifyExpires;
+              const { updateUser } = await import('./db');
+              await updateUser(dbUser.id, { metadata: JSON.stringify(meta) });
+            }
           }
           token.id = dbUser.id;
           token.role = dbUser.role;

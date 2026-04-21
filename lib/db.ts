@@ -79,6 +79,14 @@ export async function authenticateUser(email: string, password: string): Promise
   if (result.rows.length === 0) return null;
   const user = result.rows[0] as User;
   delete (user as any).password;
+  
+  if (user.metadata) {
+    const meta = JSON.parse(user.metadata);
+    if (meta.emailVerified === false) {
+      return { ...user, needsVerification: true } as User & { needsVerification: boolean };
+    }
+  }
+  
   return user;
 }
 

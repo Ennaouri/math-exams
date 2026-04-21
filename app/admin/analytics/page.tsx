@@ -1,6 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 
+interface RealtimeData {
+  activeUsers: number;
+  activePages: { page: string; users: string }[];
+  timestamp: string;
+}
+
 interface AnalyticsData {
   pageViews: number;
   activeUsers: number;
@@ -10,6 +16,7 @@ interface AnalyticsData {
 
 export default function AnalyticsPage() {
   const [stats, setStats] = useState<AnalyticsData | null>(null);
+  const [realtime, setRealtime] = useState<RealtimeData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,6 +32,23 @@ export default function AnalyticsPage() {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    const fetchRealtime = () => {
+      fetch("/api/analytics/realtime")
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.error) {
+            setRealtime(data);
+          }
+        })
+        .catch(() => {});
+    };
+
+    fetchRealtime();
+    const interval = setInterval(fetchRealtime, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const getPageTitle = (path: string) => {
@@ -60,6 +84,24 @@ export default function AnalyticsPage() {
 
       {!loading && !error && stats && (
         <>
+          <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-2xl p-6 text-white mb-6">
+            <h2 className="text-lg font-semibold mb-1">Real-Time Visitors</h2>
+            <p className="text-5xl font-bold">{realtime?.activeUsers ?? "—"}</p>
+            <p className="text-sm opacity-75">users on site right now</p>
+            {realtime?.activePages && realtime.activePages.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-white/20">
+                <p className="text-xs opacity-75 mb-2">Active pages now:</p>
+                <div className="flex flex-wrap gap-2">
+                  {realtime.activePages.slice(0, 5).map((page, i) => (
+                    <span key={i} className="bg-white/20 px-2 py-1 rounded text-xs">
+                      {page.page === "/" ? "Home" : page.page}: {page.users}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-6 text-white mb-6">
             <h2 className="text-lg font-semibold mb-1">Active Users</h2>
             <p className="text-4xl font-bold">{stats.activeUsers}</p>
