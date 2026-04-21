@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link';
+import Image from 'next/image';
 import { CategoryCardType } from '../layout';
 
 
@@ -8,23 +9,25 @@ interface Props {
 }
 export default function Card({category}: Props) {
   return (
-          <article className="flex flex-col shadow my-4">
+    <article className="flex flex-col shadow-lg my-4 bg-white rounded-lg overflow-hidden hover:shadow-xl transition-shadow">
       <Link href={`/category/${category.slug}`}>
-    <div className="hover:opacity-75">
-        <img src={category.thumbnail} alt={category.name}/>
-    </div>
-    <div className="bg-white flex flex-col justify-start p-6">
-        <p className="text-blue-700 text-sm font-bold uppercase pb-4">Technology</p>
-        <p className="text-3xl font-bold hover:text-gray-700 pb-4">{category.name}</p>
-        <p  className="text-sm pb-3">
-            By <span className="font-semibold hover:text-gray-800">Ennaouri</span>, Published on April 25th, 2020
-        </p>
-        <p className="pb-6">{category.description}</p>
-        <p className="w-full bg-blue-800 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-4">
-                    Consulter
-                </p>
-    </div>
-    </Link>
-</article>
+        <div className="relative h-48">
+          <Image 
+            src={category.thumbnail || '/placeholder.jpg'} 
+            alt={category.name}
+            fill
+            className="object-cover hover:opacity-90 transition-opacity"
+            unoptimized
+          />
+        </div>
+        <div className="bg-white flex flex-col justify-start p-6">
+          <h2 className="text-2xl font-bold hover:text-blue-600 pb-2">{category.name}</h2>
+          <p className="text-gray-600 pb-4 line-clamp-2">{category.description}</p>
+          <span className="w-full bg-blue-600 text-white font-semibold text-center rounded hover:bg-blue-700 transition-colors px-2 py-3 mt-4">
+            Consulter
+          </span>
+        </div>
+      </Link>
+    </article>
   )
 }

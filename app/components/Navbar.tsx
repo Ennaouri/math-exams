@@ -38,7 +38,7 @@ export default function Navbar() {
             <span className="text-white font-bold text-lg">M</span>
           </div>
           <span className="self-center text-2xl font-bold whitespace-nowrap">
-            LowDiscovery<span className="text-blue-400">Maths</span>
+            Maths<span className="text-blue-400">-Exams</span>
           </span>
         </Link>
         <button

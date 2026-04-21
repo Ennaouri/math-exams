@@ -23,7 +23,7 @@ export default function Footer() {
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">M</span>
                 </div>
-                <span className="text-2xl font-bold">LowDiscovery<span className="text-blue-400">Maths</span></span>
+                <span className="text-2xl font-bold">Maths<span className="text-blue-400">-Exams</span></span>
               </Link>
               <p className="text-gray-400 text-sm">
                 Votre plateforme éducative pour maîtriser les mathématiques. 
@@ -90,7 +90,7 @@ export default function Footer() {
           <hr className="my-8 border-gray-700" />
           <div className="sm:flex sm:items-center sm:justify-between">
             <span className="text-sm text-gray-400 sm:text-center">
-              © {new Date().getFullYear()} <Link href="/" className="hover:text-white">LowDiscoveryMaths</Link>. Tous droits réservés.
+              © {new Date().getFullYear()} <Link href="/" className="hover:text-white">Maths-Exams</Link>. Tous droits réservés.
             </span>
             <div className="flex gap-4 mt-4 sm:mt-0">
               <span className="text-sm text-gray-400">

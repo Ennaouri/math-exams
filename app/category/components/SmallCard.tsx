@@ -2,37 +2,30 @@
 
 import { UnderCategory } from "@/lib/types";
 import Link from "next/link";
+import Image from "next/image";
 import React from "react";
 
 export default function SmallCard({ undercategory }: { undercategory: UnderCategory }) {
   return (
-    <div className="rounded-sm bg-white p-4 pb-5 shadow-sm">
+    <div className="rounded-lg bg-white p-4 pb-5 shadow-lg hover:shadow-xl transition-shadow">
       <Link href={`/category/${undercategory.slug}/posts`} className="block rounded-md overflow-hidden">
-        <img
-          src={undercategory.thumbnail}
-          className="w-full h-60  transform hover:scale-110 transition duration-500 "
-        />
+        <div className="relative w-full h-48">
+          <Image
+            src={undercategory.thumbnail || '/placeholder.jpg'}
+            alt={undercategory.name}
+            fill
+            className="object-cover hover:scale-105 transition-transform duration-500"
+            unoptimized
+          />
+        </div>
       </Link>
       <div className="mt-3">
         <Link href={`/category/${undercategory.slug}/posts`}>
-          <h2 className="block text-xl font-semibold text-gray-700 hover:text-blue-500 transition font-roboto">
+          <h2 className="block text-xl font-semibold text-gray-700 hover:text-blue-600 transition-colors">
             {undercategory.name}
           </h2>
         </Link>
-        <div className="mt-2 flex space-x-3">
-          <div className="flex text-gray-400 text-sm items-center">
-            <span className="mr-2 text-xs">
-              <i className="far fa-user"></i>
-            </span>
-            {undercategory.description}
-          </div>
-          <div className="flex text-gray-400 text-sm items-center">
-            <span className="mr-2 text-xs">
-              <i className="far fa-clock"></i>
-            </span>
-            {new Date(undercategory.created_at).toDateString()}
-          </div>
-        </div>
+        <p className="mt-2 text-gray-500 text-sm line-clamp-2">{undercategory.description}</p>
       </div>
     </div>
   );

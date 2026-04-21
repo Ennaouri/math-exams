@@ -1,12 +1,21 @@
 import Link from "next/link"
 
-export default function NoFound() {
-  return <>
-        <div className="d-flex  align-items-center justify-content-center center vh-100">
-        <h1 className="display-1 fw-bold text-white ">404</h1>
+export default function NotFound() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="text-center">
+        <h1 className="text-9xl font-bold text-gray-300">404</h1>
+        <h2 className="text-2xl font-semibold text-gray-700 mt-4">Page non trouvée</h2>
+        <p className="text-gray-500 mt-2 mb-8">
+          Désolé, la page que vous recherchez n'existe pas.
+        </p>
+        <Link 
+          href="/"
+          className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Retour à l'accueil
+        </Link>
+      </div>
     </div>
-    <Link href="/" className="link-danger alert-primary bg-dark ">
-        Revenir à l&apos;acceuil
-    </Link>
-  </>
+  )
 }

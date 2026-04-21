@@ -2,7 +2,8 @@
 
 
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import React, { useState } from "react";
 
 export interface CategoryCardType {
   id: number;
@@ -17,7 +18,6 @@ interface Props {
 
 export default function CarouselCard({ underCategories }: Props) {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-
  
 
   const nextSlide = () => {
@@ -42,14 +42,24 @@ export default function CarouselCard({ underCategories }: Props) {
         {underCategories
           .slice(currentCardIndex, currentCardIndex + 4)
           .map((card) => (
-            <div className="w-64 h-72 m-3 rounded overflow-hidden border cursor-pointer">
-              <Link href={`/category/${card.slug}/posts`}>
-                <img src={card.thumbnail} alt="" className="w-full h-36" />
-                <div className="p-1">
-                  <h3 className="font-bold text-2xl mb-2">{card.name}</h3>
-                </div>
-              </Link>
-            </div>
+            <Link 
+              key={card.id}
+              href={`/category/${card.slug}/posts`} 
+              className="w-64 h-72 m-3 rounded-lg overflow-hidden border cursor-pointer bg-white hover:shadow-xl transition-shadow block"
+            >
+              <div className="relative h-36 w-full">
+                <Image 
+                  src={card.thumbnail || '/placeholder.jpg'} 
+                  alt={card.name}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+              </div>
+              <div className="p-2">
+                <h3 className="font-bold text-xl">{card.name}</h3>
+              </div>
+            </Link>
           ))}
       </div>
       <button className="arrow right" onClick={nextSlide}>
