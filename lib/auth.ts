@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
             return null;
           }
           if ((user as any).needsVerification) {
-            (user as any).needsVerification = false;
+            throw new Error('Email not verified');
           }
           return {
             id: user.id.toString(),
@@ -37,8 +37,11 @@ export const authOptions: NextAuthOptions = {
             name: user.name,
             role: user.role,
           };
-        } catch (error) {
+        } catch (error: any) {
           console.error('Auth error:', error);
+          if (error.message === 'Email not verified') {
+            throw error;
+          }
           return null;
         }
       },

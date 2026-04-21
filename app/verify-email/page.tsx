@@ -6,15 +6,16 @@ export default function VerifyEmailPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams?.get("token");
+  const email = searchParams?.get("email");
 
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
 
   useEffect(() => {
-    if (token) {
+    if (token && email) {
       fetch("/api/verify-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ token, email }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -25,8 +26,10 @@ export default function VerifyEmailPage() {
           }
         })
         .catch(() => setStatus("error"));
+    } else {
+      setStatus("error");
     }
-  }, [token]);
+  }, [token, email]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
