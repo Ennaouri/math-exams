@@ -5,8 +5,21 @@ import crypto from 'crypto';
 
 const { Pool } = pg;
 
+function getConnectionString() {
+  const connString = process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_URL;
+  if (!connString) return undefined;
+  
+  // Add sslmode=verify-full if not already present
+  if (!connString.includes('sslmode=')) {
+    return connString.includes('?') 
+      ? `${connString}&sslmode=verify-full`
+      : `${connString}?sslmode=verify-full`;
+  }
+  return connString;
+}
+
 const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_URL,
+  connectionString: getConnectionString(),
 });
 
 export const sql = pool;
