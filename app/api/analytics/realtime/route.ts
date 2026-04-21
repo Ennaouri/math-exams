@@ -19,9 +19,21 @@ export async function GET() {
 
     const [realtimeReport] = await analyticsDataClient.runRealtimeReport({
       property: `properties/${GA_PROPERTY_ID}`,
+      metrics: [
+        {
+          name: "activeUsers",
+        },
+      ],
+    });
+
+    const realtimeUsers =
+      realtimeReport.totals?.[0]?.metricValues?.[0]?.value || "0";
+
+    const [pageReport] = await analyticsDataClient.runRealtimeReport({
+      property: `properties/${GA_PROPERTY_ID}`,
       dimensions: [
         {
-          name: "unifiedPageScreen",
+          name: "pagePath",
         },
       ],
       metrics: [
@@ -32,24 +44,21 @@ export async function GET() {
       limit: 10,
     });
 
-    const realtimeUsers =
-      realtimeReport.totals?.[0]?.metricValues?.[0]?.value || "0";
-
     const activePages =
-      realtimeReport.rows?.map((row) => ({
+      pageReport.rows?.map((row) => ({
         page: row.dimensionValues?.[0].value || "/",
         users: row.metricValues?.[0]?.value || "0",
       })) || [];
 
     return NextResponse.json({
-      activeUsers: parseInt(realtimeUsers),
+      activeUsers: parseInt(realtimeUsers as string),
       activePages,
       timestamp: new Date().toISOString(),
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Real-time Analytics API error:", error);
     return NextResponse.json(
-      { error: "Failed to fetch real-time analytics" },
+      { error: error.message || "Failed to fetch real-time analytics" },
       { status: 500 }
     );
   }

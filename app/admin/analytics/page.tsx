@@ -17,6 +17,7 @@ interface AnalyticsData {
 export default function AnalyticsPage() {
   const [stats, setStats] = useState<AnalyticsData | null>(null);
   const [realtime, setRealtime] = useState<RealtimeData | null>(null);
+  const [realtimeError, setRealtimeError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,14 +37,17 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     const fetchRealtime = () => {
+      setRealtimeError(null);
       fetch("/api/analytics/realtime")
         .then((res) => res.json())
         .then((data) => {
-          if (!data.error) {
+          if (data.error) {
+            setRealtimeError(data.error);
+          } else {
             setRealtime(data);
           }
         })
-        .catch(() => {});
+        .catch((err) => setRealtimeError(err.message));
     };
 
     fetchRealtime();
@@ -86,19 +90,25 @@ export default function AnalyticsPage() {
         <>
           <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-2xl p-6 text-white mb-6">
             <h2 className="text-lg font-semibold mb-1">Real-Time Visitors</h2>
-            <p className="text-5xl font-bold">{realtime?.activeUsers ?? "—"}</p>
-            <p className="text-sm opacity-75">users on site right now</p>
-            {realtime?.activePages && realtime.activePages.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-white/20">
-                <p className="text-xs opacity-75 mb-2">Active pages now:</p>
-                <div className="flex flex-wrap gap-2">
-                  {realtime.activePages.slice(0, 5).map((page, i) => (
-                    <span key={i} className="bg-white/20 px-2 py-1 rounded text-xs">
-                      {page.page === "/" ? "Home" : page.page}: {page.users}
-                    </span>
-                  ))}
-                </div>
-              </div>
+            {realtimeError ? (
+              <p className="text-sm opacity-75">Unable to load real-time data</p>
+            ) : (
+              <>
+                <p className="text-5xl font-bold">{realtime?.activeUsers ?? "—"}</p>
+                <p className="text-sm opacity-75">users on site right now</p>
+                {realtime?.activePages && realtime.activePages.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-white/20">
+                    <p className="text-xs opacity-75 mb-2">Active pages now:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {realtime.activePages.slice(0, 5).map((page, i) => (
+                        <span key={i} className="bg-white/20 px-2 py-1 rounded text-xs">
+                          {page.page === "/" ? "Home" : page.page}: {page.users}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
