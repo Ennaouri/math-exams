@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import PaginatedTable from '@/app/components/PaginatedTable';
 
 interface Category {
   id: number;
@@ -235,61 +236,33 @@ export default function CategoriesPage() {
         </div>
       )}
 
-      <div className="bg-white rounded shadow overflow-hidden">
-        <table className="min-w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                ID
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Slug
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Thumbnail
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {categories.map((category) => (
-              <tr key={category.id}>
-                <td className="px-6 py-4">{category.id}</td>
-                <td className="px-6 py-4">{category.name}</td>
-                <td className="px-6 py-4">{category.slug}</td>
-                <td className="px-6 py-4">
-                  {category.thumbnail && (
-                    <img
-                      src={category.thumbnail}
-                      alt={category.name}
-                      className="w-16 h-16 object-cover"
-                    />
-                  )}
-                </td>
-                <td className="px-6 py-4">
-                  <button
-                    onClick={() => handleEdit(category)}
-                    className="text-blue-500 hover:text-blue-700 mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(category.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <PaginatedTable
+        data={categories}
+        columns={[
+          { key: 'id', label: 'ID', sortable: true },
+          { key: 'name', label: 'Name', sortable: true },
+          { key: 'slug', label: 'Slug', sortable: true },
+          { 
+            key: 'thumbnail', 
+            label: 'Thumbnail',
+            render: (category) => category.thumbnail ? (
+              <img src={category.thumbnail} alt={category.name} className="w-16 h-16 object-cover" />
+            ) : null
+          },
+          { 
+            key: 'actions', 
+            label: 'Actions',
+            sortable: false,
+            render: (category) => (
+              <div className="flex gap-2">
+                <button onClick={() => handleEdit(category)} className="text-blue-500 hover:text-blue-700">Edit</button>
+                <button onClick={() => handleDelete(category.id)} className="text-red-500 hover:text-red-700">Delete</button>
+              </div>
+            )
+          },
+        ]}
+        searchPlaceholder="Search categories..."
+      />
     </div>
   );
 }

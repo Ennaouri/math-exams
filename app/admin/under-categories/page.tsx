@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import PaginatedTable from '@/app/components/PaginatedTable';
 
 interface UnderCategory {
   id: number;
@@ -159,37 +160,41 @@ export default function UnderCategoriesPage() {
         </div>
       )}
 
-      <div className="bg-white rounded shadow overflow-hidden">
-        <table className="min-w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thumbnail</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {underCategories.map((item) => (
-              <tr key={item.id}>
-                <td className="px-6 py-4">{item.id}</td>
-                <td className="px-6 py-4">{item.name}</td>
-                <td className="px-6 py-4">{item.category_name || item.category_id}</td>
-                <td className="px-6 py-4">
-                  {item.thumbnail && (
-                    <img src={item.thumbnail} alt={item.name} className="w-16 h-16 object-cover" />
-                  )}
-                </td>
-                <td className="px-6 py-4">
-                  <button onClick={() => handleEdit(item)} className="text-blue-500 mr-2">Edit</button>
-                  <button onClick={() => handleDelete(item.id)} className="text-red-500">Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <PaginatedTable
+        data={underCategories}
+        columns={[
+          { key: 'id', label: 'ID', sortable: true },
+          { key: 'name', label: 'Name', sortable: true },
+          { 
+            key: 'category_name', 
+            label: 'Category', 
+            sortable: true,
+            render: (item) => item.category_name || item.category_id
+          },
+          { 
+            key: 'thumbnail', 
+            label: 'Thumbnail',
+            render: (item) => item.thumbnail ? (
+              <img src={item.thumbnail} alt={item.name} className="w-16 h-16 object-cover" />
+            ) : null
+          },
+          { 
+            key: 'actions', 
+            label: 'Actions',
+            sortable: false,
+            render: (item) => (
+              <div className="flex gap-2">
+                <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700">Edit</button>
+                <button onClick={() => handleDelete(item.id)} className="text-red-500 hover:text-red-700">Delete</button>
+              </div>
+            )
+          },
+        ]}
+        filters={[
+          { key: 'category_id', label: 'Filter by Category', options: categories.map(c => ({ value: String(c.id), label: c.name })) },
+        ]}
+        searchPlaceholder="Search under-categories..."
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import PaginatedTable from '@/app/components/PaginatedTable';
 
 interface Post {
   id: number;
@@ -177,47 +178,57 @@ export default function PostsPage() {
         </div>
       )}
 
-      <div className="bg-white rounded shadow overflow-hidden">
-        <table className="min-w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Under Category</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thumbnail</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {posts.map((post) => (
-              <tr key={post.id}>
-                <td className="px-6 py-4">{post.id}</td>
-                <td className="px-6 py-4">{post.name}</td>
-                <td className="px-6 py-4">
-                  {post.attribute && (
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-                      {post.attribute}
-                    </span>
-                  )}
-                </td>
-                <td className="px-6 py-4">{post.under_category_name || post.underCategoryId}</td>
-                <td className="px-6 py-4">
-                  {post.thumbnail && (
-                    post.thumbnail.match(/\.(mp4|webm)$/i)
-                      ? <video src={post.thumbnail} className="w-16 h-16 object-cover" />
-                      : <img src={post.thumbnail} alt={post.name} className="w-16 h-16 object-cover" />
-                  )}
-                </td>
-                <td className="px-6 py-4">
-                  <button onClick={() => handleEdit(post)} className="text-blue-500 mr-2">Edit</button>
-                  <button onClick={() => handleDelete(post.id)} className="text-red-500">Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <PaginatedTable
+        data={posts}
+        columns={[
+          { key: 'id', label: 'ID', sortable: true },
+          { key: 'name', label: 'Name', sortable: true },
+          { 
+            key: 'attribute', 
+            label: 'Type', 
+            sortable: true,
+            render: (post) => post.attribute ? (
+              <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">{post.attribute}</span>
+            ) : null
+          },
+          { 
+            key: 'under_category_name', 
+            label: 'Category', 
+            sortable: true,
+            render: (post) => post.under_category_name || post.underCategoryId
+          },
+          { 
+            key: 'thumbnail', 
+            label: 'Thumbnail',
+            render: (post) => post.thumbnail ? (
+              post.thumbnail.match(/\.(mp4|webm)$/i)
+                ? <video src={post.thumbnail} className="w-16 h-16 object-cover" />
+                : <img src={post.thumbnail} alt={post.name} className="w-16 h-16 object-cover" />
+            ) : null
+          },
+          { 
+            key: 'actions', 
+            label: 'Actions',
+            sortable: false,
+            render: (post) => (
+              <div className="flex gap-2">
+                <button onClick={() => handleEdit(post)} className="text-blue-500 hover:text-blue-700">Edit</button>
+                <button onClick={() => handleDelete(post.id)} className="text-red-500 hover:text-red-700">Delete</button>
+              </div>
+            )
+          },
+        ]}
+        filters={[
+          { key: 'attribute', label: 'Filter by Type', options: [
+            { value: 'cours', label: 'Cours' },
+            { value: 'exercices', label: 'Exercices' },
+            { value: 'devoir', label: 'Devoir' },
+            { value: 'examens', label: 'Examens' },
+            { value: 'concours', label: 'Concours' },
+          ]},
+        ]}
+        searchPlaceholder="Search posts..."
+      />
     </div>
   );
 }

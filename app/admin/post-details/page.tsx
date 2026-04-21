@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import PaginatedTable from '@/app/components/PaginatedTable';
 
 interface PostDetail {
   id: number;
@@ -165,31 +166,34 @@ export default function PostDetailsPage() {
         </div>
       )}
 
-      <div className="bg-white rounded shadow overflow-hidden">
-        <table className="min-w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Post</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {details.map((detail) => (
-              <tr key={detail.id}>
-                <td className="px-6 py-4">{detail.id}</td>
-                <td className="px-6 py-4">{detail.name}</td>
-                <td className="px-6 py-4">{detail.post_name || detail.post_id}</td>
-                <td className="px-6 py-4">
-                  <button onClick={() => handleEdit(detail)} className="text-blue-500 mr-2">Edit</button>
-                  <button onClick={() => handleDelete(detail.id)} className="text-red-500">Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <PaginatedTable
+        data={details}
+        columns={[
+          { key: 'id', label: 'ID', sortable: true },
+          { key: 'name', label: 'Name', sortable: true },
+          { 
+            key: 'post_name', 
+            label: 'Post', 
+            sortable: true,
+            render: (detail) => detail.post_name || detail.post_id
+          },
+          { 
+            key: 'actions', 
+            label: 'Actions',
+            sortable: false,
+            render: (detail) => (
+              <div className="flex gap-2">
+                <button onClick={() => handleEdit(detail)} className="text-blue-500 hover:text-blue-700">Edit</button>
+                <button onClick={() => handleDelete(detail.id)} className="text-red-500 hover:text-red-700">Delete</button>
+              </div>
+            )
+          },
+        ]}
+        filters={[
+          { key: 'post_id', label: 'Filter by Post', options: posts.map(p => ({ value: String(p.id), label: p.name })) },
+        ]}
+        searchPlaceholder="Search post details..."
+      />
     </div>
   );
 }
