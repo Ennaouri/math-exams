@@ -4,17 +4,28 @@ import { BetaAnalyticsDataClient } from "@google-analytics/data";
 const GA_PROPERTY_ID = process.env.GA_PROPERTY_ID;
 const GA_CREDS = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
-const analyticsDataClient = new BetaAnalyticsDataClient({
-  credentials: GA_CREDS ? JSON.parse(GA_CREDS) : undefined,
-});
+let analyticsDataClient: BetaAnalyticsDataClient | null = null;
+
+if (GA_CREDS) {
+  try {
+    analyticsDataClient = new BetaAnalyticsDataClient({
+      credentials: JSON.parse(GA_CREDS),
+    });
+  } catch (e) {
+    console.error("Failed to parse GA credentials:", e);
+  }
+}
 
 export async function GET() {
   try {
-    if (!GA_PROPERTY_ID) {
-      return NextResponse.json(
-        { error: "GA_PROPERTY_ID not configured" },
-        { status: 500 }
-      );
+    if (!GA_PROPERTY_ID || !analyticsDataClient) {
+      return NextResponse.json({
+        pageViews: 0,
+        activeUsers: 0,
+        newUsers: 0,
+        topPages: [],
+        error: "GA not configured"
+      });
     }
 
     const [report] = await analyticsDataClient.runReport({
@@ -78,11 +89,14 @@ export async function GET() {
       newUsers: parseInt(newUsers),
       topPages,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Analytics API error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch analytics" },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      pageViews: 0,
+      activeUsers: 0,
+      newUsers: 0,
+      topPages: [],
+      error: error.message
+    });
   }
 }
