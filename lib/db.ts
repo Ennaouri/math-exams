@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import pg from 'pg';
 import { Category, UnderCategory, Post, PostDetails, User } from './types';
 import crypto from 'crypto';
