@@ -1,5 +1,5 @@
 {
-  "compilerOptions": {
+"compilerOptions": {
     "target": "es2017",
     "lib": [
       "dom",
@@ -9,6 +9,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "noImplicitAny": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
