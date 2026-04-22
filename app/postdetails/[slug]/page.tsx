@@ -168,7 +168,7 @@ export default async function PostDetails({
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://maths-exams.com/postdetails/${params.slug}`
+      "@id": `https://maths-exams.com/postdetails/${slug}`
     }
   } : null;
 
