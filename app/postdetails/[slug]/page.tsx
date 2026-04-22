@@ -48,7 +48,7 @@ function getYouTubeEmbedId(url: string): string | null {
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
-function renderContent(postDetail: any) {
+function renderContent(postDetail: any, showDownload = true) {
   const { thumbnail, description } = postDetail;
 
   const isYouTube = thumbnail?.includes('youtube.com') || thumbnail?.includes('youtu.be');
@@ -84,14 +84,16 @@ function renderContent(postDetail: any) {
             style={{ border: 'none', minHeight: '70vh' }}
             title="PDF Viewer"
           ></iframe>
-          <a
-            href={thumbnail}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          >
-            Download PDF
-          </a>
+          {showDownload && (
+            <a
+              href={thumbnail}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+            >
+              Download PDF
+            </a>
+          )}
         </div>
       </div>
     );
@@ -228,7 +230,7 @@ export default async function PostDetails({
                           data-twe-parent="#accordionExample"
                         >
                           <div className={`py-4 ${!session ? 'no-download' : ''}`}>
-                            {renderContent(postDetail)}
+                            {renderContent(postDetail, !!session)}
                             
                             {postDetail.description && !postDetail.thumbnail && (
                               <div
@@ -237,10 +239,6 @@ export default async function PostDetails({
                                   __html: `<div>${postDetail.description}</div>`,
                                 }}
                               />
-                            )}
-
-                            {!session && (
-                              <div className="absolute inset-0 bg-white/50 pointer-events-none" style={{marginTop: '-20px'}}></div>
                             )}
 
                             <div style={{ overflow: "hidden", margin: "5px" }}>

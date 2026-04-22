@@ -92,12 +92,14 @@ iframe[title="Viewer"]{
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  pointer-events: auto;
 }
 
 .no-download img,
 .no-download video,
-.no-download iframe,
-.no-download object {
+.no-download a[download] {
   pointer-events: none;
+}
+
+.no-download iframe {
+  pointer-events: auto;
 }
