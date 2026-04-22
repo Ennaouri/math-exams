@@ -146,15 +146,17 @@ export default function Navbar() {
             </li>
             {status === "loading" ? null : session ? (
               <>
-<li>
-                <Link
-                  href="/admin"
-                  onClick={closeNavbar}
-                  className="block py-2 px-3 text-gray-200 rounded hover:bg-gray-700 md:hover:text-blue-400 md:p-0"
-                >
-                  {(session.user as any)?.role === "admin" ? "Admin" : "Tableau de bord"}
-                </Link>
-              </li>
+                {(session.user as any)?.role === "admin" && (
+                  <li>
+                    <Link
+                      href="/admin"
+                      onClick={closeNavbar}
+                      className="block py-2 px-3 text-gray-200 rounded hover:bg-gray-700 md:hover:text-blue-400 md:p-0"
+                    >
+                      Admin
+                    </Link>
+                  </li>
+                )}
                 <li className="relative">
                   <button
                     id="profileDropdown"
@@ -245,12 +247,13 @@ export default function Navbar() {
               </>
             ) : (
               <li>
-                <button
-                  onClick={() => signIn()}
-                  className="block py-2 px-4 text-blue-400 rounded hover:bg-gray-700 md:hover:text-blue-300"
+                <Link
+                  href="/login"
+                  onClick={closeNavbar}
+                  className="block py-2 px-3 text-gray-200 rounded hover:bg-gray-700 md:hover:text-blue-400 md:p-0"
                 >
                   Connexion
-                </button>
+                </Link>
               </li>
             )}
           </ul>

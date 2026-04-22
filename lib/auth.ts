@@ -28,9 +28,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           if (!user) {
             return null;
           }
-          if ((user as any).needsVerification) {
-            throw new Error('Email not verified');
-          }
           return {
             id: user.id.toString(),
             email: user.email,
@@ -39,9 +36,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           };
         } catch (error: any) {
           console.error('Auth error:', error);
-          if (error.message === 'Email not verified') {
-            throw error;
-          }
           return null;
         }
       },

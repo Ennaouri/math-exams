@@ -8,13 +8,14 @@ function getConnectionString() {
   const connString = process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_URL;
   if (!connString) return undefined;
   
-  // Add sslmode=verify-full if not already present
-  if (!connString.includes('sslmode=')) {
-    return connString.includes('?') 
-      ? `${connString}&sslmode=verify-full`
-      : `${connString}?sslmode=verify-full`;
+  // Use libpq compatibility mode to avoid deprecation warning
+  let baseUrl = connString;
+  if (baseUrl.includes('?')) {
+    baseUrl = `${baseUrl}&uselibpqcompat=true&sslmode=require`;
+  } else {
+    baseUrl = `${baseUrl}?uselibpqcompat=true&sslmode=require`;
   }
-  return connString;
+  return baseUrl;
 }
 
 const pool = new Pool({

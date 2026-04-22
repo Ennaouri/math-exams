@@ -2,6 +2,7 @@ import React from "react";
 import "./postDetails.css";
 import type { Metadata, ResolvingMetadata } from "next";
 import { getPostBySlug, getPostDetailsByPostSlug } from "@/lib/db";
+import AdSenseLoader from "@/app/components/AdSenseLoader";
 
 export const dynamic = 'force-dynamic';
 
@@ -201,8 +202,8 @@ export default async function PostDetails({
               </div>
             </div>
             <div id="accordionExample" className="px-1 md:px-5 ">
-              {sortedPosts.map((postDetail) => (
-                <div className="rounded-t-lg   bg-white dark:border-neutral-600 dark:bg-body-dark">
+              {sortedPosts.map((postDetail, index) => (
+                <div key={postDetail.id || index} className="rounded-t-lg bg-white dark:border-neutral-600 dark:bg-body-dark">
                   <div
                     id="collapseOne"
                     className="!visible"
@@ -260,7 +261,7 @@ export default async function PostDetails({
           </div>
         </div>
       </div>
-      <script dangerouslySetInnerHTML={{ __html: "(window.adsbygoogle = window.adsbygoogle || []).push({});" }} />
+      <AdSenseLoader />
 
     </>
   );
