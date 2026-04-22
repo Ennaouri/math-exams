@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {},
+  turbopack: {},
   reactStrictMode: true,
   images: {
-    domains: ['img.freepik.com', 'veterinaire-tour-hassan.com'],
     remotePatterns: [
       {
         protocol: 'https',

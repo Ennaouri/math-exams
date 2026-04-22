@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '@/lib/db';
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id: idStr } = await params;
     const body = await request.json();
     const { name, description, slug, thumbnail, post_id } = body;
-    const id = parseInt(params.id);
+    const id = parseInt(idStr);
     const result = await pool.query(
       'UPDATE "PostDetails" SET name = $1, description = $2, slug = $3, thumbnail = $4, post_id = $5 WHERE id = $6 RETURNING *',
       [name, description, slug, thumbnail, post_id, id]
@@ -16,9 +17,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const id = parseInt(params.id);
+    const { id: idStr } = await params;
+    const id = parseInt(idStr);
     await pool.query('DELETE FROM "PostDetails" WHERE id = $1', [id]);
     return NextResponse.json({ success: true });
   } catch (error: any) {

@@ -3,12 +3,13 @@ import { pool } from '@/lib/db';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: idStr } = await params;
     const body = await request.json();
     const { name, description, slug, thumbnail } = body;
-    const id = parseInt(params.id);
+    const id = parseInt(idStr);
 
     const result = await pool.query(
       'UPDATE "Category" SET name = $1, description = $2, slug = $3, thumbnail = $4 WHERE id = $5 RETURNING *',
@@ -23,10 +24,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id);
+    const { id: idStr } = await params;
+    const id = parseInt(idStr);
 
     await pool.query('DELETE FROM "Category" WHERE id = $1', [id]);
 

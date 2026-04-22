@@ -1,4 +1,4 @@
-import { NextAuthOptions } from 'next-auth';
+import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import { authenticateUser, createUser, getUserByEmail } from './db';
@@ -11,7 +11,7 @@ const getAuthSecret = () => {
   return 'development-secret-do-not-use-in-production-12345678';
 };
 
-export const authOptions: NextAuthOptions = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
         try {
-          const user = await authenticateUser(credentials.email, credentials.password);
+          const user = await authenticateUser(credentials.email as string, credentials.password as string);
           if (!user) {
             return null;
           }
@@ -95,4 +95,4 @@ export const authOptions: NextAuthOptions = {
     maxAge: 24 * 60 * 60,
   },
   secret: getAuthSecret(),
-};
+});
