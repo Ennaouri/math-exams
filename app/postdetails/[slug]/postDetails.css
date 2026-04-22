@@ -86,3 +86,18 @@ iframe[title="Viewer"]{
   width: 100%;
   overflow: hidden;
 }
+
+.no-download {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  pointer-events: auto;
+}
+
+.no-download img,
+.no-download video,
+.no-download iframe,
+.no-download object {
+  pointer-events: none;
+}

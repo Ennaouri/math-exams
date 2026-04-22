@@ -2,6 +2,7 @@ import React from "react";
 import "./postDetails.css";
 import type { Metadata, ResolvingMetadata } from "next";
 import { getPostBySlug, getPostDetailsByPostSlug } from "@/lib/db";
+import { auth } from "@/lib/auth";
 import AdSenseLoader from "@/app/components/AdSenseLoader";
 
 export const dynamic = 'force-dynamic';
@@ -146,6 +147,7 @@ export default async function PostDetails({
   });
   
   const post = await getPostBySlug(slug);
+  const session = await auth();
   
   const jsonLd = post ? {
     "@context": "https://schema.org",
@@ -225,7 +227,7 @@ export default async function PostDetails({
                           aria-labelledby="headingOne"
                           data-twe-parent="#accordionExample"
                         >
-                          <div className="py-4">
+                          <div className={`py-4 ${!session ? 'no-download' : ''}`}>
                             {renderContent(postDetail)}
                             
                             {postDetail.description && !postDetail.thumbnail && (
@@ -235,6 +237,10 @@ export default async function PostDetails({
                                   __html: `<div>${postDetail.description}</div>`,
                                 }}
                               />
+                            )}
+
+                            {!session && (
+                              <div className="absolute inset-0 bg-white/50 pointer-events-none" style={{marginTop: '-20px'}}></div>
                             )}
 
                             <div style={{ overflow: "hidden", margin: "5px" }}>
