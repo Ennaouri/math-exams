@@ -6,12 +6,13 @@ import type { Metadata } from "next";
 export const dynamic = 'force-dynamic';
 
 type CategoryProps = {
-  params: { slug: string[] };
+  params: Promise<{ slug: string[] }>;
 };
 
 export async function generateMetadata({ params }: CategoryProps): Promise<Metadata> {
-  const categorySlug = params.slug[0];
-  const underCategorySlug = params.slug[1];
+  const { slug } = await params;
+  const categorySlug = slug[0];
+  const underCategorySlug = slug[1];
   
   if (underCategorySlug) {
     const underCategory = await getUnderCategoryBySlug(underCategorySlug);
@@ -31,10 +32,11 @@ export async function generateMetadata({ params }: CategoryProps): Promise<Metad
 export default async function CategoryPage({
   params,
 }: {
-  params: { slug: string[] };
+  params: Promise<{ slug: string[] }>;
 }) {
-  const categorySlug = params.slug[0];
-  const underCategorySlug = params.slug[1];
+  const { slug } = await params;
+  const categorySlug = slug[0];
+  const underCategorySlug = slug[1];
 
   if (underCategorySlug) {
     const posts = await getPostsByUnderCategorySlug(underCategorySlug);

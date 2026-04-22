@@ -6,16 +6,17 @@ import { getPostBySlug, getPostDetailsByPostSlug } from "@/lib/db";
 export const dynamic = 'force-dynamic';
 
 type Props = {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
-  const postdetails = await getPostDetailsByPostSlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  const postdetails = await getPostDetailsByPostSlug(slug);
   const firstDetail = postdetails[0];
   
   return {
@@ -24,7 +25,7 @@ export async function generateMetadata(
     openGraph: {
       title: post?.name ?? 'Examens de Maths',
       description: post?.description || "Solution détaillée de l'examen de mathématiques",
-      url: `https://maths-exams.com/postdetails/${params.slug}`,
+      url: `https://maths-exams.com/postdetails/${slug}`,
       type: 'article',
       publishedTime: post?.created_at?.toISOString(),
       modifiedTime: post?.updated_at?.toISOString() || post?.created_at?.toISOString(),
@@ -135,14 +136,15 @@ function renderContent(postDetail: any) {
 export default async function PostDetails({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const postdetails = await getPostDetailsByPostSlug(params.slug);
+  const { slug } = await params;
+  const postdetails = await getPostDetailsByPostSlug(slug);
   const sortedPosts = postdetails.sort((a, b) => {
     return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
   });
   
-  const post = await getPostBySlug(params.slug);
+  const post = await getPostBySlug(slug);
   
   const jsonLd = post ? {
     "@context": "https://schema.org",
