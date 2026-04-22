@@ -31,9 +31,9 @@ async function generateSitemap(req: NextApiRequest, res: NextApiResponse) {
     const underCategories = underCategoriesResult.rows;
 
     const dynamicRoutes = [
-      ...categories.map((category) => `https://maths-exams.com/category/${category.slug}`),
-      ...postDetails.map((post) => `https://maths-exams.com/postdetails/${post.slug}`),
-      ...underCategories.map((underCategory) => `https://maths-exams.com/category/${underCategory.slug}/posts`)
+      ...categories.map((category: Category) => `https://maths-exams.com/category/${category.slug}`),
+      ...postDetails.map((post: Post) => `https://maths-exams.com/postdetails/${post.slug}`),
+      ...underCategories.map((underCategory: UnderCategory) => `https://maths-exams.com/category/${underCategory.slug}/posts`)
     ];
 
     const staticRoutes = [
