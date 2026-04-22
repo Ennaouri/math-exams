@@ -44,14 +44,14 @@ const staticRoutes: SitemapUrl[] = [
     { loc: 'https://maths-exams.com/privacypolicy', priority: '0.3', changefreq: 'monthly' },
   ];
 
-  const categoryRoutes = categoriesResult.rows.map((c) => ({
+  const categoryRoutes = categoriesResult.rows.map((c: Category) => ({
     loc: `https://maths-exams.com/category/${c.slug}`,
     lastmod: c.created_at ? new Date(c.created_at).toISOString() : new Date().toISOString(),
     priority: '0.8',
     changefreq: 'weekly',
   }));
 
-  const postRoutes = postsResult.rows.map((p) => ({
+  const postRoutes = postsResult.rows.map((p: Post) => ({
     loc: `https://maths-exams.com/postdetails/${p.slug}`,
     lastmod: p.created_at ? new Date(p.created_at).toISOString() : new Date().toISOString(),
     priority: '0.9',
