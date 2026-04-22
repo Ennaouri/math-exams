@@ -10,7 +10,7 @@
     "generate-sitemap": "ts-node app/generateSitemap.ts",
     "start": "next start",
     "lint": "next lint",
-    "vercel-build": "next build"
+    "vercel-build": "npm install --legacy-peer-deps && next build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
