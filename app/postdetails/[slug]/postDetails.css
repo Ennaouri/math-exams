@@ -75,16 +75,23 @@ iframe {
   }
 }
 
+.pdf-container {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 object, .pdfIframe{
   height: 85vh;
   width: 100%;
-  overflow: hidden;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-iframe[title="Viewer"]{
+iframe[title="PDF Viewer"]{
   height: 85vh;
   width: 100%;
-  overflow: hidden;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .no-download {
