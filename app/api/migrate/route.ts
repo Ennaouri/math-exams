@@ -1,14 +1,30 @@
 import { NextResponse } from 'next/server';
 import { pool } from '@/lib/db';
 
-export async function POST() {
+async function runMigration() {
   try {
     await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS metadata JSONB');
     await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS image TEXT');
     await pool.query('ALTER TABLE "Post" ADD COLUMN IF NOT EXISTS attribute VARCHAR(50)');
-    return NextResponse.json({ success: true, message: 'Migration completed' });
+    return { success: true, message: 'Migration completed' };
   } catch (error: any) {
     console.error('Migration error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return { error: error.message };
   }
+}
+
+export async function GET() {
+  const result = await runMigration();
+  if (result.error) {
+    return NextResponse.json(result, { status: 500 });
+  }
+  return NextResponse.json(result);
+}
+
+export async function POST() {
+  return GET();
+}
+
+export async function PUT() {
+  return GET();
 }

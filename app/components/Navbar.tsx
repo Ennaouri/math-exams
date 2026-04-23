@@ -5,11 +5,18 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 
+function getStoredImage(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('userImage');
+}
+
 export default function Navbar() {
   useEffect(() => {
     initFlowbite();
   }, []);
+
   const [isOpen, setIsOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const { data: session, status } = useSession();
 
@@ -27,6 +34,9 @@ export default function Navbar() {
   const closeNavbar = () => {
     setIsOpen(false);
   };
+
+  const userImage = (session?.user as any)?.image || getStoredImage();
+
   return (
     <nav className="bg-gray-900 text-white sticky top-0 z-50">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -160,13 +170,13 @@ export default function Navbar() {
                 <li className="relative">
                   <button
                     id="profileDropdown"
-                    data-dropdown-toggle="profileMenu"
+                    onClick={(e) => { e.preventDefault(); setProfileOpen(!profileOpen); }}
                     className="flex items-center gap-2 py-2 px-3 text-gray-200 rounded hover:bg-gray-700 md:hover:bg-transparent md:border-0 md:hover:text-blue-400 md:p-0"
                   >
                     <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center overflow-hidden">
-                      {(session.user as any)?.image ? (
+                      {userImage ? (
                         <img 
-                          src={(session.user as any).image} 
+                          src={userImage} 
                           alt={session.user?.name || 'User'}
                           className="w-full h-full object-cover"
                         />
@@ -183,7 +193,7 @@ export default function Navbar() {
                   </button>
                   <div
                     id="profileMenu"
-                    className="z-10 hidden font-normal bg-gray-800 divide-y divide-gray-700 rounded-lg shadow w-64 absolute right-0 mt-2"
+                    className={`z-10 font-normal bg-gray-800 divide-y divide-gray-700 rounded-lg shadow w-64 absolute right-0 mt-2 ${profileOpen ? 'block' : 'hidden'}`}
                   >
                     <div className="px-4 py-3">
                       <p className="text-sm text-white font-semibold">{session.user?.name}</p>
@@ -205,7 +215,7 @@ export default function Navbar() {
                       <li>
                         <Link
                           href="/profile"
-                          onClick={closeNavbar}
+                          onClick={() => { closeNavbar(); setProfileOpen(false); }}
                           className="block px-4 py-2 hover:bg-gray-700 hover:text-white"
                         >
                           <span className="flex items-center gap-2">
@@ -216,24 +226,15 @@ export default function Navbar() {
                           </span>
                         </Link>
                       </li>
-                      <li>
-                        <Link
-                          href="/profile#favorites"
-                          onClick={closeNavbar}
-                          className="block px-4 py-2 hover:bg-gray-700 hover:text-white"
-                        >
-                          <span className="flex items-center gap-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.682l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                            Favoris
-                          </span>
-                        </Link>
-                      </li>
                     </ul>
                     <div className="py-2">
                       <button
-                        onClick={() => signOut({ callbackUrl: "/" })}
+                        onClick={() => { 
+                          if (typeof window !== 'undefined') {
+                            localStorage.removeItem('userImage');
+                          }
+                          signOut({ callbackUrl: "/" }); 
+                        }}
                         className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

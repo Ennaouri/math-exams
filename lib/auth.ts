@@ -23,16 +23,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
+        const email = credentials.email as string;
+        const password = credentials.password as string;
         try {
-          const user = await authenticateUser(credentials.email as string, credentials.password as string);
+          const user = await authenticateUser(email, password);
           if (!user) {
             return null;
           }
+          console.log('authorize returning user:', { id: user.id, email: user.email, name: user.name, role: user.role, image: user.image });
           return {
             id: user.id.toString(),
             email: user.email,
             name: user.name,
             role: user.role,
+            image: user.image,
           };
         } catch (error: any) {
           console.error('Auth error:', error);
@@ -55,21 +59,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             const userMeta = JSON.stringify({ role: 'user', emailVerified: true });
             dbUser = await createUser(email, '', profile.name || 'Google User', 'user', userMeta);
           } else if (dbUser.metadata) {
-            const meta = JSON.parse(dbUser.metadata);
-            if (meta.emailVerified === false) {
-              meta.emailVerified = true;
-              delete meta.verifyToken;
-              delete meta.verifyExpires;
-              const { updateUser } = await import('./db');
-              await updateUser(dbUser.id, { metadata: JSON.stringify(meta) });
-            }
+            try {
+              const meta = JSON.parse(dbUser.metadata);
+              if (meta.emailVerified === false) {
+                meta.emailVerified = true;
+                delete meta.verifyToken;
+                delete meta.verifyExpires;
+                const { updateUser } = await import('./db');
+                await updateUser(dbUser.id, { metadata: JSON.stringify(meta) });
+              }
+              // Extract image from metadata if exists
+              if (meta.image) {
+                token.image = meta.image;
+              }
+            } catch (e) {}
           }
           token.id = dbUser.id;
           token.role = dbUser.role;
+          // Also check direct image field
+          if (dbUser.image) {
+            token.image = dbUser.image;
+          }
         }
       }
       if (user) {
+        token.id = (user as any).id;
         token.role = (user as any).role || 'user';
+        token.image = (user as any).image;
       }
       return token;
     },
@@ -77,6 +93,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session?.user) {
         (session.user as any).id = token.id;
         (session.user as any).role = token.role || 'user';
+        (session.user as any).image = token.image;
       }
       return session;
     },

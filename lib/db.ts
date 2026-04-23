@@ -1,6 +1,6 @@
 import pg from 'pg';
 import { Category, UnderCategory, Post, PostDetails, User } from './types';
-import crypto from 'crypto';
+import bcrypt from 'bcrypt';
 
 const { Pool } = pg;
 
@@ -79,32 +79,41 @@ export async function getPostDetailsByPostSlug(slug: string): Promise<PostDetail
   return result.rows as PostDetails[];
 }
 
-function hashPassword(password: string): string {
-  return crypto.createHash('sha256').update(password).digest('hex');
+async function hashPassword(password: string): Promise<string> {
+  if (!password) return '';
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(password, salt);
 }
 
 export async function authenticateUser(email: string, password: string): Promise<User | null> {
-  const hashedPassword = hashPassword(password);
   const result = await pool.query(
-    'SELECT * FROM users WHERE email = $1 AND password = $2',
-    [email, hashedPassword]
+    'SELECT * FROM users WHERE email = $1',
+    [email]
   );
   if (result.rows.length === 0) return null;
   const user = result.rows[0] as User;
+  
+  if (!user.password) return null;
+  
+  const validPassword = await bcrypt.compare(password, user.password);
+  if (!validPassword) return null;
+  
   delete (user as any).password;
   
-  if (user.metadata) {
-    const meta = JSON.parse(user.metadata);
-    if (meta.emailVerified === false) {
-      return { ...user, needsVerification: true } as User & { needsVerification: boolean };
-    }
+  if (user.metadata && typeof user.metadata === 'string' && user.metadata.startsWith('{')) {
+    try {
+      const meta = JSON.parse(user.metadata);
+      if (meta.emailVerified === false) {
+        return { ...user, needsVerification: true } as User & { needsVerification: boolean };
+      }
+    } catch (e) {}
   }
   
   return user;
 }
 
 export async function createUser(email: string, password: string, name: string, role: 'admin' | 'user' = 'user', metadata?: string): Promise<User> {
-  const hashedPassword = password ? hashPassword(password) : '';
+  const hashedPassword = password ? await hashPassword(password) : '';
   const result = await pool.query(
     'INSERT INTO users (email, password, name, role, metadata) VALUES ($1, $2, $3, $4, $5) RETURNING *',
     [email, hashedPassword, name, role, metadata || null]

@@ -15,11 +15,18 @@ interface UserData {
   image?: string;
 }
 
+interface UserMeta {
+  role?: string;
+  niveau?: string;
+  emailVerified?: boolean;
+}
+
 export default function ProfilePage() {
   const { data: session, status, update } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [passwordMode, setPasswordMode] = useState<ChangePasswordMode>('idle');
   const [currentPassword, setCurrentPassword] = useState('');
@@ -27,6 +34,13 @@ export default function ProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState(false);
+
+  const handleSignOut = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('userImage');
+    }
+    signOut({ callbackUrl: '/' });
+  };
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -36,21 +50,43 @@ export default function ProfilePage() {
     }
   }, [status, router]);
 
+  // Load stored image on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('userImage');
+      if (stored) {
+        setProfileImage(stored);
+      }
+    }
+  }, []);
+
   const fetchUserData = async () => {
     try {
       const res = await fetch('/api/users');
       if (res.ok) {
         const data = await res.json();
         setUserData(data);
+        // Save image to localStorage from database
+        if (data?.metadata) {
+          try {
+            const meta = JSON.parse(data.metadata);
+            if (meta.image && typeof window !== 'undefined') {
+              localStorage.setItem('userImage', meta.image);
+            }
+          } catch (e) {}
+        }
+      } else {
+        setUserData(null);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
+      setUserData(null);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -58,7 +94,7 @@ export default function ProfilePage() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-
+ 
       const res = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
@@ -66,14 +102,27 @@ export default function ProfilePage() {
 
       const data = await res.json();
       if (data.url) {
-        await fetch('/api/users', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: data.url }),
-        });
+        // Save to localStorage for immediate display
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('userImage', data.url);
+        }
         
-        await update({ image: data.url });
-        fetchUserData();
+        // Update local state immediately 
+        setProfileImage(data.url);
+        
+        // Try to update in database
+        try {
+          await fetch('/api/users', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: data.url }),
+          });
+        } catch (dbError) {
+          console.log('Could not save to database, using localStorage only');
+        }
+        
+        await update();
+        router.refresh();
       }
     } catch (error) {
       console.error('Upload error:', error);
@@ -82,10 +131,13 @@ export default function ProfilePage() {
     }
   };
 
-  const getUserMeta = () => {
-    if (!userData?.metadata) return null;
+  const getUserMeta = (): UserMeta | null => {
+    const metaStr = userData?.metadata || (session?.user as any)?.metadata;
+    if (!metaStr) return null;
+    if (typeof metaStr !== 'string') return null;
+    if (!metaStr.startsWith('{')) return null;
     try {
-      return JSON.parse(userData.metadata);
+      return JSON.parse(metaStr);
     } catch {
       return null;
     }
@@ -105,8 +157,22 @@ export default function ProfilePage() {
   }
 
   const displayImage = (session?.user as any)?.image || userData?.image;
+  
+  // Also check metadata for image
+  const getMetaFromData = () => {
+    if (!userData?.metadata) return null;
+    try {
+      return JSON.parse(userData.metadata);
+    } catch {
+      return null;
+    }
+  };
+  const metaData = getMetaFromData();
+  const imageFromMeta = metaData?.image;
+  const finalImage = displayImage || imageFromMeta || profileImage;
   const displayName = session?.user?.name || userData?.name || 'User';
   const displayEmail = session?.user?.email || userData?.email;
+  const userRole = (session?.user as any)?.role || userData?.role || 'user';
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4">
@@ -118,9 +184,9 @@ export default function ProfilePage() {
             <div className="relative -mt-16 mb-4">
               <div className="w-24 h-24 bg-white rounded-full p-1">
                 <div className="w-full h-full bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
-                  {displayImage ? (
+                  {finalImage ? (
                     <img 
-                      src={displayImage} 
+                      src={finalImage} 
                       alt={displayName} 
                       className="w-full h-full object-cover"
                     />
@@ -149,19 +215,42 @@ export default function ProfilePage() {
             <h1 className="text-2xl font-bold text-gray-800">{displayName}</h1>
             <p className="text-gray-600">{displayEmail}</p>
 
-            {userMeta && (
+            <div className="mt-4 flex gap-2">
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${
+                userRole === 'admin' ? 'bg-purple-600 text-white' : 'bg-green-600 text-white'
+              }`}>
+                {userRole === 'admin' ? 'Admin' : 'Utilisateur'}
+              </span>
+            </div>
+
+            {(userMeta?.role || userMeta?.niveau) && (
               <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Type:</span>
-                    <span className="text-blue-600 font-medium">
-                      {userMeta.role === 'etudiant' ? 'Étudiant' : 'Enseignant'}
-                    </span>
-                  </div>
-                  {userMeta.niveau && (
+                  {userMeta?.role && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Type:</span>
+                      <span className="text-blue-600 font-medium">
+                        {userMeta.role === 'etudiant' ? 'Étudiant' : 'Enseignant'}
+                      </span>
+                    </div>
+                  )}
+                  {userMeta?.niveau && (
                     <div className="flex justify-between">
                       <span className="text-gray-500">Niveau:</span>
-                      <span className="text-blue-600 font-medium">{userMeta.niveau}</span>
+                      <span className="text-blue-600 font-medium">
+                        {userMeta.niveau === 'tronc-commun' ? 'Tronc Commun' : 
+                         userMeta.niveau === '1re-annee-bac' ? '1re année bac' :
+                         userMeta.niveau === '2eme-annee-bac' ? '2ème année bac' : 
+                         userMeta.niveau}
+                      </span>
+                    </div>
+                  )}
+                  {userMeta?.emailVerified !== undefined && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Email:</span>
+                      <span className={`font-medium ${userMeta.emailVerified ? 'text-green-600' : 'text-orange-600'}`}>
+                        {userMeta.emailVerified ? 'Vérifié' : 'Non vérifié'}
+                      </span>
                     </div>
                   )}
                 </div>

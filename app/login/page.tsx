@@ -18,6 +18,7 @@ export default function LoginPage() {
   const [showVerifyNotice, setShowVerifyNotice] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPasswordHelp, setShowPasswordHelp] = useState(false);
 
   useEffect(() => {
     const savedEmail = localStorage.getItem('savedEmail');
@@ -47,6 +48,10 @@ export default function LoginPage() {
             setError('Invalid email or password');
           }
         } else {
+          // Clear old image and set fresh from auth
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('userImage');
+          }
           if (rememberMe) {
             localStorage.setItem('savedEmail', email);
           } else {
@@ -56,6 +61,33 @@ export default function LoginPage() {
           router.refresh();
         }
     } else {
+      // Validate password
+      if (password.length < 8) {
+        setError('Le mot de passe doit contenir au moins 8 caractères');
+        setLoading(false);
+        return;
+      }
+      if (!/[A-Z]/.test(password)) {
+        setError('Le mot de passe doit contenir au moins une majuscule');
+        setLoading(false);
+        return;
+      }
+      if (!/[a-z]/.test(password)) {
+        setError('Le mot de passe doit contenir au moins une minuscule');
+        setLoading(false);
+        return;
+      }
+      if (!/[0-9]/.test(password)) {
+        setError('Le mot de passe doit contenir au moins un chiffre');
+        setLoading(false);
+        return;
+      }
+      if (!/[^A-Za-z0-9]/.test(password)) {
+        setError('Le mot de passe doit contenir au moins un caractère spécial');
+        setLoading(false);
+        return;
+      }
+      
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -66,7 +98,18 @@ export default function LoginPage() {
       if (!res.ok) {
         setError(data.error || 'Registration failed');
       } else {
-        setShowVerifyNotice(true);
+        const result = await signIn('credentials', {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (result?.error) {
+          setError('Invalid email or password');
+        } else {
+          router.push('/profile');
+          router.refresh();
+        }
       }
     }
     } catch {
@@ -183,10 +226,32 @@ export default function LoginPage() {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => { setPassword(e.target.value); if (!isLogin && e.target.value) setShowPasswordHelp(true); }}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               required
             />
+            {showPasswordHelp && !isLogin && (
+              <div className="mt-2 text-xs text-gray-500">
+                <p className="font-semibold mb-1">Le mot de passe doit contenir :</p>
+                <ul className="space-y-1">
+                  <li className={password.length >= 8 ? 'text-green-600' : 'text-red-500'}>
+                    {password.length >= 8 ? '✓' : '✗'} Au moins 8 caractères
+                  </li>
+                  <li className={/[A-Z]/.test(password) ? 'text-green-600' : 'text-red-500'}>
+                    {/[A-Z]/.test(password) ? '✓' : '✗'} Une majuscule
+                  </li>
+                  <li className={/[a-z]/.test(password) ? 'text-green-600' : 'text-red-500'}>
+                    {/[a-z]/.test(password) ? '✓' : '✗'} Une minuscule
+                  </li>
+                  <li className={/[0-9]/.test(password) ? 'text-green-600' : 'text-red-500'}>
+                    {/[0-9]/.test(password) ? '✓' : '✗'} Un chiffre
+                  </li>
+                  <li className={/[^A-Za-z0-9]/.test(password) ? 'text-green-600' : 'text-red-500'}>
+                    {/[^A-Za-z0-9]/.test(password) ? '✓' : '✗'} Un caractère spécial
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-between mb-6">
@@ -223,14 +288,14 @@ export default function LoginPage() {
           {isLogin ? (
             <p className="text-gray-600">
               Don't have an account?{' '}
-              <button onClick={() => { setIsLogin(false); setError(''); }} className="text-blue-500 hover:text-blue-700 font-semibold">
+              <button onClick={() => { setIsLogin(false); setError(''); setShowPasswordHelp(false); }} className="text-blue-500 hover:text-blue-700 font-semibold">
                 Sign up
               </button>
             </p>
           ) : (
             <p className="text-gray-600">
               Already have an account?{' '}
-              <button onClick={() => { setIsLogin(true); setError(''); }} className="text-blue-500 hover:text-blue-700 font-semibold">
+              <button onClick={() => { setIsLogin(true); setError(''); setShowPasswordHelp(false); }} className="text-blue-500 hover:text-blue-700 font-semibold">
                 Login
               </button>
             </p>

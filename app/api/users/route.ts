@@ -9,8 +9,20 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = parseInt((session.user as any).id);
-    const user = await getUserById(userId);
+    const userId = (session.user as any)?.id;
+    console.log('GET /api/users - userId from session:', userId, 'type:', typeof userId);
+    if (!userId) {
+      return NextResponse.json({ error: 'User ID not found in session' }, { status: 400 });
+    }
+    
+    const parsedId = parseInt(userId);
+    console.log('GET /api/users - parsedId:', parsedId, 'isNaN:', isNaN(parsedId));
+    if (isNaN(parsedId)) {
+      return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+    }
+    
+    const user = await getUserById(parsedId);
+    console.log('GET /api/users - user:', user);
     
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -30,16 +42,49 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = parseInt((session.user as any).id);
+    const userId = (session.user as any)?.id;
+    if (!userId) {
+      return NextResponse.json({ error: 'User ID not found in session' }, { status: 400 });
+    }
+    
+    const parsedId = parseInt(userId);
+    if (isNaN(parsedId)) {
+      return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+    }
+    
     const body = await request.json();
     
-    const user = await updateUser(userId, body);
+    let user: any = null;
     
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    // Always store image in metadata (safer than direct column)
+    if (body.image) {
+      const { getUserById } = await import('@/lib/db');
+      const existingUser = await getUserById(parsedId);
+      let meta: any = { role: 'user' };
+      if (existingUser?.metadata) {
+        try {
+          meta = JSON.parse(existingUser.metadata);
+        } catch (e) {}
+      }
+      meta.image = body.image;
+      user = await updateUser(parsedId, { metadata: JSON.stringify(meta) });
+    } else if (Object.keys(body).length > 0) {
+      // For other updates like name
+      const { getUserById } = await import('@/lib/db');
+      const existingUser = await getUserById(parsedId);
+      if (existingUser) {
+        user = await updateUser(parsedId, body);
+      }
+    }
+    
+    if (!user && Object.keys(body).length > 0) {
+      return NextResponse.json({ error: 'Failed to update user' }, { status: 404 });
     }
 
-    return NextResponse.json(user);
+    // Return updated user
+    const { getUserById } = await import('@/lib/db');
+    const updatedUser = await getUserById(parsedId);
+    return NextResponse.json(updatedUser);
   } catch (error) {
     console.error('Error updating user:', error);
     return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });

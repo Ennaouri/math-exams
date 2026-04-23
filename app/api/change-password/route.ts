@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { pool } from "@/lib/db";
-import crypto from "crypto";
+import bcrypt from 'bcrypt';
 
 export async function POST(request: Request) {
   try {
@@ -19,30 +19,32 @@ export async function POST(request: Request) {
       );
     }
 
-    const hashedCurrentPassword = crypto
-      .createHash("sha256")
-      .update(currentPassword)
-      .digest("hex");
-
-    const hashedNewPassword = crypto
-      .createHash("sha256")
-      .update(newPassword)
-      .digest("hex");
-
     const result = await pool.query(
-      "SELECT id FROM users WHERE email = $1 AND password = $2",
-      [session.user.email, hashedCurrentPassword]
+      'SELECT password FROM users WHERE email = $1',
+      [session.user.email]
     );
 
     if (result.rows.length === 0) {
+      return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
+    }
+
+    const storedHash = result.rows[0].password;
+    if (!storedHash) {
+      return NextResponse.json({ error: "Mot de passe non défini" }, { status: 400 });
+    }
+
+    const validPassword = await bcrypt.compare(currentPassword, storedHash);
+    if (!validPassword) {
       return NextResponse.json(
         { error: "Mot de passe actuel incorrect" },
         { status: 400 }
       );
     }
 
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
     await pool.query(
-      "UPDATE users SET password = $1 WHERE email = $2",
+      'UPDATE users SET password = $1 WHERE email = $2',
       [hashedNewPassword, session.user.email]
     );
 
