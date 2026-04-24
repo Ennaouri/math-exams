@@ -78,20 +78,25 @@ iframe {
 .pdf-container {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  position: relative;
 }
 
-object, .pdfIframe{
+object, .pdfIframe {
   height: 85vh;
   width: 100%;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-iframe[title="PDF Viewer"]{
+iframe[title="PDF Viewer"] {
   height: 85vh;
   width: 100%;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .no-download {

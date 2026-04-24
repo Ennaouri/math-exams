@@ -74,15 +74,18 @@ function renderContent(postDetail: any, showDownload = true) {
   }
 
   if (isPdf) {
+    const pdfUrl = `https://docs.google.com/gview?url=${encodeURIComponent(thumbnail)}&embedded=true`;
     return (
-      <div className="pdf-container" style={{ minHeight: '80vh' }}>
+      <div className="pdf-container" style={{ height: 'calc(100vh - 200px)', minHeight: '500px' }}>
         <div className="pdf-preview">
           <iframe
-            src={thumbnail}
+            src={pdfUrl}
             width="100%"
-            height="800"
-            style={{ border: 'none', minHeight: '70vh' }}
+            height="100%"
+            style={{ border: 'none' }}
             title="PDF Viewer"
+            scrolling="yes"
+            allowFullScreen
           ></iframe>
           {showDownload && (
             <a
