@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm install --legacy-peer-deps && next build",
     "export": "next build && next export",
     "sitemap": "next-sitemap --config next-sitemap.config.js",
     "generate-sitemap": "ts-node app/generateSitemap.ts",
