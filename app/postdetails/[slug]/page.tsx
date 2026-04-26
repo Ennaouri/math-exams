@@ -74,30 +74,25 @@ function renderContent(postDetail: any, showDownload = true) {
   }
 
   if (isPdf) {
-    const pdfUrl = `https://docs.google.com/gview?url=${encodeURIComponent(thumbnail)}&embedded=true`;
     return (
-      <div className="pdf-container" style={{ height: 'calc(100vh - 200px)', minHeight: '500px' }}>
-        <div className="pdf-preview">
-          <iframe
-            src={pdfUrl}
-            width="100%"
-            height="100%"
-            style={{ border: 'none' }}
-            title="PDF Viewer"
-            scrolling="yes"
-            allowFullScreen
-          ></iframe>
-          {showDownload && (
-            <a
-              href={thumbnail}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-            >
-              Download PDF
-            </a>
-          )}
-        </div>
+      <div className="pdf-container pdf-embed-wrapper" style={{ height: 'calc(100vh - 200px)', minHeight: '500px' }}>
+        <embed
+          src={`${thumbnail}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`}
+          type="application/pdf"
+          width="100%"
+          height="100%"
+          style={{ border: 'none', pointerEvents: 'auto' }}
+        />
+        {showDownload && (
+          <a
+            href={thumbnail}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Download PDF
+          </a>
+        )}
       </div>
     );
   }
@@ -107,6 +102,7 @@ function renderContent(postDetail: any, showDownload = true) {
       <div className="video-container">
         <video
           controls
+          controlsList="nodownload"
           width="100%"
           className="rounded-lg"
           preload="metadata"

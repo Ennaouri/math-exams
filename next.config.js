@@ -2,6 +2,7 @@
 const nextConfig = {
   turbopack: {},
   reactStrictMode: true,
+  serverExternalPackages: ['pdfjs-dist'],
   images: {
     remotePatterns: [
       {
