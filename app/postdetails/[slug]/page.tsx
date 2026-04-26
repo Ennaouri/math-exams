@@ -149,6 +149,9 @@ export default async function PostDetails({
   
   const post = await getPostBySlug(slug);
   const session = await auth();
+  console.log('DEBUG session:', JSON.stringify(session));
+  console.log('DEBUG session.user:', session?.user);
+  console.log('DEBUG session truthy:', Boolean(session));
   
   const jsonLd = post ? {
     "@context": "https://schema.org",
