@@ -110,6 +110,16 @@ function renderContent(postDetail: any, showDownload = true) {
           <source src={thumbnail} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+        {showDownload && (
+          <a
+            href={thumbnail}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Download Video
+          </a>
+        )}
       </div>
     );
   }
@@ -122,6 +132,16 @@ function renderContent(postDetail: any, showDownload = true) {
           alt={postDetail.name}
           className="w-full max-h-[600px] object-contain rounded-lg"
         />
+        {showDownload && (
+          <a
+            href={thumbnail}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Download Image
+          </a>
+        )}
       </div>
     );
   }
