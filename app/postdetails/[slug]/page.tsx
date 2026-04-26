@@ -213,7 +213,7 @@ export default async function PostDetails({
         <div className="rounded-sm overflow-hidden bg-white shadow-sm">
           <div className=" pb-5">
             <nav className="px-5 mb-3 text-sm text-gray-500">
-              <ol className="flex items-center space-x-2">
+              <ol className="flex items-center space-x-2 flex-wrap">
                 <li>
                   <Link href="/" className="hover:text-red-600">Home</Link>
                 </li>
@@ -227,11 +227,14 @@ export default async function PostDetails({
                     </li>
                   </>
                 )}
-                {postWithCategory?.underCategory && (
+                {postWithCategory?.underCategory && postWithCategory?.category && (
                   <>
                     <li>/</li>
                     <li>
-                      <Link href={`/category/${postWithCategory.category?.slug}/${postWithCategory.underCategory.slug}`} className="hover:text-red-600">
+                      <Link 
+                        href={`/category/${postWithCategory.category?.slug}/${postWithCategory.underCategory.slug}`} 
+                        className="hover:text-red-600"
+                      >
                         {postWithCategory.underCategory.name}
                       </Link>
                     </li>
