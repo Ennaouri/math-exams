@@ -87,7 +87,7 @@ export default async function RootLayout({
   const randomPosts = [randomPosts1, randomPosts2, randomPosts3, randomPosts4];
 
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>

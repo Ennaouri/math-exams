@@ -79,6 +79,20 @@ export async function getPostDetailsByPostSlug(slug: string): Promise<PostDetail
   return result.rows as PostDetails[];
 }
 
+export async function getAllPostDetails(): Promise<PostDetails[]> {
+  const result = await pool.query('SELECT * FROM "PostDetails"');
+  return result.rows as PostDetails[];
+}
+
+export async function getAllPostDetailsWithPostName(): Promise<(PostDetails & { post_name?: string })[]> {
+  const result = await pool.query(`
+    SELECT pd.*, p.name as post_name 
+    FROM "PostDetails" pd 
+    JOIN "Post" p ON p.id = pd.post_id
+  `);
+  return result.rows as (PostDetails & { post_name?: string })[];
+}
+
 export interface PostWithCategory {
   post: Post;
   category: Category | null;
