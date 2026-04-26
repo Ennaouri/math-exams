@@ -229,7 +229,7 @@ export default async function PostDetails({
                           data-twe-parent="#accordionExample"
                         >
                           <div className={`py-4 ${!session ? 'no-download' : ''}`}>
-                            {renderContent(postDetail, !!session)}
+                            {renderContent(postDetail, Boolean(session))}
                             
                             {postDetail.description && !postDetail.thumbnail && (
                               <div
