@@ -1,8 +1,9 @@
 import React from "react";
 import "./postDetails.css";
 import type { Metadata, ResolvingMetadata } from "next";
-import { getPostBySlug, getPostDetailsByPostSlug } from "@/lib/db";
+import { getPostBySlug, getPostDetailsByPostSlug, getPostWithCategory } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import Link from "next/link";
 import AdSenseLoader from "@/app/components/AdSenseLoader";
 
 export const dynamic = 'force-dynamic';
@@ -169,6 +170,7 @@ export default async function PostDetails({
   
   const post = await getPostBySlug(slug);
   const session = await auth();
+  const postWithCategory = await getPostWithCategory(slug);
   console.log('DEBUG session:', JSON.stringify(session));
   console.log('DEBUG session.user:', session?.user);
   console.log('DEBUG session truthy:', Boolean(session));
@@ -210,6 +212,35 @@ export default async function PostDetails({
       <div className="">
         <div className="rounded-sm overflow-hidden bg-white shadow-sm">
           <div className=" pb-5">
+            <nav className="px-5 mb-3 text-sm text-gray-500">
+              <ol className="flex items-center space-x-2">
+                <li>
+                  <Link href="/" className="hover:text-red-600">Home</Link>
+                </li>
+                {postWithCategory?.category && (
+                  <>
+                    <li>/</li>
+                    <li>
+                      <Link href={`/category/${postWithCategory.category.slug}`} className="hover:text-red-600">
+                        {postWithCategory.category.name}
+                      </Link>
+                    </li>
+                  </>
+                )}
+                {postWithCategory?.underCategory && (
+                  <>
+                    <li>/</li>
+                    <li>
+                      <Link href={`/category/${postWithCategory.category?.slug}/${postWithCategory.underCategory.slug}`} className="hover:text-red-600">
+                        {postWithCategory.underCategory.name}
+                      </Link>
+                    </li>
+                  </>
+                )}
+                <li>/</li>
+                <li className="text-gray-700">{post?.name}</li>
+              </ol>
+            </nav>
             <h2 className="px-5 block text-2xl font-semibold text-gray-700 font-roboto">
               {post?.name}
             </h2>

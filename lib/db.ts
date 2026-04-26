@@ -79,6 +79,35 @@ export async function getPostDetailsByPostSlug(slug: string): Promise<PostDetail
   return result.rows as PostDetails[];
 }
 
+export interface PostWithCategory {
+  post: Post;
+  category: Category | null;
+  underCategory: UnderCategory | null;
+}
+
+export async function getPostWithCategory(slug: string): Promise<PostWithCategory | null> {
+  const postResult = await pool.query('SELECT * FROM "Post" WHERE slug = $1', [slug]);
+  const post = postResult.rows[0] as Post;
+  if (!post) return null;
+  
+  const underCatResult = await pool.query(
+    'SELECT uc.* FROM "UnderCategory" uc WHERE uc.id = $1',
+    [post.underCategoryId]
+  );
+  const underCategory = underCatResult.rows[0] as UnderCategory;
+  
+  let category: Category | null = null;
+  if (underCategory) {
+    const catResult = await pool.query(
+      'SELECT c.* FROM "Category" c WHERE c.id = $1',
+      [underCategory.category_id]
+    );
+    category = catResult.rows[0] as Category;
+  }
+  
+  return { post, category, underCategory };
+}
+
 async function hashPassword(password: string): Promise<string> {
   if (!password) return '';
   const salt = await bcrypt.genSalt(10);
