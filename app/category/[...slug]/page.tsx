@@ -46,6 +46,14 @@ export default async function CategoryPage({
     
     return (
       <div>
+        <nav className="mb-4 text-sm text-gray-500">
+          <ol className="flex items-center space-x-2">
+            <li><Link href="/" className="hover:text-red-600">Home</Link></li>
+            {category && (<><li>/</li><li><Link href={`/category/${category.slug}`} className="hover:text-red-600">{category.name}</Link></li></>)}
+            <li>/</li>
+            <li className="text-gray-700">{underCategory?.name}</li>
+          </ol>
+        </nav>
         <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
           <h5 className="text-base uppercase font-semibold font-roboto">
             {title}
@@ -83,6 +91,13 @@ export default async function CategoryPage({
   
   return (
     <div>
+      <nav className="mb-4 text-sm text-gray-500">
+        <ol className="flex items-center space-x-2">
+          <li><Link href="/" className="hover:text-red-600">Home</Link></li>
+          <li>/</li>
+          <li className="text-gray-700">{category?.name}</li>
+        </ol>
+      </nav>
       <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
         <h5 className="text-base uppercase font-semibold font-roboto">
           {category?.name || 'Under Categories'}

@@ -52,6 +52,13 @@ function SearchContent() {
             </div>
 
             <div className="max-w-4xl mx-auto px-4 py-8">
+                <nav className="mb-4 text-sm text-gray-500">
+                    <ol className="flex items-center space-x-2">
+                        <li><Link href="/" className="hover:text-red-600">Home</Link></li>
+                        <li>/</li>
+                        <li className="text-gray-700">Recherche: {query}</li>
+                    </ol>
+                </nav>
                 {loading ? (
                     <div className="text-center py-8">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
