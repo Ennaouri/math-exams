@@ -17,12 +17,15 @@ export async function GET() {
         JOIN "Post" p ON p.id = pd.post_id
       `);
       
-      const getFileName = (url: string): string => {
+      const getBaseName = (url: string): string => {
         if (!url) return '';
         try {
           const decoded = decodeURIComponent(url);
           const parts = decoded.split('/');
-          return parts[parts.length - 1].toLowerCase();
+          const fileName = parts[parts.length - 1].toLowerCase();
+          const withoutTimestamp = fileName.replace(/^[0-9]+-/, '');
+          const withoutVercelSuffix = withoutTimestamp.replace(/-[a-zA-Z0-9]+(\.[^.]+)$/, '$1');
+          return withoutVercelSuffix;
         } catch {
           return '';
         }
@@ -30,19 +33,19 @@ export async function GET() {
       
       const blobFileNames = new Set<string>();
       for (const blob of blobs.blobs) {
-        const fileName = getFileName(blob.pathname || blob.url);
+        const fileName = getBaseName(blob.pathname || blob.url);
         if (fileName) blobFileNames.add(fileName);
       }
       
       for (const p of postsResult.rows) {
         if (p.thumbnail && p.name) {
-          const fileName = getFileName(p.thumbnail);
+          const fileName = getBaseName(p.thumbnail);
           if (blobFileNames.has(fileName)) {
             usedUrls.add(p.thumbnail);
             blobUsage[p.thumbnail] = `Post: ${p.name}`;
             
             for (const blob of blobs.blobs) {
-              const blobFileName = getFileName(blob.pathname || blob.url);
+              const blobFileName = getBaseName(blob.pathname || blob.url);
               if (blobFileName === fileName) {
                 usedUrls.add(blob.url);
                 blobUsage[blob.url] = `Post: ${p.name}`;
@@ -53,13 +56,13 @@ export async function GET() {
       }
       for (const pd of postDetailsResult.rows) {
         if (pd.thumbnail && pd.name) {
-          const fileName = getFileName(pd.thumbnail);
+          const fileName = getBaseName(pd.thumbnail);
           if (blobFileNames.has(fileName)) {
             usedUrls.add(pd.thumbnail);
             blobUsage[pd.thumbnail] = `PostDetails: ${pd.name} (${pd.post_name})`;
             
             for (const blob of blobs.blobs) {
-              const blobFileName = getFileName(blob.pathname || blob.url);
+              const blobFileName = getBaseName(blob.pathname || blob.url);
               if (blobFileName === fileName) {
                 usedUrls.add(blob.url);
                 blobUsage[blob.url] = `PostDetails: ${pd.name} (${pd.post_name})`;
