@@ -27,6 +27,8 @@ export interface Post {
   slug: string;
   underCategoryId: number;
   attribute?: string;
+  semestre?: number;
+  semestre_order?: number;
   created_at: Date;
   updated_at: Date;
 }

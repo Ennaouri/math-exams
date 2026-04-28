@@ -12,6 +12,8 @@ interface Post {
   underCategoryId: number;
   under_category_name?: string;
   attribute?: string;
+  semestre?: number;
+  semestre_order?: number;
 }
 
 export default function PostsPage() {
@@ -29,6 +31,8 @@ export default function PostsPage() {
     thumbnail: '',
     underCategoryId: 0,
     attribute: '',
+    semestre: null as number | null,
+    semestre_order: null as number | null,
   });
 
   useEffect(() => {
@@ -105,12 +109,14 @@ export default function PostsPage() {
       thumbnail: item.thumbnail,
       underCategoryId: item.underCategoryId,
       attribute: item.attribute || '',
+      semestre: item.semestre ?? null,
+      semestre_order: item.semestre_order ?? null,
     });
     setShowForm(true);
   };
 
   const resetForm = () => {
-    setFormData({ name: '', description: '', slug: '', thumbnail: '', underCategoryId: 0, attribute: '' });
+    setFormData({ name: '', description: '', slug: '', thumbnail: '', underCategoryId: 0, attribute: '', semestre: null, semestre_order: null });
     setEditingItem(null);
     setShowForm(false);
   };
@@ -156,6 +162,18 @@ export default function PostsPage() {
                 </select>
               </div>
               <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Semestre</label>
+                <select value={formData.semestre || ''} onChange={(e) => setFormData({ ...formData, semestre: e.target.value ? parseInt(e.target.value) : null })} className="w-full border p-2 rounded">
+                  <option value="">Select semestre</option>
+                  <option value="1">Semestre 1</option>
+                  <option value="2">Semestre 2</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Order in Semestre</label>
+                <input type="number" min="1" value={formData.semestre_order || ''} onChange={(e) => setFormData({ ...formData, semestre_order: e.target.value ? parseInt(e.target.value) : null })} className="w-full border p-2 rounded" />
+              </div>
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Description</label>
                 <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full border p-2 rounded" rows={3} />
               </div>
@@ -191,6 +209,8 @@ export default function PostsPage() {
               <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">{post.attribute}</span>
             ) : null
           },
+          { key: 'semestre', label: 'Semestre', sortable: true },
+          { key: 'semestre_order', label: 'Ordre', sortable: true },
           { 
             key: 'under_category_name', 
             label: 'Category', 
@@ -225,6 +245,10 @@ export default function PostsPage() {
             { value: 'devoir', label: 'Devoir' },
             { value: 'examens', label: 'Examens' },
             { value: 'concours', label: 'Concours' },
+          ]},
+          { key: 'semestre', label: 'Filter by Semestre', options: [
+            { value: '1', label: 'Semestre 1' },
+            { value: '2', label: 'Semestre 2' },
           ]},
         ]}
         searchPlaceholder="Search posts..."

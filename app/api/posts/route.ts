@@ -18,10 +18,10 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, description, slug, thumbnail, underCategoryId, attribute } = body;
+    const { name, description, slug, thumbnail, underCategoryId, attribute, semestre, semestre_order } = body;
     const result = await pool.query(
-      'INSERT INTO "Post" (name, description, slug, thumbnail, "underCategory_id", attribute, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW()) RETURNING *',
-      [name, description, slug, thumbnail, underCategoryId, attribute || null]
+      'INSERT INTO "Post" (name, description, slug, thumbnail, "underCategory_id", attribute, semestre, semestre_order, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW()) RETURNING *',
+      [name, description, slug, thumbnail, underCategoryId, attribute || null, semestre || null, semestre_order || null]
     );
     return NextResponse.json(result.rows[0]);
   } catch (error: any) {
