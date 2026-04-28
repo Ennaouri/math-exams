@@ -10,6 +10,7 @@ import { getCategories, getPosts, getUnderCategories } from "@/lib/db";
 import { Providers } from "./providers";
 import Script from "next/script";
 import { GA_TRACKING_ID } from "@/lib/gtag";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const dynamic = 'force-dynamic';
 
@@ -98,6 +99,7 @@ export default async function RootLayout({
       </Script>
       <Providers>
       <body>
+        <SpeedInsights />
         <main className="bg-gray-100 min-h-screen w-screen">
           <main className="max-w-screen-xl m-auto bg-white">
             <main>
