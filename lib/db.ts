@@ -54,13 +54,13 @@ export async function getUnderCategoryBySlug(slug: string): Promise<UnderCategor
 }
 
 export async function getPosts(): Promise<Post[]> {
-  const result = await pool.query('SELECT * FROM "Post"');
+  const result = await pool.query('SELECT * FROM "Post" ORDER BY semestre, semestre_order NULLS LAST, created_at DESC');
   return result.rows as Post[];
 }
 
 export async function getPostsByUnderCategorySlug(slug: string): Promise<Post[]> {
   const result = await pool.query(
-    'SELECT p.* FROM "Post" p JOIN "UnderCategory" uc ON uc.id = p."underCategory_id" WHERE uc.slug = $1',
+    'SELECT p.* FROM "Post" p JOIN "UnderCategory" uc ON uc.id = p."underCategory_id" WHERE uc.slug = $1 ORDER BY p.semestre, p.semestre_order NULLS LAST, p.created_at DESC',
     [slug]
   );
   return result.rows as Post[];

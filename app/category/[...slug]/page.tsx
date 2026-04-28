@@ -44,6 +44,35 @@ export default async function CategoryPage({
     const category = await getCategoryBySlug(categorySlug);
     const title = underCategory?.name || category?.name || 'Posts';
     
+    const postsWithSemestre = posts.filter(p => p.semestre != null);
+    const postsWithoutSemestre = posts.filter(p => p.semestre == null);
+    
+    const semester1Posts = postsWithSemestre.filter(p => p.semestre === 1).sort((a, b) => (a.semestre_order || 0) - (b.semestre_order || 0));
+    const semester2Posts = postsWithSemestre.filter(p => p.semestre === 2).sort((a, b) => (a.semestre_order || 0) - (b.semestre_order || 0));
+    const allPosts = [...semester1Posts, ...semester2Posts, ...postsWithoutSemestre];
+    
+    const renderPost = (post: typeof posts[0], index: number) => (
+      <Link 
+        key={index} 
+        href={`/postdetails/${post.slug}`}
+        className="block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100"
+      >
+        <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4">
+          <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <h3 className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition-colors text-center">
+          {post.name}
+        </h3>
+        {post.description && (
+          <p className="text-sm text-gray-500 mt-2 text-center line-clamp-2">
+            {post.description}
+          </p>
+        )}
+      </Link>
+    );
+    
     return (
       <div>
         <nav className="mb-4 text-sm text-gray-500">
@@ -59,29 +88,44 @@ export default async function CategoryPage({
             {title}
           </h5>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {posts.map((post, index) => (
-            <Link 
-              key={index} 
-              href={`/postdetails/${post.slug}`}
-              className="block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 border border-gray-100"
-            >
-              <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition-colors text-center">
-                {post.name}
-              </h3>
-              {post.description && (
-                <p className="text-sm text-gray-500 mt-2 text-center line-clamp-2">
-                  {post.description}
-                </p>
-              )}
-            </Link>
-          ))}
-        </div>
+        
+        {semester1Posts.length > 0 && (
+          <div className="mb-8">
+            <div className="flex bg-blue-600 px-3 py-2 justify-between items-center rounded-sm mb-4">
+              <h5 className="text-base uppercase font-semibold font-roboto text-white">
+                Semestre 1
+              </h5>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {semester1Posts.map(renderPost)}
+            </div>
+          </div>
+        )}
+        
+        {semester2Posts.length > 0 && (
+          <div className="mb-8">
+            <div className="flex bg-green-600 px-3 py-2 justify-between items-center rounded-sm mb-4">
+              <h5 className="text-base uppercase font-semibold font-roboto text-white">
+                Semestre 2
+              </h5>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {semester2Posts.map(renderPost)}
+            </div>
+          </div>
+        )}
+        
+        {postsWithoutSemestre.length > 0 && (
+          <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {postsWithoutSemestre.map(renderPost)}
+            </div>
+          </div>
+        )}
+        
+        {allPosts.length === 0 && (
+          <p className="text-gray-500">Aucun post disponible.</p>
+        )}
       </div>
     );
   }
