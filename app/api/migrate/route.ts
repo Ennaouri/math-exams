@@ -6,6 +6,8 @@ async function runMigration() {
     await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS metadata JSONB');
     await pool.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS image TEXT');
     await pool.query('ALTER TABLE "Post" ADD COLUMN IF NOT EXISTS attribute VARCHAR(50)');
+    await pool.query('ALTER TABLE "Post" ADD COLUMN IF NOT EXISTS semestre INTEGER');
+    await pool.query('ALTER TABLE "Post" ADD COLUMN IF NOT EXISTS semestre_order INTEGER');
     return { success: true, message: 'Migration completed' };
   } catch (error: any) {
     console.error('Migration error:', error);
