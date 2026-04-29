@@ -10,7 +10,7 @@ export default function RandomPosts({ posts }: { posts: Post[] }) {
         Derniers ajouts
       </h3>
       <div className="space-y-3">
-        {posts.map((post, index) => (
+        {posts.filter(Boolean).map((post, index) => (
           <Link href={`/postdetails/${post.slug}`} className="block group" key={index}>
             <h5 className="text-md leading-5 block font-roboto font-semibold transition group-hover:text-blue-500">
               {post.name}

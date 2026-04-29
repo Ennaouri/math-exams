@@ -3,6 +3,7 @@ import { getUnderCategoriesByCategorySlug, getPostsByUnderCategorySlug, getCateg
 import Link from "next/link";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
+import AdUnit from "@/app/components/AdUnit";
 
 export const dynamic = 'force-dynamic';
 
@@ -100,6 +101,12 @@ export default async function CategoryPage({
             {title}
           </h1>
         </div>
+        <section className="bg-white px-5 py-5 rounded-sm mb-5">
+          <p className="text-gray-700 leading-7">
+            Retrouvez les ressources de {title} pour apprendre, s'entraîner et préparer les devoirs ou examens. Les contenus sont organisés pour suivre le programme marocain tout en restant utiles aux élèves francophones qui travaillent les mêmes notions.
+          </p>
+        </section>
+        <AdUnit slot="5512454890" format="fluid" layout="in-article" />
         
         {semester1Posts.length > 0 && (
           <div className="mb-8">
@@ -159,6 +166,11 @@ export default async function CategoryPage({
           {category?.name || 'Under Categories'}
         </h1>
       </div>
+      <section className="bg-white px-5 py-5 rounded-sm mb-5">
+        <p className="text-gray-700 leading-7">
+          Choisissez un chapitre ou un type de ressource pour travailler {category?.name || "ce niveau"}: cours, exercices, devoirs, examens et corrections détaillées.
+        </p>
+      </section>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {underCategories.map((underCategory, index) => (
           <Link 

@@ -6,14 +6,16 @@ import RightSide from "./components/RightSide";
 import "./globals.css";
 import Footer from "./components/Footer";
 import type { Metadata } from "next";
-import { getCategories, getPosts, getUnderCategories } from "@/lib/db";
+import { getCategories, getLatestPosts, getLatestUnderCategories } from "@/lib/db";
 import { Providers } from "./providers";
 import Script from "next/script";
 import { GA_TRACKING_ID } from "@/lib/gtag";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, seoKeywords } from "@/lib/seo";
+import type { Category, Post, UnderCategory } from "@/lib/types";
 
 export const dynamic = 'force-dynamic';
+const isProduction = process.env.NODE_ENV === "production";
 
 export const metadata: Metadata = {
   title: {
@@ -80,16 +82,23 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const categories = await getCategories();
-  const posts = await getPosts();
-  const undercategories = await getUnderCategories();
+  let categories: Category[] = [];
+  let posts: Post[] = [];
+  let undercategories: UnderCategory[] = [];
 
-  const randomPosts1 = posts[getRandomInt(posts.length)];
-  const randomPosts2 = posts[getRandomInt(posts.length)];
-  const randomPosts3 = posts[getRandomInt(posts.length)];
-  const randomPosts4 = posts[getRandomInt(posts.length)];
+  try {
+    [categories, posts, undercategories] = await Promise.all([
+      getCategories(),
+      getLatestPosts(8),
+      getLatestUnderCategories(4),
+    ]);
+  } catch (error) {
+    console.error("Unable to load layout data:", error);
+  }
 
-  const randomPosts = [randomPosts1, randomPosts2, randomPosts3, randomPosts4];
+  const randomPosts = posts.length
+    ? Array.from({ length: Math.min(4, posts.length) }, () => posts[getRandomInt(posts.length)]).filter(Boolean)
+    : [];
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -119,11 +128,15 @@ export default async function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301" crossOrigin="anonymous" strategy="lazyOnload" />
-      <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} strategy="afterInteractive" />
-      <Script id="gtag-init" strategy="afterInteractive">
-        {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_TRACKING_ID}');`}
-      </Script>
+      {isProduction && (
+        <>
+          <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301" crossOrigin="anonymous" strategy="lazyOnload" />
+          <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} strategy="afterInteractive" />
+          <Script id="gtag-init" strategy="afterInteractive">
+            {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_TRACKING_ID}');`}
+          </Script>
+        </>
+      )}
       <Script
         id="website-json-ld"
         type="application/ld+json"
@@ -146,18 +159,20 @@ export default async function RootLayout({
                 <div className="container mx-auto  flex flex-wrap lg:flex-nowrap">
                   <div className="w-full xl:w-3/12 hidden xl:block">
                     <CategoriesSideBar categories={categories} />
-                    <div style={{ overflow: "hidden", margin: "5px" }}>
-                      <ins
-                        className="adsbygoogle"
-                        style={{ display: "block" }}
-                        data-ad-format="autorelaxed"
-                        data-ad-client="ca-pub-5587331919297301"
-                        data-ad-slot="1112602893"
-                        data-full-width-responsive="true"
-                        data-ad-status="unfilled"
-                      ></ins>
-                    </div>
-                    <RandomPosts posts={randomPosts} />
+                    {isProduction && (
+                      <div style={{ overflow: "hidden", margin: "5px" }}>
+                        <ins
+                          className="adsbygoogle"
+                          style={{ display: "block" }}
+                          data-ad-format="autorelaxed"
+                          data-ad-client="ca-pub-5587331919297301"
+                          data-ad-slot="1112602893"
+                          data-full-width-responsive="true"
+                          data-ad-status="unfilled"
+                        ></ins>
+                      </div>
+                    )}
+                    {randomPosts.length > 0 && <RandomPosts posts={randomPosts} />}
                     <div className="mt-4">
                       <RightSide undercategories={undercategories} />
                     </div>

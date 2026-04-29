@@ -1,11 +1,12 @@
 import React from "react";
 import "./postDetails.css";
 import type { Metadata, ResolvingMetadata } from "next";
-import { getPostBySlug, getPostDetailsByPostSlug, getPostWithCategory } from "@/lib/db";
+import { getPostBySlug, getPostDetailsByPostSlug, getPostWithCategory, getRelatedPostsBySlug } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 import AdSenseLoader from "@/app/components/AdSenseLoader";
 import { SITE_NAME, SITE_URL, buildPageMetadata } from "@/lib/seo";
+import AdUnit from "@/app/components/AdUnit";
 
 export const dynamic = 'force-dynamic';
 
@@ -181,6 +182,7 @@ export default async function PostDetails({
   const post = await getPostBySlug(slug);
   const session = await auth();
   const postWithCategory = await getPostWithCategory(slug);
+  const relatedPosts = await getRelatedPostsBySlug(slug);
   
   const jsonLd = post ? {
     "@context": "https://schema.org",
@@ -273,6 +275,18 @@ export default async function PostDetails({
                 {post?.created_at?.toDateString()}
               </div>
             </div>
+            <section className="mx-5 mt-5 rounded-sm border border-blue-100 bg-blue-50 p-4">
+              <h2 className="text-lg font-semibold text-gray-800">À propos de cette ressource</h2>
+              <p className="mt-2 text-sm leading-6 text-gray-700">
+                Cette page vous aide à travailler {postWithCategory?.underCategory?.name || "les mathématiques"} pour {postWithCategory?.category?.name || "le programme de mathématiques"}. Consultez le contenu, notez les méthodes importantes, puis entraînez-vous avec les ressources liées en bas de page.
+              </p>
+              {post?.description && (
+                <p className="mt-2 text-sm leading-6 text-gray-700">{post.description}</p>
+              )}
+            </section>
+            <div className="px-5">
+              <AdUnit slot="5512454890" format="fluid" layout="in-article" />
+            </div>
             <div id="accordionExample" className="px-1 md:px-5 ">
               {sortedPosts.map((postDetail, index) => (
                 <div key={postDetail.id || index} className="rounded-t-lg bg-white dark:border-neutral-600 dark:bg-body-dark">
@@ -309,19 +323,7 @@ export default async function PostDetails({
                               />
                             )}
 
-                            <div style={{ overflow: "hidden", margin: "5px" }}>
-                              <ins
-                                className="adsbygoogle"
-                                style={{
-                                  display: "block",
-                                  textAlign: "center",
-                                }}
-                                data-ad-layout="in-article"
-                                data-ad-format="fluid"
-                                data-ad-client="ca-pub-5587331919297301"
-                                data-ad-slot="5512454890"
-                              ></ins>
-                            </div>
+                            <AdUnit slot="5512454890" format="fluid" layout="in-article" />
                           </div>
                         </div>
                       </div>
@@ -332,6 +334,28 @@ export default async function PostDetails({
             </div>
           </div>
         </div>
+        {relatedPosts.length > 0 && (
+          <section className="mt-6 rounded-sm bg-white p-5 shadow-sm">
+            <h2 className="text-xl font-semibold text-gray-800">Ressources liées</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Continuez avec des cours, exercices ou examens du même niveau pour augmenter vos chances de réussite.
+            </p>
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {relatedPosts.map((relatedPost) => (
+                <Link
+                  key={relatedPost.id}
+                  href={`/postdetails/${relatedPost.slug}`}
+                  className="block rounded-sm border border-gray-100 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <h3 className="font-semibold text-gray-800">{relatedPost.name}</h3>
+                  {relatedPost.description && (
+                    <p className="mt-2 text-sm text-gray-600 line-clamp-3">{relatedPost.description}</p>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
       <AdSenseLoader />
 

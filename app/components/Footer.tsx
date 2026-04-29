@@ -41,13 +41,13 @@ export default function Footer() {
                     <Link href="/about" className="hover:text-white transition-colors">À propos</Link>
                   </li>
                   <li>
-                    <Link href="/category/tronc-commun" className="hover:text-white transition-colors">Tronc Commun</Link>
+                    <Link href="/methodologie-bac" className="hover:text-white transition-colors">Méthode BAC</Link>
                   </li>
                   <li>
-                    <Link href="/category/1re-annee-bac" className="hover:text-white transition-colors">1ère Année Bac</Link>
+                    <Link href="/equipe-pedagogique" className="hover:text-white transition-colors">Équipe pédagogique</Link>
                   </li>
                   <li>
-                    <Link href="/category/2eme-annee-bac" className="hover:text-white transition-colors">2ème Année Bac</Link>
+                    <Link href="/#niveaux" className="hover:text-white transition-colors">Niveaux</Link>
                   </li>
                 </ul>
               </div>
@@ -94,7 +94,7 @@ export default function Footer() {
             </span>
             <div className="flex gap-4 mt-4 sm:mt-0">
               <span className="text-sm text-gray-400">
-                Créé avec ❤️ pour les étudiants du Maroc
+                Créé pour les étudiants du Maroc
               </span>
             </div>
           </div>

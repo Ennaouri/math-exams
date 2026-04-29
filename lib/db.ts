@@ -20,6 +20,10 @@ function getConnectionString() {
 
 const pool = new Pool({
   connectionString: getConnectionString(),
+  max: 5,
+  connectionTimeoutMillis: 5000,
+  idleTimeoutMillis: 10000,
+  query_timeout: 10000,
 });
 
 export const sql = pool;
@@ -40,6 +44,14 @@ export async function getUnderCategories(): Promise<UnderCategory[]> {
   return result.rows as UnderCategory[];
 }
 
+export async function getLatestUnderCategories(limit = 4): Promise<UnderCategory[]> {
+  const result = await pool.query(
+    'SELECT * FROM "UnderCategory" ORDER BY created_at DESC LIMIT $1',
+    [limit]
+  );
+  return result.rows as UnderCategory[];
+}
+
 export async function getUnderCategoriesByCategorySlug(slug: string): Promise<UnderCategory[]> {
   const result = await pool.query(
     'SELECT uc.* FROM "UnderCategory" uc JOIN "Category" c ON c.id = uc.category_id WHERE c.slug = $1',
@@ -55,6 +67,27 @@ export async function getUnderCategoryBySlug(slug: string): Promise<UnderCategor
 
 export async function getPosts(): Promise<Post[]> {
   const result = await pool.query('SELECT * FROM "Post" ORDER BY semestre, semestre_order NULLS LAST, created_at DESC');
+  return result.rows as Post[];
+}
+
+export async function getLatestPosts(limit = 8): Promise<Post[]> {
+  const result = await pool.query(
+    'SELECT * FROM "Post" ORDER BY created_at DESC LIMIT $1',
+    [limit]
+  );
+  return result.rows as Post[];
+}
+
+export async function getExamPosts(limit = 6): Promise<Post[]> {
+  const result = await pool.query(
+    `SELECT *
+     FROM "Post"
+     WHERE name ILIKE ANY($1)
+        OR description ILIKE ANY($1)
+     ORDER BY created_at DESC
+     LIMIT $2`,
+    [["%examen%", "%national%", "%bac%", "%concours%"], limit]
+  );
   return result.rows as Post[];
 }
 
@@ -120,6 +153,36 @@ export async function getPostWithCategory(slug: string): Promise<PostWithCategor
   }
   
   return { post, category, underCategory };
+}
+
+export async function getRelatedPostsBySlug(slug: string, limit = 6): Promise<Post[]> {
+  const currentPost = await getPostBySlug(slug);
+  if (!currentPost) return [];
+
+  const result = await pool.query(
+    `SELECT *
+     FROM "Post"
+     WHERE "underCategory_id" = $1
+       AND slug <> $2
+     ORDER BY semestre NULLS LAST, semestre_order NULLS LAST, created_at DESC
+     LIMIT $3`,
+    [currentPost.underCategoryId, slug, limit]
+  );
+
+  if (result.rows.length > 0) {
+    return result.rows as Post[];
+  }
+
+  const fallback = await pool.query(
+    `SELECT *
+     FROM "Post"
+     WHERE slug <> $1
+     ORDER BY created_at DESC
+     LIMIT $2`,
+    [slug, limit]
+  );
+
+  return fallback.rows as Post[];
 }
 
 async function hashPassword(password: string): Promise<string> {

@@ -147,6 +147,15 @@ export default function Navbar() {
             </li>
             <li>
               <Link
+                href="/methodologie-bac"
+                onClick={closeNavbar}
+                className="block py-2 px-3 text-gray-200 rounded hover:bg-gray-700 md:hover:text-blue-400 md:p-0"
+              >
+                Méthode BAC
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/contactus"
                 onClick={closeNavbar}
                 className="block py-2 px-3 text-gray-200 rounded hover:bg-gray-700 md:hover:text-blue-400 md:p-0"
