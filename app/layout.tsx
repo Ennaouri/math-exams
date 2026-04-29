@@ -11,51 +11,55 @@ import { Providers } from "./providers";
 import Script from "next/script";
 import { GA_TRACKING_ID } from "@/lib/gtag";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, seoKeywords } from "@/lib/seo";
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: {
-    default: "Mathématiques Du Secondaire | Examens | Exercice | Concours",
+    default: "Maths-Exams | Mathématiques du programme marocain",
     template: "%s | Maths-Exams",
   },
-  description: "Les solutions de tous les examens de maths du secondaire qualifiants (BAC) ainsi que la correction des concours des grandes écoles. Vidéos explicatifs et corrections détaillées.",
-  keywords: ["maths", "Mathématiques", "exams", "Secondaire", "exercices", "bac", "examens", "concours", "solution", "correction", "tronc commun", "1ere", "maths bac"],
-  metadataBase: new URL("https://maths-exams.com"),
+  description: DEFAULT_DESCRIPTION,
+  keywords: seoKeywords,
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "education",
+  metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: "https://maths-exams.com",
+    canonical: SITE_URL,
     languages: {
-      fr: "https://maths-exams.com",
+      "fr-MA": SITE_URL,
+      fr: SITE_URL,
     },
   },
   openGraph: {
     type: "website",
-    locale: "fr_FR",
-    url: "https://maths-exams.com",
-    siteName: "Maths-Exams",
-    title: "Mathématiques Du Secondaire | Examens | Exercice | Concours",
-    description: "Les solutions de tous les examens de maths du secondaire qualifiants (BAC) ainsi que la correction des concours des grandes écoles.",
+    locale: "fr_MA",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: "Maths-Exams | Cours, exercices et examens de maths",
+    description: DEFAULT_DESCRIPTION,
     images: [
       {
-        url: "https://maths-exams.com/og-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Maths-Exams - Examens et Concours de Mathématiques",
+        alt: "Maths-Exams - ressources de mathématiques",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mathématiques Du Secondaire | Examens | Exercice | Concours",
-    description: "Les solutions de tous les examens de maths du secondaire qualifiants (BAC) ainsi que la correction des concours des grandes écoles.",
-    images: ["https://maths-exams.com/og-image.jpg"],
+    title: "Maths-Exams | Mathématiques du programme marocain",
+    description: DEFAULT_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
   },
   robots: {
     index: true,
     follow: true,
-  },
-  verification: {
-    google: "google-site-verification-code",
   },
 };
 
@@ -86,6 +90,29 @@ export default async function RootLayout({
   const randomPosts4 = posts[getRandomInt(posts.length)];
 
   const randomPosts = [randomPosts1, randomPosts2, randomPosts3, randomPosts4];
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: SITE_URL,
+    inLanguage: "fr-MA",
+    description: DEFAULT_DESCRIPTION,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${SITE_URL}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: DEFAULT_DESCRIPTION,
+    areaServed: ["MA", "FR", "BE", "CA"],
+    knowsAbout: ["Mathématiques", "Baccalauréat marocain", "Examens nationaux", "Concours"],
+  };
 
   return (
     <html lang="fr" suppressHydrationWarning>
@@ -97,6 +124,16 @@ export default async function RootLayout({
       <Script id="gtag-init" strategy="afterInteractive">
         {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_TRACKING_ID}');`}
       </Script>
+      <Script
+        id="website-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
+      <Script
+        id="organization-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
       <Providers>
       <body>
         <SpeedInsights />

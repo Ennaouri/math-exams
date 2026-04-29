@@ -1,6 +1,13 @@
-
-
+import type { Metadata } from 'next'
 import React from 'react'
+import { buildPageMetadata } from '@/lib/seo'
+
+export const metadata: Metadata = buildPageMetadata({
+    title: 'Politique de confidentialité',
+    description: 'Politique de confidentialité de Maths-Exams.',
+    path: '/privacypolicy',
+    noIndex: true,
+})
 
 
 function policy() {

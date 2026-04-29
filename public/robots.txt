@@ -1,6 +1,12 @@
 # *
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /login
+Disallow: /profile
+Disallow: /reset-password
+Disallow: /verify-email
 
 # Host
 Host: https://maths-exams.com

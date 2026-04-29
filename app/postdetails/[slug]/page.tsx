@@ -5,6 +5,7 @@ import { getPostBySlug, getPostDetailsByPostSlug, getPostWithCategory } from "@/
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 import AdSenseLoader from "@/app/components/AdSenseLoader";
+import { SITE_NAME, SITE_URL, buildPageMetadata } from "@/lib/seo";
 
 export const dynamic = 'force-dynamic';
 
@@ -21,24 +22,29 @@ export async function generateMetadata(
   const post = await getPostBySlug(slug);
   const postdetails = await getPostDetailsByPostSlug(slug);
   const firstDetail = postdetails[0];
+  const title = post?.name ?? "Ressource de mathématiques";
+  const description = post?.description || "Cours, exercice ou examen corrigé de mathématiques avec solution détaillée.";
+  const image = getShareImage(firstDetail?.thumbnail, post?.thumbnail);
   
   return {
-    title: post?.name ?? 'Post',
-    description: post?.description || "Solution détaillée de l'examen de mathématiques",
+    ...buildPageMetadata({
+      title,
+      description,
+      path: `/postdetails/${slug}`,
+      type: "article",
+      image,
+    }),
     openGraph: {
-      title: post?.name ?? 'Examens de Maths',
-      description: post?.description || "Solution détaillée de l'examen de mathématiques",
-      url: `https://maths-exams.com/postdetails/${slug}`,
+      ...buildPageMetadata({
+        title,
+        description,
+        path: `/postdetails/${slug}`,
+        type: "article",
+        image,
+      }).openGraph,
       type: 'article',
       publishedTime: post?.created_at?.toISOString(),
       modifiedTime: post?.updated_at?.toISOString() || post?.created_at?.toISOString(),
-      images: firstDetail?.thumbnail ? [{ url: firstDetail.thumbnail }] : [],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post?.name ?? 'Examens de Maths',
-      description: post?.description || "Solution détaillée de l'examen de mathématiques",
-      images: firstDetail?.thumbnail ? [firstDetail.thumbnail] : [],
     },
   };
 }
@@ -47,6 +53,10 @@ function getYouTubeEmbedId(url: string): string | null {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
   return (match && match[2].length === 11) ? match[2] : null;
+}
+
+function getShareImage(...urls: Array<string | null | undefined>) {
+  return urls.find((url) => url && /\.(jpg|jpeg|png|gif|webp)$/i.test(url)) || null;
 }
 
 function renderContent(postDetail: any, showDownload = true) {
@@ -171,33 +181,35 @@ export default async function PostDetails({
   const post = await getPostBySlug(slug);
   const session = await auth();
   const postWithCategory = await getPostWithCategory(slug);
-  console.log('DEBUG session:', JSON.stringify(session));
-  console.log('DEBUG session.user:', session?.user);
-  console.log('DEBUG session truthy:', Boolean(session));
   
   const jsonLd = post ? {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "LearningResource",
     "headline": post.name,
     "description": post.description || "Examens et concours de mathématiques",
     "datePublished": post.created_at?.toISOString(),
     "dateModified": post.updated_at?.toISOString() || post.created_at?.toISOString(),
+    "educationalLevel": postWithCategory?.category?.name,
+    "learningResourceType": postWithCategory?.underCategory?.name || "Cours et exercice",
+    "inLanguage": "fr-MA",
+    "isAccessibleForFree": true,
+    "about": ["Mathématiques", "Programme marocain", postWithCategory?.category?.name].filter(Boolean),
     "author": {
       "@type": "Organization",
-      "name": "Maths-Exams",
-      "url": "https://maths-exams.com"
+      "name": SITE_NAME,
+      "url": SITE_URL
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Maths-Exams",
+      "name": SITE_NAME,
       "logo": {
         "@type": "ImageObject",
-        "url": "https://maths-exams.com/logo.png"
+        "url": `${SITE_URL}/favicon.ico`
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://maths-exams.com/postdetails/${slug}`
+      "@id": `${SITE_URL}/postdetails/${slug}`
     }
   } : null;
 
@@ -215,7 +227,7 @@ export default async function PostDetails({
             <nav className="px-5 mb-3 text-sm text-gray-500">
               <ol className="flex items-center space-x-2 flex-wrap">
                 <li>
-                  <Link href="/" className="hover:text-red-600">Home</Link>
+                  <Link href="/" className="hover:text-red-600">Accueil</Link>
                 </li>
                 {postWithCategory?.category && (
                   <>
@@ -244,9 +256,9 @@ export default async function PostDetails({
                 <li className="text-gray-700">{post?.name}</li>
               </ol>
             </nav>
-            <h2 className="px-5 block text-2xl font-semibold text-gray-700 font-roboto">
+            <h1 className="px-5 block text-2xl font-semibold text-gray-700 font-roboto">
               {post?.name}
-            </h2>
+            </h1>
             <div className="px-5 mt-2 flex space-x-4">
               <div className="flex text-gray-400 text-sm items-center">
                 <span className="mr-2 text-xs">

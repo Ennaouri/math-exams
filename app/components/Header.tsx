@@ -25,9 +25,9 @@ export default function Header() {
           </svg>
         </div>
         
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
+        <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
           Mathématiques Du Secondaire
-        </h1>
+        </div>
         
         <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto">
           Votre plateforme complète pour maîtriser les mathématiques du lycée

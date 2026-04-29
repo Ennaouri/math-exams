@@ -2,6 +2,7 @@ import React from "react";
 import { getUnderCategoriesByCategorySlug, getPostsByUnderCategorySlug, getCategoryBySlug, getUnderCategoryBySlug } from "@/lib/db";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
 export const dynamic = 'force-dynamic';
 
@@ -16,17 +17,28 @@ export async function generateMetadata({ params }: CategoryProps): Promise<Metad
   
   if (underCategorySlug) {
     const underCategory = await getUnderCategoryBySlug(underCategorySlug);
-    return {
-      title: underCategory?.name || "Catégorie",
-      description: underCategory?.description || "Examens et exercices de mathématiques",
-    };
+    const category = await getCategoryBySlug(categorySlug);
+    const title = underCategory?.name || "Cours et exercices de mathématiques";
+    return buildPageMetadata({
+      title,
+      description:
+        underCategory?.description ||
+        `Cours, exercices et examens corrigés de mathématiques pour ${title}${category?.name ? ` - ${category.name}` : ""}.`,
+      path: `/category/${categorySlug}/${underCategorySlug}`,
+      image: underCategory?.thumbnail,
+    });
   }
   
   const category = await getCategoryBySlug(categorySlug);
-  return {
-    title: category?.name || "Catégorie",
-    description: category?.description || "Examens et exercices de mathématiques",
-  };
+  const title = category?.name || "Niveau de mathématiques";
+  return buildPageMetadata({
+    title,
+    description:
+      category?.description ||
+      `Cours, exercices, devoirs et examens corrigés de mathématiques pour ${title}, selon le programme marocain.`,
+    path: `/category/${categorySlug}`,
+    image: category?.thumbnail,
+  });
 }
 
 export default async function CategoryPage({
@@ -77,24 +89,24 @@ export default async function CategoryPage({
       <div>
         <nav className="mb-4 text-sm text-gray-500">
           <ol className="flex items-center space-x-2">
-            <li><Link href="/" className="hover:text-red-600">Home</Link></li>
+            <li><Link href="/" className="hover:text-red-600">Accueil</Link></li>
             {category && (<><li>/</li><li><Link href={`/category/${category.slug}`} className="hover:text-red-600">{category.name}</Link></li></>)}
             <li>/</li>
             <li className="text-gray-700">{underCategory?.name}</li>
           </ol>
         </nav>
         <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
-          <h5 className="text-base uppercase font-semibold font-roboto">
+          <h1 className="text-base uppercase font-semibold font-roboto">
             {title}
-          </h5>
+          </h1>
         </div>
         
         {semester1Posts.length > 0 && (
           <div className="mb-8">
             <div className="flex bg-blue-600 px-3 py-2 justify-between items-center rounded-sm mb-4">
-              <h5 className="text-base uppercase font-semibold font-roboto text-white">
+              <h2 className="text-base uppercase font-semibold font-roboto text-white">
                 Semestre 1
-              </h5>
+              </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {semester1Posts.map(renderPost)}
@@ -105,9 +117,9 @@ export default async function CategoryPage({
         {semester2Posts.length > 0 && (
           <div className="mb-8">
             <div className="flex bg-green-600 px-3 py-2 justify-between items-center rounded-sm mb-4">
-              <h5 className="text-base uppercase font-semibold font-roboto text-white">
+              <h2 className="text-base uppercase font-semibold font-roboto text-white">
                 Semestre 2
-              </h5>
+              </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {semester2Posts.map(renderPost)}
@@ -137,15 +149,15 @@ export default async function CategoryPage({
     <div>
       <nav className="mb-4 text-sm text-gray-500">
         <ol className="flex items-center space-x-2">
-          <li><Link href="/" className="hover:text-red-600">Home</Link></li>
+          <li><Link href="/" className="hover:text-red-600">Accueil</Link></li>
           <li>/</li>
           <li className="text-gray-700">{category?.name}</li>
         </ol>
       </nav>
       <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
-        <h5 className="text-base uppercase font-semibold font-roboto">
+        <h1 className="text-base uppercase font-semibold font-roboto">
           {category?.name || 'Under Categories'}
-        </h5>
+        </h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {underCategories.map((underCategory, index) => (
