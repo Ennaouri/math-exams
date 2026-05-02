@@ -48,7 +48,7 @@ const contactInfo = [
       </svg>
     ),
     label: "WhatsApp",
-    value: "+212 634842943",
+    value: "+212 710500405",
   },
 ];
 
