@@ -10,28 +10,10 @@ export default function RightSide({ undercategories }: { undercategories: UnderC
     <div >
                 <SocialMedias />
 
-                <div className=" w-full bg-white shadow-sm rounded-sm p-4">
-                    <h3 className="text-xl font-semibold text-gray-700 mb-3 font-roboto">Catégories</h3>
-                    <div className="space-y-3">
-                        {undercategories.slice(0, 4).map((underCategory, index) => (
-                            <Link href={`/category/${underCategory.slug}`} className="block group" key={index}>
-                                <h5
-                                    className="text-md leading-5 block font-roboto font-semibold transition group-hover:text-blue-500">
-                                    {underCategory.name}
-                                </h5>
-                                <div className="flex text-gray-400 text-sm items-center mt-1">
-                                    <span className="mr-1 text-xs"><i className="far fa-clock"></i></span>
-                                    {new Date(underCategory.created_at).toDateString()}
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="w-full bg-white shadow-sm rounded-sm p-4  mt-8">
+                <div className="w-full bg-white shadow-sm rounded-sm p-4 mt-8">
                     <h3 className="text-xl font-semibold text-gray-700 mb-3 font-roboto">Tags</h3>
                     <div className="flex items-center flex-wrap gap-2">
-                        <Link href="category/examens"
+                        <Link href="/category/examens"
                             className="px-3 py-1  text-sm border border-gray-200 rounded-sm transition hover:bg-blue-500 hover:text-white">examens</Link>
                         <Link href="/postdetails/courslimitesetcontinuitepcetsvt"
                             className="px-3 py-1  text-sm border border-gray-200 rounded-sm transition hover:bg-blue-500 hover:text-white">limites</Link>
