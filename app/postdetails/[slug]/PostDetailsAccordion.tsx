@@ -144,17 +144,39 @@ export default function PostDetailsAccordion({
         const buttonId = `post-detail-button-${postDetail.id || index}`;
 
         return (
-          <section key={postDetail.id || index} className="overflow-hidden rounded-sm border border-gray-200 bg-white shadow-sm">
+          <section
+            key={postDetail.id || index}
+            className={`overflow-hidden rounded-sm border bg-white shadow-sm transition-shadow ${
+              isOpen ? "border-blue-500 shadow-md" : "border-gray-200"
+            }`}
+          >
             <button
               id={buttonId}
               type="button"
               aria-expanded={isOpen}
               aria-controls={panelId}
               onClick={() => setOpenIndex(isOpen ? -1 : index)}
-              className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition hover:bg-gray-50"
+              className={`flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition ${
+                isOpen ? "bg-blue-50" : "bg-slate-50 hover:bg-blue-50"
+              }`}
             >
-              <span className="font-semibold text-gray-800">{postDetail.name || `Partie ${index + 1}`}</span>
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border border-gray-200 text-gray-600">
+              <span className="flex items-center gap-3">
+                <span
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-sm text-sm font-bold ${
+                    isOpen ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-700"
+                  }`}
+                >
+                  {index + 1}
+                </span>
+                <span className={`text-base font-bold md:text-lg ${isOpen ? "text-blue-700" : "text-slate-800"}`}>
+                  {postDetail.name || `Partie ${index + 1}`}
+                </span>
+              </span>
+              <span
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border ${
+                  isOpen ? "border-blue-600 bg-blue-600 text-white" : "border-blue-200 bg-white text-blue-700"
+                }`}
+              >
                 <svg
                   className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
                   fill="none"
