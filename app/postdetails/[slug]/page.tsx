@@ -4,12 +4,13 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { getPostBySlug, getPostDetailsByPostSlug, getPostWithCategory, getRelatedPostsBySlug } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
+import Script from "next/script";
 import AdSenseLoader from "@/app/components/AdSenseLoader";
 import { SITE_NAME, SITE_URL, buildPageMetadata } from "@/lib/seo";
 import AdUnit from "@/app/components/AdUnit";
 import PostDetailsAccordion from "./PostDetailsAccordion";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -111,7 +112,8 @@ export default async function PostDetails({
   return (
     <>
       {jsonLd && (
-        <script
+        <Script
+          id="post-json-ld"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />

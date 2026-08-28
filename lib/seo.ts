@@ -20,6 +20,8 @@ export const seoKeywords = [
   "bac PC SVT",
   "bac sciences maths",
   "concours mathématiques",
+  "devoirs maths lycée",
+  "révision bac maroc",
 ];
 
 export function absoluteUrl(path = "/") {
@@ -34,6 +36,7 @@ export function buildPageMetadata({
   type = "website",
   image = DEFAULT_OG_IMAGE,
   noIndex = false,
+  keywords,
 }: {
   title: string;
   description?: string | null;
@@ -41,13 +44,18 @@ export function buildPageMetadata({
   type?: "website" | "article";
   image?: string | null;
   noIndex?: boolean;
+  keywords?: string[];
 }): Metadata {
   const canonical = absoluteUrl(path);
   const imageUrl = absoluteUrl(image || DEFAULT_OG_IMAGE);
+  const mergedKeywords = keywords
+    ? [...seoKeywords, ...keywords]
+    : seoKeywords;
 
   return {
     title,
     description: description || DEFAULT_DESCRIPTION,
+    keywords: mergedKeywords,
     alternates: {
       canonical,
     },

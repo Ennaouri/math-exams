@@ -3,9 +3,11 @@ import { buildPageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import Script from "next/script";
 import AdUnit from "./components/AdUnit";
+import Image from "next/image";
 import type { Category, Post } from "@/lib/types";
+import { SITE_NAME, SITE_URL } from "@/lib/seo";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export const metadata = buildPageMetadata({
   title: "Cours, exercices et examens de maths au Maroc",
@@ -61,6 +63,34 @@ export default async function Home() {
     ],
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Accueil",
+        item: SITE_URL,
+      },
+    ],
+  };
+
+  const itemListJsonLd = categories.length > 0
+    ? {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Niveaux scolaires – Mathématiques",
+        description: "Liste des niveaux du programme marocain de mathématiques",
+        itemListElement: categories.map((cat, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: cat.name,
+          url: `${SITE_URL}/category/${cat.slug}`,
+        })),
+      }
+    : null;
+
   return (
     <div>
       <Script
@@ -68,11 +98,30 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <nav className="mb-4 text-sm text-gray-500">
-        <ol className="flex items-center space-x-2">
-          <li className="text-gray-700">Accueil</li>
+      <Script
+        id="home-breadcrumb-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      {itemListJsonLd && (
+        <Script
+          id="home-itemlist-json-ld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
+      )}
+
+      {/* Breadcrumb */}
+      <nav className="mb-4 text-sm text-gray-500" aria-label="Fil d'Ariane">
+        <ol className="flex items-center space-x-2" itemScope itemType="https://schema.org/BreadcrumbList">
+          <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+            <span itemProp="name" className="text-gray-700">Accueil</span>
+            <meta itemProp="position" content="1" />
+          </li>
         </ol>
       </nav>
+
+      {/* Hero intro */}
       <section className="bg-white px-5 py-6 rounded-sm mb-5">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
           Mathématiques du programme marocain: cours, exercices et examens corrigés
@@ -81,23 +130,30 @@ export default async function Home() {
           Préparez les mathématiques du tronc commun, de la 1ère BAC, de la 2ème BAC et des concours avec des ressources claires, utiles au Maroc et accessibles aux élèves d'autres pays francophones.
         </p>
       </section>
+
       <AdUnit slot="5512454890" format="fluid" layout="in-article" />
+
+      {/* Level cards */}
       <div id="niveaux" className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5 scroll-mt-32">
         <h2 className="text-base uppercase font-semibold font-roboto">
           Niveaux et Concours
         </h2>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         {categories.map((category) => (
           <Link key={category.id} href={`/category/${category.slug}`}>
             <div className="bg-white rounded shadow overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
               {category.thumbnail && (
-                <img 
-                  src={category.thumbnail} 
-                  alt={category.name} 
-                  className="w-full h-48 object-cover"
-                />
+                <div className="relative w-full h-48">
+                  <Image
+                    src={category.thumbnail}
+                    alt={category.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
               )}
               <div className="p-4">
                 <h3 className="text-lg font-semibold">{category.name}</h3>
@@ -109,6 +165,8 @@ export default async function Home() {
           </Link>
         ))}
       </div>
+
+      {/* Recent posts */}
       {recentPosts.length > 0 && (
         <section className="mt-10">
           <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
@@ -132,6 +190,8 @@ export default async function Home() {
           </div>
         </section>
       )}
+
+      {/* Exam posts */}
       {examPosts.length > 0 && (
         <section className="mt-10">
           <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
@@ -155,6 +215,8 @@ export default async function Home() {
           </div>
         </section>
       )}
+
+      {/* Study method */}
       <section className="mt-10 bg-white px-5 py-6 rounded-sm">
         <h2 className="text-xl font-bold text-gray-800">Méthode simple pour progresser en mathématiques</h2>
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -172,6 +234,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* FAQ */}
       <section className="mt-10 bg-white px-5 py-6 rounded-sm">
         <h2 className="text-xl font-bold text-gray-800">Questions fréquentes</h2>
         <div className="mt-4 space-y-4">
@@ -182,6 +246,10 @@ export default async function Home() {
           <div>
             <h3 className="font-semibold text-gray-800">Le site est-il utile hors du Maroc ?</h3>
             <p className="mt-1 text-sm text-gray-600">Oui, les cours et exercices de mathématiques restent utiles pour les élèves francophones d'autres pays.</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-gray-800">Est-ce que le site est gratuit ?</h3>
+            <p className="mt-1 text-sm text-gray-600">Oui, toutes les ressources de Maths-Exams sont accessibles gratuitement. Aucune inscription n'est requise pour consulter les cours et exercices.</p>
           </div>
         </div>
       </section>

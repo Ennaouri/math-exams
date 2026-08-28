@@ -35,6 +35,9 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+# binaries and installer files
+node20.exe
+node.msi
+node.cmd
 
 .vercel

@@ -14,7 +14,10 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, seoKeywords } from "@/lib/seo";
 import type { Category, Post, UnderCategory } from "@/lib/types";
 
-export const dynamic = 'force-dynamic';
+
+// Revalidate layout data once per hour instead of force-dynamic on every request
+export const revalidate = 3600;
+
 const isProduction = process.env.NODE_ENV === "production";
 
 export const metadata: Metadata = {
@@ -73,9 +76,14 @@ export interface CategoryCardType {
   slug: string;
 }
 
-const getRandomInt = (max: number) => {
-  return Math.floor(Math.random() * max);
-};
+/** Pick N unique random items from an array (no duplicates). */
+function pickUniqueRandom<T>(arr: T[], count: number): T[] {
+  if (!arr.length) return [];
+  const shuffled = [...arr].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, Math.min(count, arr.length));
+}
+
+
 
 export default async function RootLayout({
   children,
@@ -96,9 +104,8 @@ export default async function RootLayout({
     console.error("Unable to load layout data:", error);
   }
 
-  const randomPosts = posts.length
-    ? Array.from({ length: Math.min(4, posts.length) }, () => posts[getRandomInt(posts.length)]).filter(Boolean)
-    : [];
+  const randomPosts = pickUniqueRandom(posts, 4);
+
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -128,37 +135,43 @@ export default async function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" href="/favicon.png" type="image/png" />
+        {/* JSON-LD structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
       </head>
-      {isProduction && (
-        <>
-          <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301" crossOrigin="anonymous" strategy="lazyOnload" />
-          <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} strategy="afterInteractive" />
-          <Script id="gtag-init" strategy="afterInteractive">
-            {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_TRACKING_ID}');`}
-          </Script>
-        </>
-      )}
-      <Script
-        id="website-json-ld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-      />
-      <Script
-        id="organization-json-ld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-      />
-      <Providers>
       <body>
-        <SpeedInsights />
-        <main className="bg-gray-100 min-h-screen w-screen">
-          <main className="max-w-screen-xl m-auto bg-white">
-            <main>
-              <Navbar />
+        <Providers>
+          {isProduction && (
+            <>
+              <Script
+                async
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301"
+                crossOrigin="anonymous"
+                strategy="lazyOnload"
+              />
+              <Script
+                src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+                strategy="afterInteractive"
+              />
+              <Script id="gtag-init" strategy="afterInteractive">
+                {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_TRACKING_ID}');`}
+              </Script>
+            </>
+          )}
+          <SpeedInsights />
+          <div className="bg-gray-100 min-h-screen w-screen">
+            <div className="max-w-screen-xl m-auto bg-white">
+              <Navbar categories={categories} />
               <Header />
-              <main className="pt-12 bg-gray-100 pb-12">
-                <div className="container mx-auto  flex flex-wrap lg:flex-nowrap">
-                  <div className="w-full xl:w-3/12 hidden xl:block">
+              <div className="pt-12 bg-gray-100 pb-12">
+                <div className="container mx-auto flex flex-wrap lg:flex-nowrap">
+                  <aside className="w-full xl:w-3/12 hidden xl:block" aria-label="Barre latérale">
                     <CategoriesSideBar categories={categories} />
                     {isProduction && (
                       <div style={{ overflow: "hidden", margin: "5px" }}>
@@ -177,20 +190,17 @@ export default async function RootLayout({
                     <div className="mt-4">
                       <RightSide undercategories={undercategories} />
                     </div>
-                    
-                  </div>
-                  <div className="xl:w-9/12 lg:w-9/12 w-full  xl:ml-6 lg:mr-6">
+                  </aside>
+                  <main className="xl:w-9/12 lg:w-9/12 w-full xl:ml-6 lg:mr-6" id="main-content">
                     {children}
-                  </div>
+                  </main>
                 </div>
-              </main>
-            </main>
-            <Footer />
-          </main>
-        </main>
-        
+              </div>
+              <Footer />
+            </div>
+          </div>
+        </Providers>
       </body>
-      </Providers>
     </html>
   );
 }

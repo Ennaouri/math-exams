@@ -7,7 +7,7 @@ const { Pool } = pg;
 function getConnectionString() {
   const connString = process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_URL;
   if (!connString) return undefined;
-  
+
   // Use libpq compatibility mode to avoid deprecation warning
   let baseUrl = connString;
   if (baseUrl.includes('?')) {
@@ -29,8 +29,11 @@ const pool = new Pool({
 export const sql = pool;
 export { pool };
 
+// ─── Categories ──────────────────────────────────────────────────────────────
+// Recommended DB index: CREATE INDEX IF NOT EXISTS idx_category_slug ON "Category"(slug);
+
 export async function getCategories(): Promise<Category[]> {
-  const result = await pool.query('SELECT * FROM "Category"');
+  const result = await pool.query('SELECT * FROM "Category" ORDER BY id');
   return result.rows as Category[];
 }
 
@@ -38,6 +41,10 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
   const result = await pool.query('SELECT * FROM "Category" WHERE slug = $1', [slug]);
   return (result.rows[0] as Category) ?? null;
 }
+
+// ─── UnderCategories ─────────────────────────────────────────────────────────
+// Recommended DB index: CREATE INDEX IF NOT EXISTS idx_undercategory_slug ON "UnderCategory"(slug);
+// Recommended DB index: CREATE INDEX IF NOT EXISTS idx_undercategory_category_id ON "UnderCategory"(category_id);
 
 export async function getUnderCategories(): Promise<UnderCategory[]> {
   const result = await pool.query('SELECT * FROM "UnderCategory"');
@@ -65,6 +72,11 @@ export async function getUnderCategoryBySlug(slug: string): Promise<UnderCategor
   return (result.rows[0] as UnderCategory) ?? null;
 }
 
+// ─── Posts ───────────────────────────────────────────────────────────────────
+// Recommended DB index: CREATE INDEX IF NOT EXISTS idx_post_slug ON "Post"(slug);
+// Recommended DB index: CREATE INDEX IF NOT EXISTS idx_post_created_at ON "Post"(created_at DESC);
+// Recommended DB index: CREATE INDEX IF NOT EXISTS idx_post_undercategory_id ON "Post"("underCategory_id");
+
 export async function getPosts(): Promise<Post[]> {
   const result = await pool.query('SELECT * FROM "Post" ORDER BY semestre, semestre_order NULLS LAST, created_at DESC');
   return result.rows as Post[];
@@ -79,10 +91,12 @@ export async function getLatestPosts(limit = 8): Promise<Post[]> {
 }
 
 export async function getExamPosts(limit = 6): Promise<Post[]> {
+  // Uses a dedicated attribute column when available, falls back to name/description search
   const result = await pool.query(
     `SELECT *
      FROM "Post"
-     WHERE name ILIKE ANY($1)
+     WHERE attribute = 'exam'
+        OR name ILIKE ANY($1)
         OR description ILIKE ANY($1)
      ORDER BY created_at DESC
      LIMIT $2`,
@@ -103,6 +117,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   const result = await pool.query('SELECT * FROM "Post" WHERE slug = $1', [slug]);
   return (result.rows[0] as Post) ?? null;
 }
+
+// ─── PostDetails ─────────────────────────────────────────────────────────────
 
 export async function getPostDetailsByPostSlug(slug: string): Promise<PostDetails[]> {
   const result = await pool.query(
@@ -126,6 +142,8 @@ export async function getAllPostDetailsWithPostName(): Promise<(PostDetails & { 
   return result.rows as (PostDetails & { post_name?: string })[];
 }
 
+// ─── Post with Category (single JOIN query — was 3 sequential queries) ───────
+
 export interface PostWithCategory {
   post: Post;
   category: Category | null;
@@ -133,57 +151,126 @@ export interface PostWithCategory {
 }
 
 export async function getPostWithCategory(slug: string): Promise<PostWithCategory | null> {
-  const postResult = await pool.query('SELECT * FROM "Post" WHERE slug = $1', [slug]);
-  const post = postResult.rows[0] as Post;
-  if (!post) return null;
-  
-  const underCatResult = await pool.query(
-    'SELECT uc.* FROM "UnderCategory" uc WHERE uc.id = $1',
-    [post.underCategoryId]
+  const result = await pool.query<{
+    // Post columns
+    p_id: number; p_name: string; p_thumbnail: string; p_description: string;
+    p_slug: string; p_underCategoryId: number; p_attribute: string;
+    p_semestre: number; p_semestre_order: number; p_created_at: Date; p_updated_at: Date;
+    // UnderCategory columns
+    uc_id: number; uc_name: string; uc_thumbnail: string; uc_description: string;
+    uc_slug: string; uc_category_id: number; uc_created_at: Date; uc_updated_at: Date;
+    // Category columns
+    c_id: number; c_name: string; c_thumbnail: string; c_description: string;
+    c_slug: string; c_created_at: Date; c_updated_at: Date;
+  }>(
+    `SELECT
+       p.id            AS p_id,
+       p.name          AS p_name,
+       p.thumbnail     AS p_thumbnail,
+       p.description   AS p_description,
+       p.slug          AS p_slug,
+       p."underCategory_id" AS "p_underCategoryId",
+       p.attribute     AS p_attribute,
+       p.semestre      AS p_semestre,
+       p.semestre_order AS p_semestre_order,
+       p.created_at    AS p_created_at,
+       p.updated_at    AS p_updated_at,
+       uc.id           AS uc_id,
+       uc.name         AS uc_name,
+       uc.thumbnail    AS uc_thumbnail,
+       uc.description  AS uc_description,
+       uc.slug         AS uc_slug,
+       uc.category_id  AS uc_category_id,
+       uc.created_at   AS uc_created_at,
+       uc.updated_at   AS uc_updated_at,
+       c.id            AS c_id,
+       c.name          AS c_name,
+       c.thumbnail     AS c_thumbnail,
+       c.description   AS c_description,
+       c.slug          AS c_slug,
+       c.created_at    AS c_created_at,
+       c.updated_at    AS c_updated_at
+     FROM "Post" p
+     LEFT JOIN "UnderCategory" uc ON uc.id = p."underCategory_id"
+     LEFT JOIN "Category" c ON c.id = uc.category_id
+     WHERE p.slug = $1`,
+    [slug]
   );
-  const underCategory = underCatResult.rows[0] as UnderCategory;
-  
-  let category: Category | null = null;
-  if (underCategory) {
-    const catResult = await pool.query(
-      'SELECT c.* FROM "Category" c WHERE c.id = $1',
-      [underCategory.category_id]
-    );
-    category = catResult.rows[0] as Category;
-  }
-  
+
+  if (!result.rows.length) return null;
+  const row = result.rows[0];
+
+  const post: Post = {
+    id: row.p_id,
+    name: row.p_name,
+    thumbnail: row.p_thumbnail,
+    description: row.p_description,
+    slug: row.p_slug,
+    underCategoryId: row["p_underCategoryId"],
+    attribute: row.p_attribute,
+    semestre: row.p_semestre,
+    semestre_order: row.p_semestre_order,
+    created_at: row.p_created_at,
+    updated_at: row.p_updated_at,
+  };
+
+  const underCategory: UnderCategory | null = row.uc_id
+    ? {
+        id: row.uc_id,
+        name: row.uc_name,
+        thumbnail: row.uc_thumbnail,
+        description: row.uc_description,
+        slug: row.uc_slug,
+        category_id: row.uc_category_id,
+        created_at: row.uc_created_at,
+        updated_at: row.uc_updated_at,
+      }
+    : null;
+
+  const category: Category | null = row.c_id
+    ? {
+        id: row.c_id,
+        name: row.c_name,
+        thumbnail: row.c_thumbnail,
+        description: row.c_description,
+        slug: row.c_slug,
+        created_at: row.c_created_at,
+        updated_at: row.c_updated_at,
+      }
+    : null;
+
   return { post, category, underCategory };
 }
 
-export async function getRelatedPostsBySlug(slug: string, limit = 6): Promise<Post[]> {
-  const currentPost = await getPostBySlug(slug);
-  if (!currentPost) return [];
+// ─── Related posts (single query using underCategoryId — was 2 sequential) ──
 
-  const result = await pool.query(
-    `SELECT *
-     FROM "Post"
-     WHERE "underCategory_id" = $1
-       AND slug <> $2
-     ORDER BY semestre NULLS LAST, semestre_order NULLS LAST, created_at DESC
-     LIMIT $3`,
-    [currentPost.underCategoryId, slug, limit]
+export async function getRelatedPostsBySlug(slug: string, limit = 6): Promise<Post[]> {
+  // Single query: fetch the current post and its related posts in one round-trip
+  const result = await pool.query<Post & { target_under_id: number }>(
+    `WITH target AS (
+       SELECT "underCategory_id" FROM "Post" WHERE slug = $1
+     )
+     SELECT p.* FROM "Post" p, target
+     WHERE p."underCategory_id" = target."underCategory_id"
+       AND p.slug <> $1
+     ORDER BY p.semestre NULLS LAST, p.semestre_order NULLS LAST, p.created_at DESC
+     LIMIT $2`,
+    [slug, limit]
   );
 
   if (result.rows.length > 0) {
     return result.rows as Post[];
   }
 
+  // Fallback: return latest posts if no same-category posts found
   const fallback = await pool.query(
-    `SELECT *
-     FROM "Post"
-     WHERE slug <> $1
-     ORDER BY created_at DESC
-     LIMIT $2`,
+    `SELECT * FROM "Post" WHERE slug <> $1 ORDER BY created_at DESC LIMIT $2`,
     [slug, limit]
   );
-
   return fallback.rows as Post[];
 }
+
+// ─── Users ───────────────────────────────────────────────────────────────────
 
 async function hashPassword(password: string): Promise<string> {
   if (!password) return '';
@@ -198,27 +285,36 @@ export async function authenticateUser(email: string, password: string): Promise
   );
   if (result.rows.length === 0) return null;
   const user = result.rows[0] as User;
-  
+
   if (!user.password) return null;
-  
+
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) return null;
-  
+
   delete (user as any).password;
-  
-  if (user.metadata && typeof user.metadata === 'string' && user.metadata.startsWith('{')) {
+
+  // Safely parse metadata JSON to check email verification status
+  if (user.metadata && typeof user.metadata === 'string') {
     try {
       const meta = JSON.parse(user.metadata);
-      if (meta.emailVerified === false) {
+      if (meta?.emailVerified === false) {
         return { ...user, needsVerification: true } as User & { needsVerification: boolean };
       }
-    } catch (e) {}
+    } catch {
+      // Metadata is not valid JSON — ignore
+    }
   }
-  
+
   return user;
 }
 
-export async function createUser(email: string, password: string, name: string, role: 'admin' | 'user' = 'user', metadata?: string): Promise<User> {
+export async function createUser(
+  email: string,
+  password: string,
+  name: string,
+  role: 'admin' | 'user' = 'user',
+  metadata?: string
+): Promise<User> {
   const hashedPassword = password ? await hashPassword(password) : '';
   const result = await pool.query(
     'INSERT INTO users (email, password, name, role, metadata) VALUES ($1, $2, $3, $4, $5) RETURNING *',
@@ -229,7 +325,10 @@ export async function createUser(email: string, password: string, name: string, 
   return user;
 }
 
-export async function updateUser(id: number, data: { name?: string; metadata?: string; image?: string }): Promise<User | null> {
+export async function updateUser(
+  id: number,
+  data: { name?: string; metadata?: string; image?: string }
+): Promise<User | null> {
   const updates: string[] = [];
   const values: any[] = [];
   let paramIndex = 1;

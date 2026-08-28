@@ -54,7 +54,7 @@ function SearchContent() {
             <div className="max-w-4xl mx-auto px-4 py-8">
                 <nav className="mb-4 text-sm text-gray-500">
                     <ol className="flex items-center space-x-2">
-                        <li><Link href="/" className="hover:text-red-600">Home</Link></li>
+                        <li><Link href="/" className="hover:text-red-600">Accueil</Link></li>
                         <li>/</li>
                         <li className="text-gray-700">Recherche: {query}</li>
                     </ol>

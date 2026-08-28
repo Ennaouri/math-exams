@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import AdUnit from "@/app/components/AdUnit";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 type CategoryProps = {
   params: Promise<{ slug: string[] }>;
