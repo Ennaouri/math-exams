@@ -121,45 +121,57 @@ export default async function Home() {
         </ol>
       </nav>
 
-      {/* Hero intro */}
-      <section className="bg-white px-5 py-6 rounded-sm mb-5">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-          Mathématiques du programme marocain: cours, exercices et examens corrigés
-        </h1>
-        <p className="mt-3 text-gray-600 leading-relaxed">
-          Préparez les mathématiques du tronc commun, de la 1ère BAC, de la 2ème BAC et des concours avec des ressources claires, utiles au Maroc et accessibles aux élèves d'autres pays francophones.
+      {/* Hero intro banner */}
+      <section className="bg-white px-6 py-6 rounded-2xl border border-slate-200/80 shadow-sm mb-6">
+        <h2 className="text-xl md:text-2xl font-black text-slate-900">
+          Mathématiques du programme marocain : cours, exercices et examens corrigés
+        </h2>
+        <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+          Préparez les mathématiques du Tronc Commun, de la 1ère BAC, de la 2ème BAC et des concours post-bac avec des ressources pédagogiques conformes aux cadres de référence officiels.
         </p>
       </section>
 
       <AdUnit slot="5512454890" format="fluid" layout="in-article" />
 
       {/* Level cards */}
-      <div id="niveaux" className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5 scroll-mt-32">
-        <h2 className="text-base uppercase font-semibold font-roboto">
-          Niveaux et Concours
+      <div id="niveaux" className="flex bg-slate-900 text-white px-5 py-3.5 justify-between items-center rounded-2xl mb-6 scroll-mt-28 shadow-sm">
+        <h2 className="text-sm uppercase font-black tracking-wider text-white">
+          📚 Niveaux Scolaires & Concours
         </h2>
+        <span className="text-xs text-blue-300 font-semibold">Programme Officiel</span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
         {categories.map((category) => (
           <Link key={category.id} href={`/category/${category.slug}`}>
-            <div className="bg-white rounded shadow overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-              {category.thumbnail && (
-                <div className="relative w-full h-48">
-                  <Image
-                    src={category.thumbnail}
-                    alt={category.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-              )}
-              <div className="p-4">
-                <h3 className="text-lg font-semibold">{category.name}</h3>
-                {category.description && (
-                  <p className="text-gray-600 text-sm mt-1">{category.description}</p>
+            <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer h-full flex flex-col justify-between">
+              <div>
+                {category.thumbnail && (
+                  <div className="relative w-full h-44 bg-slate-100">
+                    <Image
+                      src={category.thumbnail}
+                      alt={category.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
                 )}
+                <div className="p-5">
+                  <h3 className="text-base font-black text-slate-900 hover:text-blue-600 transition-colors">
+                    {category.name}
+                  </h3>
+                  {category.description && (
+                    <p className="text-xs text-slate-600 mt-1.5 leading-relaxed line-clamp-2">
+                      {category.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="px-5 pb-4 pt-0">
+                <span className="text-xs font-bold text-blue-600 inline-flex items-center gap-1">
+                  Accéder aux chapitres & devoirs →
+                </span>
               </div>
             </div>
           </Link>
