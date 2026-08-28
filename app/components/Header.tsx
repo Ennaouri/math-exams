@@ -3,8 +3,8 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="relative overflow-hidden bg-gradient-to-r from-[#1e3a8a] via-[#2563eb] to-[#3b82f6]">
-      {/* Decorative grid */}
+    <header className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white border-b border-blue-900/30">
+      {/* Subtle grid pattern background */}
       <div className="absolute inset-0 opacity-10" aria-hidden="true">
         <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
           <defs>
@@ -16,23 +16,24 @@ export default function Header() {
         </svg>
       </div>
 
-      <div className="absolute top-0 left-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-x-1/2 -translate-y-1/2" aria-hidden="true"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full translate-x-1/2 translate-y-1/2" aria-hidden="true"></div>
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
 
-      <div className="relative max-w-screen-xl mx-auto px-4 py-20 text-center">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6 backdrop-blur-sm" aria-hidden="true">
-          <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
-          </svg>
+      <div className="relative max-w-screen-xl mx-auto px-4 py-16 sm:py-20 text-center">
+        {/* Top Live Badge */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-300 text-xs font-bold uppercase tracking-wider mb-6 backdrop-blur-sm">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Plateforme Pédagogique d'Excellence • Programme Marocain
         </div>
 
-        {/* Decorative display text — not a heading; page-specific h1 lives in each page */}
-        <p className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
-          Mathématiques Du Secondaire
+        {/* Hero Title */}
+        <p className="text-3xl sm:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tight leading-tight">
+          Maîtrisez les Mathématiques du Lycée & Préparez le <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-amber-300">National</span>
         </p>
 
-        <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-          Votre plateforme complète pour maîtriser les mathématiques du lycée
+        {/* Subtitle */}
+        <p className="text-sm sm:text-lg text-slate-300 mb-8 max-w-3xl mx-auto leading-relaxed font-normal">
+          Cours complets, séances interactives en direct (Lives), banques d'exercices corrigés pas à pas et accompagnement personnalisé pour le Tronc Commun, la 1ère BAC et la 2ème BAC.
         </p>
 
         {/* Search bar */}
@@ -40,47 +41,46 @@ export default function Header() {
           <SearchBar />
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* Call to actions */}
+        <div className="flex flex-wrap items-center justify-center gap-3.5">
+          <Link
+            href="/lives"
+            className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-blue-600/30 transition-all"
+          >
+            <span>🔴 Voir les Séances en Direct</span>
+          </Link>
+
+          <Link
+            href="/tarifs"
+            className="inline-flex items-center justify-center px-6 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-amber-400/20 transition-all"
+          >
+            <span>✨ Packs d'Abonnement</span>
+          </Link>
+
           <Link
             href="/#niveaux"
-            className="inline-flex items-center justify-center px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors shadow-lg"
+            className="inline-flex items-center justify-center px-6 py-3 bg-slate-800/80 hover:bg-slate-800 text-slate-200 font-bold text-xs uppercase tracking-wider rounded-xl border border-slate-700 backdrop-blur-sm transition-all"
           >
-            <span>Explorer les niveaux</span>
-            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </Link>
-          <Link
-            href="/about"
-            className="inline-flex items-center justify-center px-8 py-3 bg-white/10 text-white font-semibold rounded-lg hover:bg-white/20 transition-colors backdrop-blur-sm border border-white/20"
-          >
-            En savoir plus
+            <span>Explorer par Niveau</span>
           </Link>
         </div>
 
-        <div className="mt-12 flex flex-wrap justify-center gap-8 text-white/70 text-sm">
+        {/* Stats and Highlights */}
+        <div className="mt-12 pt-8 border-t border-slate-800/60 flex flex-wrap justify-center items-center gap-8 sm:gap-14 text-xs font-semibold text-slate-400">
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-            <span>Cours complets</span>
+            <span className="text-blue-400 font-bold text-base">500+</span>
+            <span>Examens & Devoirs Corrigés</span>
           </div>
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>Examens nationaux</span>
+            <span className="text-emerald-400 font-bold text-base">100%</span>
+            <span>Conforme Programme Marocain</span>
           </div>
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-            <span>Gratuit</span>
+            <span className="text-amber-400 font-bold text-base">24/7</span>
+            <span>Replays Vidéo & Téléchargement PDF</span>
           </div>
         </div>
       </div>
-
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent" aria-hidden="true"></div>
     </header>
   );
 }

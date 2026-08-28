@@ -33,6 +33,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes: SitemapRow[] = [
     { url: `${SITE_URL}/`, priority: 1, changeFrequency: "daily" },
+    { url: `${SITE_URL}/formations`, priority: 0.9, changeFrequency: "weekly" },
+    { url: `${SITE_URL}/lives`, priority: 0.9, changeFrequency: "daily" },
+    { url: `${SITE_URL}/tarifs`, priority: 0.85, changeFrequency: "weekly" },
     { url: `${SITE_URL}/methodologie-bac`, priority: 0.75, changeFrequency: "monthly" },
     { url: `${SITE_URL}/equipe-pedagogique`, priority: 0.5, changeFrequency: "monthly" },
     { url: `${SITE_URL}/about`, priority: 0.5, changeFrequency: "monthly" },

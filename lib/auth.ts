@@ -36,6 +36,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             email: user.email,
             name: user.name,
             role: user.role,
+            niveau: user.niveau,
+            phone: user.phone,
             image: user.image,
           };
         } catch (error: any) {
@@ -56,8 +58,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (email) {
           let dbUser = await getUserByEmail(email);
           if (!dbUser) {
-            const userMeta = JSON.stringify({ role: 'user', emailVerified: true });
-            dbUser = await createUser(email, '', profile.name || 'Google User', 'user', userMeta);
+            const userMeta = JSON.stringify({ role: 'etudiant', emailVerified: true });
+            dbUser = await createUser(email, '', profile.name || 'Google User', 'etudiant', userMeta);
           } else if (dbUser.metadata) {
             try {
               const meta = JSON.parse(dbUser.metadata);
@@ -68,7 +70,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 const { updateUser } = await import('./db');
                 await updateUser(dbUser.id, { metadata: JSON.stringify(meta) });
               }
-              // Extract image from metadata if exists
               if (meta.image) {
                 token.image = meta.image;
               }
@@ -76,7 +77,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
           token.id = dbUser.id;
           token.role = dbUser.role;
-          // Also check direct image field
+          token.niveau = dbUser.niveau;
+          token.phone = dbUser.phone;
           if (dbUser.image) {
             token.image = dbUser.image;
           }
@@ -84,7 +86,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       if (user) {
         token.id = (user as any).id;
-        token.role = (user as any).role || 'user';
+        token.role = (user as any).role || 'etudiant';
+        token.niveau = (user as any).niveau;
+        token.phone = (user as any).phone;
         token.image = (user as any).image;
       }
       return token;
@@ -92,7 +96,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, token }) {
       if (session?.user) {
         (session.user as any).id = token.id;
-        (session.user as any).role = token.role || 'user';
+        (session.user as any).role = token.role || 'etudiant';
+        (session.user as any).niveau = token.niveau;
+        (session.user as any).phone = token.phone;
         (session.user as any).image = token.image;
       }
       return session;
