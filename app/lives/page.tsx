@@ -1,8 +1,9 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/seo';
-import { getLiveSessions } from '@/lib/db';
+import { getLiveSessions, getUpcomingLiveSessions } from '@/lib/db';
 import LivesClient from './LivesClient';
+import LiveCountdownBanner from '@/app/components/LiveCountdownBanner';
 
 export const revalidate = 3600;
 
@@ -14,10 +15,18 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default async function LivesPage() {
-  const lives = await getLiveSessions(30);
+  const [lives, upcomingLives] = await Promise.all([
+    getLiveSessions(30),
+    getUpcomingLiveSessions(3),
+  ]);
 
   return (
     <div className="py-8">
+      {/* Live NOW banner (only shows if a session is currently live) */}
+      {upcomingLives.some((l) => l.status === 'live') && (
+        <LiveCountdownBanner lives={upcomingLives} />
+      )}
+
       {/* Header banner */}
       <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-900 rounded-3xl p-8 sm:p-12 text-white mb-10 relative overflow-hidden shadow-xl">
         <div className="relative z-10 max-w-3xl">

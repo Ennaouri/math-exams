@@ -10,7 +10,16 @@ export async function GET() {
     }
 
     const parentId = Number((session.user as any).id);
-    const students = await getParentStudents(parentId);
+    let students = await getParentStudents(parentId);
+
+    const { getUserProgressStats } = await import('@/lib/db');
+    students = await Promise.all(
+      students.map(async (st: any) => {
+        const stats = await getUserProgressStats(st.student_id);
+        return { ...st, progressStats: stats };
+      })
+    );
+
     return NextResponse.json(students);
   } catch (error) {
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });

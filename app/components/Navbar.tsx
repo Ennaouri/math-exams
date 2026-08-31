@@ -4,6 +4,8 @@ import Link from "next/link";
 import React, { useState, useRef, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import type { CategoryCardType } from "../layout";
+import SearchBar from "./SearchBar";
+import ThemeToggle from "./ThemeToggle";
 
 function getStoredImage(): string | null {
   if (typeof window === "undefined") return null;
@@ -53,6 +55,11 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
             Maths<span className="text-blue-400">-Exams</span>
           </span>
         </Link>
+
+        {/* Search bar — hidden on mobile, visible on md+ */}
+        <div className="hidden md:flex flex-1 max-w-xs mx-4">
+          <SearchBar />
+        </div>
 
         {/* Hamburger */}
         <button
@@ -156,6 +163,17 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
 
             <li>
               <Link
+                href="/calendrier"
+                onClick={closeAll}
+                className="flex items-center gap-1.5 py-2 px-3 text-slate-200 hover:text-blue-400 md:p-0 transition-colors"
+              >
+                <span>📅</span>
+                <span>Calendrier</span>
+              </Link>
+            </li>
+
+            <li>
+              <Link
                 href="/tarifs"
                 onClick={closeAll}
                 className="block py-2 px-3 text-amber-300 hover:text-amber-200 font-bold md:p-0 transition-colors"
@@ -172,6 +190,10 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
               >
                 Méthode BAC
               </Link>
+            </li>
+
+            <li className="flex items-center">
+              <ThemeToggle />
             </li>
 
             {/* Auth / Dashboard button */}

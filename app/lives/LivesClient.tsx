@@ -1,14 +1,66 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { LiveSession } from '@/lib/types';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+
+function BellButton({ liveId, initialSubscribed }: { liveId: number; initialSubscribed: boolean }) {
+  const [subscribed, setSubscribed] = useState(initialSubscribed);
+  const [loading, setLoading] = useState(false);
+
+  const toggle = async () => {
+    setLoading(true);
+    try {
+      const method = subscribed ? 'DELETE' : 'POST';
+      const res = await fetch('/api/live-notifications', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ liveId }),
+      });
+      if (res.ok) setSubscribed(!subscribed);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={toggle}
+      disabled={loading}
+      title={subscribed ? 'Annuler le rappel' : 'Recevoir un rappel par email'}
+      className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border transition-all disabled:opacity-60 ${
+        subscribed
+          ? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100'
+          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700'
+      }`}
+    >
+      {loading ? (
+        <span className="animate-spin w-3 h-3 border border-current border-t-transparent rounded-full" />
+      ) : (
+        <span>{subscribed ? '🔔' : '🔕'}</span>
+      )}
+      <span className="hidden sm:inline">{subscribed ? 'Rappel activé' : 'Me rappeler'}</span>
+    </button>
+  );
+}
 
 export default function LivesClient({ initialLives }: { initialLives: LiveSession[] }) {
   const { data: session } = useSession();
   const [selectedNiveau, setSelectedNiveau] = useState<string>('all');
   const [activeTab, setActiveTab] = useState<'upcoming' | 'replays'>('upcoming');
+  const [subscribedIds, setSubscribedIds] = useState<number[]>([]);
+
+  // Fetch which lives the user is already subscribed to
+  useEffect(() => {
+    if (!session) return;
+    fetch('/api/live-notifications')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.subscriptions) setSubscribedIds(data.subscriptions);
+      })
+      .catch(() => {});
+  }, [session]);
 
   const filteredLives = initialLives.filter((live) => {
     const matchNiveau = selectedNiveau === 'all' || live.niveau.includes(selectedNiveau);
@@ -138,9 +190,18 @@ export default function LivesClient({ initialLives }: { initialLives: LiveSessio
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
-                  <div className="text-xs text-slate-500">
-                    {live.resources_count ? `📎 ${live.resources_count} fiches PDF incluses` : 'Support de cours inclus'}
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3 flex-wrap">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs text-slate-500">
+                      {live.resources_count ? `📎 ${live.resources_count} fiches PDF incluses` : 'Support de cours inclus'}
+                    </span>
+                    {/* Bell reminder button — only for upcoming sessions and logged-in users */}
+                    {session && live.status !== 'completed' && (
+                      <BellButton
+                        liveId={live.id}
+                        initialSubscribed={subscribedIds.includes(live.id)}
+                      />
+                    )}
                   </div>
 
                   {live.status === 'completed' && live.replay_url ? (

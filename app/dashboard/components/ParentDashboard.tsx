@@ -3,10 +3,15 @@
 import React, { useState } from 'react';
 import { ParentStudent, SubscriptionPlan, LiveSession } from '@/lib/types';
 import Link from 'next/link';
+import ProgressSection from './ProgressSection';
+
+interface ParentStudentWithStats extends ParentStudent {
+  progressStats?: any;
+}
 
 interface ParentDashboardProps {
   parentUser: any;
-  students: ParentStudent[];
+  students: ParentStudentWithStats[];
   plans: SubscriptionPlan[];
   upcomingLives: LiveSession[];
 }
@@ -17,7 +22,8 @@ export default function ParentDashboard({
   plans,
   upcomingLives,
 }: ParentDashboardProps) {
-  const [studentList, setStudentList] = useState<ParentStudent[]>(students);
+  const [studentList, setStudentList] = useState<ParentStudentWithStats[]>(students);
+  const [expandedStudentId, setExpandedStudentId] = useState<number | null>(null);
   const [studentEmail, setStudentEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -113,36 +119,54 @@ export default function ParentDashboard({
           </div>
         ) : (
           <div className="space-y-4 mb-8">
-            {studentList.map((st) => (
-              <div
-                key={st.id}
-                className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5 rounded-2xl border border-slate-100 bg-slate-50/70"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-base">
-                    🎓
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900 text-sm">{st.student_name || 'Élève'}</h3>
-                    <div className="text-xs text-slate-500">{st.student_email}</div>
-                    {st.student_niveau && (
-                      <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-50 text-blue-700">
-                        {st.student_niveau}
-                      </span>
-                    )}
-                  </div>
-                </div>
+            {studentList.map((st) => {
+              const isExpanded = expandedStudentId === st.id;
+              return (
+                <div key={st.id} className="flex flex-col rounded-2xl border border-slate-100 bg-slate-50/70 overflow-hidden">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-base">
+                        🎓
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-slate-900 text-sm">{st.student_name || 'Élève'}</h3>
+                        <div className="text-xs text-slate-500">{st.student_email}</div>
+                        {st.student_niveau && (
+                          <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-50 text-blue-700">
+                            {st.student_niveau}
+                          </span>
+                        )}
+                      </div>
+                    </div>
 
-                <div className="flex items-center gap-3">
-                  <Link
-                    href="/tarifs"
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider"
-                  >
-                    Souscrire un Pack
-                  </Link>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={() => setExpandedStudentId(isExpanded ? null : st.id)}
+                        className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2"
+                      >
+                        {isExpanded ? 'Masquer la progression' : 'Voir la progression'}
+                        <svg className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      <Link
+                        href="/tarifs"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider"
+                      >
+                        Souscrire un Pack
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Expanded Progress Section */}
+                  {isExpanded && st.progressStats && (
+                    <div className="px-5 pb-5 pt-2 border-t border-slate-200/60 bg-white">
+                      <ProgressSection stats={st.progressStats} />
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

@@ -150,3 +150,85 @@ export interface FormationResource {
   is_premium: boolean;
   created_at: Date;
 }
+
+// ─── Progression Étudiant ────────────────────────────────────────────────────
+
+export interface UserProgress {
+  id: number;
+  user_id: number;
+  post_id: number;
+  post_slug: string;
+  post_name?: string;
+  category_name?: string;
+  category_slug?: string;
+  viewed_at: Date;
+}
+
+export interface UserProgressStats {
+  total_viewed: number;
+  recent: UserProgress[];
+  by_category: {
+    category_name: string;
+    category_slug: string;
+    viewed: number;
+    total: number;
+    percent: number;
+  }[];
+  streak_days: number;
+}
+
+// ─── QCM Interactif ───────────────────────────────────────────────────────────
+
+export interface QuizQuestion {
+  id: number;
+  quiz_id: number;
+  question_text: string;
+  explanation?: string;
+  position: number;
+  choices: string[];
+  correct_index: number;
+  created_at: Date;
+}
+
+export interface Quiz {
+  id: number;
+  post_id: number;
+  title: string;
+  description?: string;
+  time_limit: number;
+  is_active: boolean;
+  questions: QuizQuestion[];
+  created_at: Date;
+}
+
+export interface QuizAttempt {
+  id: number;
+  quiz_id: number;
+  user_id: number;
+  answers: { question_id: number; chosen_index: number }[];
+  score: number;
+  total: number;
+  completed: boolean;
+  started_at: Date;
+  completed_at?: Date;
+}
+
+// ─── Calendrier des Examens ────────────────────────────────────────────────────
+
+export interface ExamEvent {
+  id: number;
+  title: string;
+  event_date: Date;
+  event_time?: string;
+  end_date?: Date;
+  type: 'examen_national' | 'examen_regional' | 'concours' | 'devoir_surveille' | 'autre';
+  niveau?: string;
+  niveau_label?: string;
+  description?: string;
+  location?: string;
+  pdf_url?: string;
+  source_url?: string;
+  is_active: boolean;
+  created_at: Date;
+  updated_at: Date;
+}

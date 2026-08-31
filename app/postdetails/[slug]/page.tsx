@@ -9,6 +9,7 @@ import AdSenseLoader from "@/app/components/AdSenseLoader";
 import { SITE_NAME, SITE_URL, buildPageMetadata } from "@/lib/seo";
 import AdUnit from "@/app/components/AdUnit";
 import PostDetailsAccordion from "./PostDetailsAccordion";
+import QuizBlock from "@/app/components/QuizBlock";
 
 export const revalidate = 3600;
 
@@ -119,18 +120,18 @@ export default async function PostDetails({
         />
       )}
       <div className="">
-        <div className="rounded-sm overflow-hidden bg-white shadow-sm">
+        <div className="rounded-sm overflow-hidden bg-white dark:bg-slate-800 shadow-sm border dark:border-slate-700">
           <div className=" pb-5">
-            <nav className="px-5 mb-3 text-sm text-gray-500">
+            <nav className="px-5 mb-3 text-sm text-gray-500 dark:text-gray-400">
               <ol className="flex items-center space-x-2 flex-wrap">
                 <li>
-                  <Link href="/" className="hover:text-red-600">Accueil</Link>
+                  <Link href="/" className="hover:text-red-600 dark:hover:text-red-400">Accueil</Link>
                 </li>
                 {postWithCategory?.category && (
                   <>
                     <li>/</li>
                     <li>
-                      <Link href={`/category/${postWithCategory.category.slug}`} className="hover:text-red-600">
+                      <Link href={`/category/${postWithCategory.category.slug}`} className="hover:text-red-600 dark:hover:text-red-400">
                         {postWithCategory.category.name}
                       </Link>
                     </li>
@@ -142,7 +143,7 @@ export default async function PostDetails({
                     <li>
                       <Link 
                         href={`/category/${postWithCategory.category?.slug}/${postWithCategory.underCategory.slug}`} 
-                        className="hover:text-red-600"
+                        className="hover:text-red-600 dark:hover:text-red-400"
                       >
                         {postWithCategory.underCategory.name}
                       </Link>
@@ -150,45 +151,60 @@ export default async function PostDetails({
                   </>
                 )}
                 <li>/</li>
-                <li className="text-gray-700">{post?.name}</li>
+                <li className="text-gray-700 dark:text-gray-300">{post?.name}</li>
               </ol>
             </nav>
-            <h1 className="px-5 block text-2xl font-semibold text-gray-700 font-roboto">
+            <h1 className="px-5 block text-2xl font-semibold text-gray-700 dark:text-gray-100 font-roboto">
               {post?.name}
             </h1>
             <div className="px-5 mt-2 flex space-x-4">
-              <div className="flex text-gray-400 text-sm items-center">
+              <div className="flex text-gray-400 dark:text-gray-500 text-sm items-center">
                 <span className="mr-2 text-xs">
                   <i className="far fa-user"></i>
                 </span>
                 Cours
               </div>
-              <div className="px-5 flex text-gray-400 text-sm items-center">
+              <div className="px-5 flex text-gray-400 dark:text-gray-500 text-sm items-center">
                 <span className="mr-2 text-xs">
                   <i className="far fa-clock"></i>
                 </span>
                 {post?.created_at?.toDateString()}
               </div>
             </div>
-            <section className="mx-5 mt-5 rounded-sm border border-blue-100 bg-blue-50 p-4">
-              <h2 className="text-lg font-semibold text-gray-800">À propos de cette ressource</h2>
-              <p className="mt-2 text-sm leading-6 text-gray-700">
+            <section className="mx-5 mt-5 rounded-sm border border-blue-100 dark:border-blue-900/50 bg-blue-50 dark:bg-blue-900/20 p-4">
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-blue-200">À propos de cette ressource</h2>
+              <p className="mt-2 text-sm leading-6 text-gray-700 dark:text-blue-100/70">
                 Cette page vous aide à travailler {postWithCategory?.underCategory?.name || "les mathématiques"} pour {postWithCategory?.category?.name || "le programme de mathématiques"}. Consultez le contenu, notez les méthodes importantes, puis entraînez-vous avec les ressources liées en bas de page.
               </p>
               {post?.description && (
-                <p className="mt-2 text-sm leading-6 text-gray-700">{post.description}</p>
+                <p className="mt-2 text-sm leading-6 text-gray-700 dark:text-blue-100/70">{post.description}</p>
               )}
             </section>
             <div className="px-5">
               <AdUnit slot="5512454890" format="fluid" layout="in-article" />
             </div>
-            <PostDetailsAccordion items={accordionItems} showDownload={Boolean(session)} />
+            <PostDetailsAccordion
+              items={accordionItems}
+              showDownload={Boolean(session)}
+              postId={post?.id}
+              postSlug={slug}
+              postName={post?.name}
+              categoryName={postWithCategory?.category?.name}
+              categorySlug={postWithCategory?.category?.slug}
+            />
+
+            {/* QCM interactif — s'affiche si un quiz existe pour ce post */}
+            {post?.id && (
+              <div className="px-1 md:px-5 mt-2">
+                <QuizBlock postId={post.id} isLoggedIn={Boolean(session)} />
+              </div>
+            )}
           </div>
         </div>
         {relatedPosts.length > 0 && (
-          <section className="mt-6 rounded-sm bg-white p-5 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-800">Ressources liées</h2>
-            <p className="mt-2 text-sm text-gray-600">
+          <section className="mt-6 rounded-sm bg-white dark:bg-slate-800 p-5 shadow-sm border dark:border-slate-700">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Ressources liées</h2>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
               Continuez avec des cours, exercices ou examens du même niveau pour augmenter vos chances de réussite.
             </p>
             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -196,11 +212,11 @@ export default async function PostDetails({
                 <Link
                   key={relatedPost.id}
                   href={`/postdetails/${relatedPost.slug}`}
-                  className="block rounded-sm border border-gray-100 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
+                  className="block rounded-sm border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm transition-shadow hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600"
                 >
-                  <h3 className="font-semibold text-gray-800">{relatedPost.name}</h3>
+                  <h3 className="font-semibold text-gray-800 dark:text-gray-200">{relatedPost.name}</h3>
                   {relatedPost.description && (
-                    <p className="mt-2 text-sm text-gray-600 line-clamp-3">{relatedPost.description}</p>
+                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-3">{relatedPost.description}</p>
                   )}
                 </Link>
               ))}

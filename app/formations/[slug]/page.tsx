@@ -5,6 +5,7 @@ import { getFormationBySlug, getFormationResources, getFormations } from '@/lib/
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { auth } from '@/lib/auth';
+import WatermarkedDownloadButton from '@/app/components/WatermarkedDownloadButton';
 
 export const revalidate = 3600;
 
@@ -127,16 +128,12 @@ export default async function FormationDetailPage({ params }: { params: Promise<
               </div>
 
               {session ? (
-                <a
-                  href={res.file_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
+                <WatermarkedDownloadButton
+                  pdfUrl={res.file_url}
+                  fileName={res.title}
+                  label="Télécharger 📥"
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center gap-1.5 shrink-0"
-                >
-                  <span>Télécharger</span>
-                  <span>📥</span>
-                </a>
+                />
               ) : (
                 <Link
                   href="/tarifs"

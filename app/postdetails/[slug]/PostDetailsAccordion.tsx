@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import AdUnit from "@/app/components/AdUnit";
+import WatermarkedDownloadButton from "@/app/components/WatermarkedDownloadButton";
 
 type PostDetailItem = {
   id?: number;
@@ -24,6 +25,10 @@ function renderContent(postDetail: PostDetailItem, showDownload = true) {
   const isPdf = thumbnail?.toLowerCase().endsWith(".pdf");
   const isVideo = thumbnail?.match(/\.(mp4|webm|mov)$/i);
   const isImage = thumbnail?.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+
+  // Derive a clean filename from the URL path
+  const rawFileName = thumbnail?.split('/').pop()?.split('?')[0] || 'document.pdf';
+  const cleanFileName = decodeURIComponent(rawFileName).replace(/^\d+-/, '');
 
   if (isYouTube || getYouTubeEmbedId(thumbnail || "")) {
     const youtubeId = getYouTubeEmbedId(mediaUrl);
@@ -53,14 +58,16 @@ function renderContent(postDetail: PostDetailItem, showDownload = true) {
           style={{ border: "none", pointerEvents: "auto" }}
         />
         {showDownload && (
-          <a
-            href={mediaUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          >
-            Download PDF
-          </a>
+          <div className="mt-3 flex items-center gap-3 flex-wrap">
+            <WatermarkedDownloadButton
+              pdfUrl={mediaUrl}
+              fileName={cleanFileName}
+              label="⬇ Télécharger (avec filigrane)"
+            />
+            <span className="text-xs text-slate-400 italic">
+              Le PDF téléchargé contiendra votre nom en filigrane.
+            </span>
+          </div>
         )}
       </div>
     );
@@ -122,15 +129,38 @@ function renderContent(postDetail: PostDetailItem, showDownload = true) {
 export default function PostDetailsAccordion({
   items,
   showDownload,
+  postId,
+  postSlug,
+  postName,
+  categoryName,
+  categorySlug,
 }: {
   items: PostDetailItem[];
   showDownload: boolean;
+  postId?: number;
+  postSlug?: string;
+  postName?: string;
+  categoryName?: string;
+  categorySlug?: string;
 }) {
   const [openIndex, setOpenIndex] = useState(0);
+  const tracked = useRef(false);
+
+  // Track the post view once when the page loads (only if user is logged in = showDownload)
+  useEffect(() => {
+    if (showDownload && postId && postSlug && !tracked.current) {
+      tracked.current = true;
+      fetch('/api/progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId, postSlug, postName, categoryName, categorySlug }),
+      }).catch(() => {/* non-critical */});
+    }
+  }, [showDownload, postId, postSlug, postName, categoryName, categorySlug]);
 
   if (!items.length) {
     return (
-      <div className="rounded-sm border border-gray-100 bg-white p-5 text-gray-600">
+      <div className="rounded-sm border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 text-gray-600 dark:text-gray-400">
         Aucun contenu disponible pour cette ressource.
       </div>
     );
@@ -146,8 +176,8 @@ export default function PostDetailsAccordion({
         return (
           <section
             key={postDetail.id || index}
-            className={`overflow-hidden rounded-sm border bg-white shadow-sm transition-shadow ${
-              isOpen ? "border-blue-500 shadow-md" : "border-gray-200"
+            className={`overflow-hidden rounded-sm border bg-white dark:bg-slate-800 shadow-sm transition-shadow ${
+              isOpen ? "border-blue-500 shadow-md" : "border-gray-200 dark:border-slate-700"
             }`}
           >
             <button
@@ -157,24 +187,24 @@ export default function PostDetailsAccordion({
               aria-controls={panelId}
               onClick={() => setOpenIndex(isOpen ? -1 : index)}
               className={`flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition ${
-                isOpen ? "bg-blue-50" : "bg-slate-50 hover:bg-blue-50"
+                isOpen ? "bg-blue-50 dark:bg-blue-900/30" : "bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50 dark:hover:bg-blue-900/20"
               }`}
             >
               <span className="flex items-center gap-3">
                 <span
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-sm text-sm font-bold ${
-                    isOpen ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-700"
+                    isOpen ? "bg-blue-600 text-white" : "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300"
                   }`}
                 >
                   {index + 1}
                 </span>
-                <span className={`text-base font-bold md:text-lg ${isOpen ? "text-blue-700" : "text-slate-800"}`}>
+                <span className={`text-base font-bold md:text-lg ${isOpen ? "text-blue-700 dark:text-blue-400" : "text-slate-800 dark:text-slate-200"}`}>
                   {postDetail.name || `Partie ${index + 1}`}
                 </span>
               </span>
               <span
                 className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border ${
-                  isOpen ? "border-blue-600 bg-blue-600 text-white" : "border-blue-200 bg-white text-blue-700"
+                  isOpen ? "border-blue-600 bg-blue-600 text-white" : "border-blue-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-blue-700 dark:text-blue-300"
                 }`}
               >
                 <svg
@@ -193,7 +223,7 @@ export default function PostDetailsAccordion({
                 id={panelId}
                 role="region"
                 aria-labelledby={buttonId}
-                className={`border-t border-gray-100 px-3 py-4 md:px-5 ${!showDownload ? "no-download" : ""}`}
+                className={`border-t border-gray-100 dark:border-slate-700 px-3 py-4 md:px-5 ${!showDownload ? "no-download" : ""}`}
               >
                 {renderContent(postDetail, showDownload)}
                 <AdUnit slot="5512454890" format="fluid" layout="in-article" />

@@ -45,7 +45,7 @@ export default function CarouselCard({ underCategories }: Props) {
             <Link 
               key={card.id}
               href={`/category/${card.slug}/posts`} 
-              className="w-64 h-72 m-3 rounded-lg overflow-hidden border cursor-pointer bg-white hover:shadow-xl transition-shadow block"
+              className="w-64 h-72 m-3 rounded-lg overflow-hidden border dark:border-slate-700 cursor-pointer bg-white dark:bg-slate-800 hover:shadow-xl transition-shadow block"
             >
               <div className="relative h-36 w-full">
                 <Image 
@@ -57,7 +57,7 @@ export default function CarouselCard({ underCategories }: Props) {
                 />
               </div>
               <div className="p-2">
-                <h3 className="font-bold text-xl">{card.name}</h3>
+                <h3 className="font-bold text-xl text-slate-900 dark:text-slate-100">{card.name}</h3>
               </div>
             </Link>
           ))}

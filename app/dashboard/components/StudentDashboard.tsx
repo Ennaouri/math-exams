@@ -1,14 +1,17 @@
 'use client';
 
 import React from 'react';
-import { UserSubscription, LiveSession, Formation } from '@/lib/types';
+import { UserSubscription, LiveSession, Formation, UserProgressStats } from '@/lib/types';
 import Link from 'next/link';
+import ProgressSection from './ProgressSection';
+import AITutor from './AITutor';
 
 interface StudentDashboardProps {
   user: any;
   subscription: UserSubscription | null;
   upcomingLives: LiveSession[];
   formations: Formation[];
+  progressStats: UserProgressStats;
 }
 
 export default function StudentDashboard({
@@ -16,6 +19,7 @@ export default function StudentDashboard({
   subscription,
   upcomingLives,
   formations,
+  progressStats,
 }: StudentDashboardProps) {
   const isSubscribed = subscription && subscription.status === 'active';
 
@@ -61,6 +65,12 @@ export default function StudentDashboard({
           )}
         </div>
       </div>
+
+      {/* Progress Section */}
+      <ProgressSection stats={progressStats} />
+
+      {/* AI Tutor Section */}
+      <AITutor progressStats={progressStats} niveau={user?.niveau} />
 
       {/* Grid: Upcoming Lives & Quick Formations */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

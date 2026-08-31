@@ -1,4 +1,4 @@
-import { getCategories, getExamPosts, getLatestPosts } from "@/lib/db";
+import { getCategories, getExamPosts, getLatestPosts, getUpcomingLiveSessions } from "@/lib/db";
 import { buildPageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import Script from "next/script";
@@ -6,6 +6,7 @@ import AdUnit from "./components/AdUnit";
 import Image from "next/image";
 import type { Category, Post } from "@/lib/types";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import LiveCountdownBanner from "./components/LiveCountdownBanner";
 
 export const revalidate = 3600;
 
@@ -20,12 +21,14 @@ export default async function Home() {
   let categories: Category[] = [];
   let posts: Post[] = [];
   let recentPosts: Post[] = [];
+  let upcomingLives: any[] = [];
 
   try {
-    [categories, posts, recentPosts] = await Promise.all([
+    [categories, posts, recentPosts, upcomingLives] = await Promise.all([
       getCategories(),
       getExamPosts(6),
       getLatestPosts(6),
+      getUpcomingLiveSessions(3),
     ]);
   } catch (error) {
     console.error("Unable to load home data:", error);
@@ -110,6 +113,9 @@ export default async function Home() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
         />
       )}
+
+      {/* Live countdown banner */}
+      {upcomingLives.length > 0 && <LiveCountdownBanner lives={upcomingLives} />}
 
       {/* Breadcrumb */}
       <nav className="mb-4 text-sm text-gray-500" aria-label="Fil d'Ariane">

@@ -8,6 +8,7 @@ import {
   getFormations,
   getParentStudents,
   getSubscriptionPlans,
+  getUserProgressStats,
 } from '@/lib/db';
 import StudentDashboard from './components/StudentDashboard';
 import ParentDashboard from './components/ParentDashboard';
@@ -28,13 +29,25 @@ export default async function DashboardPage() {
   const userId = Number(user.id);
   const role = user.role || 'etudiant';
 
-  const [subscription, upcomingLives, formations, plans, parentStudents] = await Promise.all([
+  const [subscription, upcomingLives, formations, plans, parentStudentsInitial, progressStats] = await Promise.all([
     getUserSubscription(userId),
     getUpcomingLiveSessions(4),
     getFormations(),
     getSubscriptionPlans(),
     role === 'parent' ? getParentStudents(userId) : Promise.resolve([]),
+    role !== 'parent' ? getUserProgressStats(userId) : Promise.resolve({ total_viewed: 0, recent: [], by_category: [], streak_days: 0 }),
   ]);
+
+  // If parent, fetch progress for all linked students
+  let parentStudents = parentStudentsInitial;
+  if (role === 'parent' && parentStudents.length > 0) {
+    parentStudents = await Promise.all(
+      parentStudents.map(async (st: any) => {
+        const stats = await getUserProgressStats(st.student_id);
+        return { ...st, progressStats: stats };
+      })
+    );
+  }
 
   return (
     <div className="py-8">
@@ -93,6 +106,7 @@ export default async function DashboardPage() {
           subscription={subscription}
           upcomingLives={upcomingLives}
           formations={formations}
+          progressStats={progressStats}
         />
       )}
     </div>

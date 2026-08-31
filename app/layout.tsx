@@ -165,11 +165,11 @@ export default async function RootLayout({
             </>
           )}
           <SpeedInsights />
-          <div className="bg-gray-100 min-h-screen w-screen">
-            <div className="max-w-screen-xl m-auto bg-white">
+          <div className="bg-gray-100 dark:bg-slate-900 min-h-screen w-screen transition-colors">
+            <div className="max-w-screen-xl m-auto bg-white dark:bg-slate-900 transition-colors">
               <Navbar categories={categories} />
               <Header />
-              <div className="pt-12 bg-gray-100 pb-12">
+              <div className="pt-12 bg-gray-100 dark:bg-slate-900 pb-12 transition-colors">
                 <div className="container mx-auto flex flex-wrap lg:flex-nowrap">
                   <aside className="w-full xl:w-3/12 hidden xl:block" aria-label="Barre latérale">
                     <CategoriesSideBar categories={categories} />

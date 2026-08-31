@@ -933,3 +933,425 @@ export async function getAllUsers(): Promise<User[]> {
     return [];
   }
 }
+
+// ─── Progression Étudiant ─────────────────────────────────────────────────────
+
+export async function trackPostView(
+  userId: number,
+  postId: number,
+  postSlug: string,
+  postName?: string,
+  categoryName?: string,
+  categorySlug?: string
+): Promise<void> {
+  try {
+    await pool.query(
+      `INSERT INTO user_progress (user_id, post_id, post_slug, post_name, category_name, category_slug, viewed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, NOW())
+       ON CONFLICT (user_id, post_id)
+       DO UPDATE SET viewed_at = NOW(),
+                     post_name = EXCLUDED.post_name,
+                     category_name = EXCLUDED.category_name,
+                     category_slug = EXCLUDED.category_slug`,
+      [userId, postId, postSlug, postName || null, categoryName || null, categorySlug || null]
+    );
+  } catch {
+    // silently fail — tracking is non-critical
+  }
+}
+
+export async function getUserProgress(userId: number, limit = 10): Promise<import('./types').UserProgress[]> {
+  try {
+    const result = await pool.query(
+      `SELECT * FROM user_progress WHERE user_id = $1 ORDER BY viewed_at DESC LIMIT $2`,
+      [userId, limit]
+    );
+    return result.rows;
+  } catch {
+    return [];
+  }
+}
+
+export async function getUserProgressStats(userId: number): Promise<import('./types').UserProgressStats> {
+  const empty: import('./types').UserProgressStats = {
+    total_viewed: 0,
+    recent: [],
+    by_category: [],
+    streak_days: 0,
+  };
+
+  try {
+    // Total posts viewed
+    const totalRes = await pool.query(
+      `SELECT COUNT(*) AS cnt FROM user_progress WHERE user_id = $1`,
+      [userId]
+    );
+    const total_viewed = parseInt(totalRes.rows[0]?.cnt || '0', 10);
+
+    // Recent 5
+    const recentRes = await pool.query(
+      `SELECT * FROM user_progress WHERE user_id = $1 ORDER BY viewed_at DESC LIMIT 5`,
+      [userId]
+    );
+
+    // Per-category stats: how many posts exist and how many the user has viewed
+    const catRes = await pool.query(
+      `SELECT
+         c.name         AS category_name,
+         c.slug         AS category_slug,
+         COUNT(DISTINCT p.id)::int AS total,
+         COUNT(DISTINCT up.post_id)::int AS viewed
+       FROM "Category" c
+       JOIN "UnderCategory" uc ON uc.category_id = c.id
+       JOIN "Post" p ON p."underCategory_id" = uc.id
+       LEFT JOIN user_progress up
+         ON up.post_id = p.id AND up.user_id = $1
+       GROUP BY c.id, c.name, c.slug
+       ORDER BY c.id`,
+      [userId]
+    );
+
+    const by_category = catRes.rows.map((row: any) => ({
+      category_name: row.category_name,
+      category_slug: row.category_slug,
+      viewed: row.viewed,
+      total: row.total,
+      percent: row.total > 0 ? Math.round((row.viewed / row.total) * 100) : 0,
+    }));
+
+    // Streak : count consecutive days (today included) with at least one view
+    const streakRes = await pool.query(
+      `WITH daily AS (
+         SELECT DISTINCT date_trunc('day', viewed_at AT TIME ZONE 'UTC') AS day
+         FROM user_progress
+         WHERE user_id = $1
+       ),
+       numbered AS (
+         SELECT day, ROW_NUMBER() OVER (ORDER BY day DESC) AS rn FROM daily
+       )
+       SELECT COUNT(*) AS streak
+       FROM numbered
+       WHERE day = CURRENT_DATE - (rn - 1) * INTERVAL '1 day'`,
+      [userId]
+    );
+    const streak_days = parseInt(streakRes.rows[0]?.streak || '0', 10);
+
+    return {
+      total_viewed,
+      recent: recentRes.rows,
+      by_category,
+      streak_days,
+    };
+  } catch {
+    return empty;
+  }
+}
+
+// ─── Notifications Lives ──────────────────────────────────────────────────────
+
+export async function subscribeLiveNotification(
+  liveId: number,
+  userId: number,
+  email: string,
+  userName?: string
+): Promise<{ success: boolean; alreadySubscribed?: boolean }> {
+  try {
+    await pool.query(
+      `INSERT INTO live_notification (live_id, user_id, email, user_name)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (live_id, user_id) DO NOTHING`,
+      [liveId, userId, email, userName || null]
+    );
+    return { success: true };
+  } catch {
+    return { success: false };
+  }
+}
+
+export async function unsubscribeLiveNotification(
+  liveId: number,
+  userId: number
+): Promise<boolean> {
+  try {
+    await pool.query(
+      'DELETE FROM live_notification WHERE live_id = $1 AND user_id = $2',
+      [liveId, userId]
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function isSubscribedToLive(liveId: number, userId: number): Promise<boolean> {
+  try {
+    const result = await pool.query(
+      'SELECT 1 FROM live_notification WHERE live_id = $1 AND user_id = $2',
+      [liveId, userId]
+    );
+    return result.rows.length > 0;
+  } catch {
+    return false;
+  }
+}
+
+export async function getUserLiveSubscriptions(userId: number): Promise<number[]> {
+  try {
+    const result = await pool.query(
+      'SELECT live_id FROM live_notification WHERE user_id = $1',
+      [userId]
+    );
+    return result.rows.map((r: any) => r.live_id);
+  } catch {
+    return [];
+  }
+}
+
+export async function getPendingLiveNotifications(hoursAhead = 24): Promise<
+  { email: string; user_name: string; live_id: number; live_title: string; scheduled_at: Date; niveau_label: string; meeting_url: string; notif_id: number }[]
+> {
+  try {
+    const result = await pool.query(
+      `SELECT
+         ln.id           AS notif_id,
+         ln.email,
+         ln.user_name,
+         ln.live_id,
+         ls.title        AS live_title,
+         ls.scheduled_at,
+         ls.niveau_label,
+         ls.meeting_url
+       FROM live_notification ln
+       JOIN live_session ls ON ls.id = ln.live_id
+       WHERE ln.notified = false
+         AND ls.status = 'upcoming'
+         AND ls.scheduled_at BETWEEN NOW() AND NOW() + ($1 || ' hours')::INTERVAL`,
+      [hoursAhead]
+    );
+    return result.rows;
+  } catch {
+    return [];
+  }
+}
+
+export async function markNotificationSent(notifId: number): Promise<void> {
+  try {
+    await pool.query('UPDATE live_notification SET notified = true WHERE id = $1', [notifId]);
+  } catch {}
+}
+
+// ─── QCM Interactif ───────────────────────────────────────────────────────────
+
+export async function getQuizByPostId(postId: number): Promise<any | null> {
+  try {
+    const quizRes = await pool.query(
+      `SELECT * FROM quiz WHERE post_id = $1 AND is_active = true`,
+      [postId]
+    );
+    if (!quizRes.rows.length) return null;
+    const quiz = quizRes.rows[0];
+
+    const qRes = await pool.query(
+      `SELECT * FROM quiz_question WHERE quiz_id = $1 ORDER BY position ASC`,
+      [quiz.id]
+    );
+    quiz.questions = qRes.rows.map((q: any) => ({
+      ...q,
+      choices: Array.isArray(q.choices) ? q.choices : JSON.parse(q.choices),
+    }));
+    return quiz;
+  } catch {
+    return null;
+  }
+}
+
+export async function getQuizAttempt(quizId: number, userId: number): Promise<any | null> {
+  try {
+    const res = await pool.query(
+      `SELECT * FROM quiz_attempt WHERE quiz_id = $1 AND user_id = $2`,
+      [quizId, userId]
+    );
+    return res.rows[0] || null;
+  } catch {
+    return null;
+  }
+}
+
+export async function upsertQuizAttempt(
+  quizId: number,
+  userId: number,
+  answers: { question_id: number; chosen_index: number }[],
+  score: number,
+  total: number,
+  completed: boolean
+): Promise<any> {
+  try {
+    const res = await pool.query(
+      `INSERT INTO quiz_attempt (quiz_id, user_id, answers, score, total, completed, completed_at)
+       VALUES ($1, $2, $3::jsonb, $4, $5, $6, $7)
+       ON CONFLICT (quiz_id, user_id) DO UPDATE SET
+         answers      = EXCLUDED.answers,
+         score        = EXCLUDED.score,
+         total        = EXCLUDED.total,
+         completed    = EXCLUDED.completed,
+         completed_at = EXCLUDED.completed_at
+       RETURNING *`,
+      [quizId, userId, JSON.stringify(answers), score, total, completed, completed ? new Date() : null]
+    );
+    return res.rows[0];
+  } catch (e: any) {
+    throw e;
+  }
+}
+
+// Admin: create or update a quiz for a post
+export async function upsertQuiz(
+  postId: number,
+  title: string,
+  description: string,
+  timeLimit: number
+): Promise<number> {
+  const res = await pool.query(
+    `INSERT INTO quiz (post_id, title, description, time_limit)
+     VALUES ($1, $2, $3, $4)
+     ON CONFLICT (post_id) DO UPDATE SET
+       title       = EXCLUDED.title,
+       description = EXCLUDED.description,
+       time_limit  = EXCLUDED.time_limit
+     RETURNING id`,
+    [postId, title, description, timeLimit]
+  );
+  return res.rows[0].id;
+}
+
+export async function upsertQuizQuestion(
+  quizId: number,
+  questionText: string,
+  choices: string[],
+  correctIndex: number,
+  explanation: string,
+  position: number,
+  id?: number
+): Promise<number> {
+  if (id) {
+    const res = await pool.query(
+      `UPDATE quiz_question SET question_text=$1, choices=$2::jsonb, correct_index=$3,
+       explanation=$4, position=$5 WHERE id=$6 AND quiz_id=$7 RETURNING id`,
+      [questionText, JSON.stringify(choices), correctIndex, explanation, position, id, quizId]
+    );
+    return res.rows[0]?.id ?? id;
+  }
+  const res = await pool.query(
+    `INSERT INTO quiz_question (quiz_id, question_text, choices, correct_index, explanation, position)
+     VALUES ($1, $2, $3::jsonb, $4, $5, $6) RETURNING id`,
+    [quizId, questionText, JSON.stringify(choices), correctIndex, explanation, position]
+  );
+  return res.rows[0].id;
+}
+
+export async function deleteQuizQuestion(questionId: number): Promise<void> {
+  await pool.query('DELETE FROM quiz_question WHERE id = $1', [questionId]);
+}
+
+// ─── Calendrier des Examens ───────────────────────────────────────────────────
+
+export async function getExamEvents(filters?: {
+  niveau?: string;
+  type?: string;
+  year?: number;
+  month?: number;
+}): Promise<import('./types').ExamEvent[]> {
+  try {
+    const conditions: string[] = ['is_active = true'];
+    const values: any[] = [];
+    let idx = 1;
+
+    if (filters?.niveau) {
+      conditions.push(`(niveau = $${idx} OR niveau = 'all')`);
+      values.push(filters.niveau);
+      idx++;
+    }
+    if (filters?.type) {
+      conditions.push(`type = $${idx}`);
+      values.push(filters.type);
+      idx++;
+    }
+    if (filters?.year) {
+      conditions.push(`EXTRACT(YEAR FROM event_date) = $${idx}`);
+      values.push(filters.year);
+      idx++;
+    }
+    if (filters?.month) {
+      conditions.push(`EXTRACT(MONTH FROM event_date) = $${idx}`);
+      values.push(filters.month);
+      idx++;
+    }
+
+    const where = `WHERE ${conditions.join(' AND ')}`;
+    const res = await pool.query(
+      `SELECT * FROM exam_event ${where} ORDER BY event_date ASC`,
+      values
+    );
+    return res.rows;
+  } catch {
+    return [];
+  }
+}
+
+export async function getUpcomingExamEvents(limit = 5): Promise<import('./types').ExamEvent[]> {
+  try {
+    const res = await pool.query(
+      `SELECT * FROM exam_event
+       WHERE is_active = true AND event_date >= CURRENT_DATE
+       ORDER BY event_date ASC
+       LIMIT $1`,
+      [limit]
+    );
+    return res.rows;
+  } catch {
+    return [];
+  }
+}
+
+export async function createExamEvent(data: {
+  title: string;
+  event_date: string;
+  event_time?: string;
+  end_date?: string;
+  type: string;
+  niveau?: string;
+  niveau_label?: string;
+  description?: string;
+  location?: string;
+  pdf_url?: string;
+  source_url?: string;
+}): Promise<import('./types').ExamEvent> {
+  const res = await pool.query(
+    `INSERT INTO exam_event
+       (title, event_date, event_time, end_date, type, niveau, niveau_label, description, location, pdf_url, source_url)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+     RETURNING *`,
+    [data.title, data.event_date, data.event_time || null, data.end_date || null,
+     data.type, data.niveau || null, data.niveau_label || null, data.description || null,
+     data.location || null, data.pdf_url || null, data.source_url || null]
+  );
+  return res.rows[0];
+}
+
+export async function updateExamEvent(id: number, data: Partial<{
+  title: string; event_date: string; event_time: string; end_date: string;
+  type: string; niveau: string; niveau_label: string; description: string;
+  location: string; pdf_url: string; source_url: string; is_active: boolean;
+}>): Promise<import('./types').ExamEvent> {
+  const fields = Object.keys(data).map((k, i) => `${k} = $${i + 2}`).join(', ');
+  const values = [id, ...Object.values(data)];
+  const res = await pool.query(
+    `UPDATE exam_event SET ${fields}, updated_at = NOW() WHERE id = $1 RETURNING *`,
+    values
+  );
+  return res.rows[0];
+}
+
+export async function deleteExamEvent(id: number): Promise<void> {
+  await pool.query('DELETE FROM exam_event WHERE id = $1', [id]);
+}
