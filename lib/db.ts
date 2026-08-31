@@ -798,7 +798,7 @@ async function hashPassword(password: string): Promise<string> {
 
 export async function authenticateUser(email: string, password: string): Promise<User | null> {
   try {
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const result = await pool.query('SELECT * FROM users WHERE email ILIKE $1', [email]);
     if (result.rows.length === 0) return null;
     const user = result.rows[0] as User;
 
