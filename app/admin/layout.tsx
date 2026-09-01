@@ -21,8 +21,8 @@ export default async function AdminLayout({
           <h1 className="text-xl font-bold">Admin Dashboard</h1>
           <div className="flex gap-4 items-center">
             <Link href="/admin" className="hover:text-gray-300">Dashboard</Link>
-            <Link href="/admin/lives" className="text-red-400 font-bold hover:text-red-300">Lives</Link>
-            <Link href="/admin/subscriptions" className="text-amber-400 font-bold hover:text-amber-300">Abonnements</Link>
+            {/* <Link href="/admin/lives" className="text-red-400 font-bold hover:text-red-300">Lives</Link> */}
+            {/* <Link href="/admin/subscriptions" className="text-amber-400 font-bold hover:text-amber-300">Abonnements</Link> */}
             <Link href="/admin/analytics" className="hover:text-gray-300">Analytics</Link>
             <Link href="/admin/categories" className="hover:text-gray-300">Categories</Link>
             <Link href="/admin/under-categories" className="hover:text-gray-300">Under Categories</Link>

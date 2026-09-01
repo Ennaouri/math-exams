@@ -74,11 +74,13 @@ export default function ParentDashboard({
           <p className="text-xs text-slate-500 mt-1">Étudiants rattachés à votre espace</p>
         </div>
 
+        {/* 
         <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
           <div className="text-slate-400 font-bold uppercase text-[10px]">Séances Live cette semaine</div>
           <div className="text-3xl font-black text-blue-600 mt-1">{upcomingLives.length}</div>
           <p className="text-xs text-slate-500 mt-1">Cours et entraînements programmés</p>
         </div>
+        */}
 
         <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
           <div>
@@ -149,12 +151,14 @@ export default function ParentDashboard({
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </button>
+                      {/* 
                       <Link
                         href="/tarifs"
                         className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider"
                       >
                         Souscrire un Pack
                       </Link>
+                      */}
                     </div>
                   </div>
 
@@ -199,6 +203,7 @@ export default function ParentDashboard({
       </div>
 
       {/* Upcoming Lives Schedule for Children */}
+      {/* 
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm">
         <h2 className="text-xl font-black text-slate-900 mb-4">
           Planning des Cours en Direct pour vos Enfants
@@ -227,6 +232,7 @@ export default function ParentDashboard({
           ))}
         </div>
       </div>
+      */}
     </div>
   );
 }

@@ -115,7 +115,7 @@ export default async function Home() {
       )}
 
       {/* Live countdown banner */}
-      {upcomingLives.length > 0 && <LiveCountdownBanner lives={upcomingLives} />}
+      {/* {upcomingLives.length > 0 && <LiveCountdownBanner lives={upcomingLives} />} */}
 
       {/* Breadcrumb */}
       <nav className="mb-4 text-sm text-gray-500" aria-label="Fil d'Ariane">
