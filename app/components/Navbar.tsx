@@ -130,26 +130,6 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
               )}
             </li>
 
-            <li>
-              <Link
-                href="/formations"
-                onClick={closeAll}
-                className="block py-2 px-3 text-slate-200 hover:text-blue-400 lg:p-0 transition-colors"
-              >
-                Formations
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                href="/lives"
-                onClick={closeAll}
-                className="flex items-center gap-1.5 py-2 px-3 text-slate-200 hover:text-blue-400 lg:p-0 transition-colors"
-              >
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                <span>Lives</span>
-              </Link>
-            </li>
 
             <li>
               <Link
@@ -162,15 +142,6 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
               </Link>
             </li>
 
-            <li>
-              <Link
-                href="/tarifs"
-                onClick={closeAll}
-                className="block py-2 px-3 text-amber-300 hover:text-amber-200 font-bold lg:p-0 transition-colors"
-              >
-                Tarifs & Packs
-              </Link>
-            </li>
 
 
             <li className="flex items-center">
