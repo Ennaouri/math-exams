@@ -239,6 +239,7 @@ export default function CalendarClient({ allEvents, upcomingEvents }: CalendarCl
             </div>
           </div>
           
+          {/*
           <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-3xl p-6 border border-indigo-100 text-center">
             <h4 className="font-black text-indigo-900 mb-2">Prêt pour les examens ?</h4>
             <p className="text-xs text-indigo-700/80 mb-4">Accédez à tous nos cours et exercices corrigés pour vous préparer efficacement.</p>
@@ -246,6 +247,7 @@ export default function CalendarClient({ allEvents, upcomingEvents }: CalendarCl
               Voir nos offres
             </Link>
           </div>
+          */}
         </div>
 
       </div>

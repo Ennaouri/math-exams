@@ -74,7 +74,7 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           {role === 'admin' && (
             <Link
               href="/admin"
@@ -83,12 +83,22 @@ export default async function DashboardPage() {
               Panneau Admin
             </Link>
           )}
+          {role === 'etudiant' && (
+            <Link
+              href="/formations"
+              className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm"
+            >
+              Toutes les Formations
+            </Link>
+          )}
+          {/*
           <Link
             href="/tarifs"
             className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm shadow-blue-600/20"
           >
             {subscription ? 'Changer de Pack' : 'Prendre un Abonnement'}
           </Link>
+          */}
         </div>
       </div>
 
