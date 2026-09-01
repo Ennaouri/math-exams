@@ -19,8 +19,8 @@ const contactInfo = [
       </svg>
     ),
     label: "Email",
-    value: "contact@maths-exams.com",
-    href: "mailto:contact@maths-exams.com",
+    value: "ennaouri.mohammed@gmail.com",
+    href: "mailto:ennaouri.mohammed@gmail.com",
   },
   {
     icon: (
