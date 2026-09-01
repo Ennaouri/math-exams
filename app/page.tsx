@@ -137,7 +137,7 @@ export default async function Home() {
         </p>
       </section>
 
-      {/* <AdUnit slot="5512454890" format="fluid" layout="in-article" /> */}
+      <AdUnit slot="5512454890" format="fluid" layout="in-article" />
 
       {/* Level cards */}
       <div id="niveaux" className="flex bg-slate-900 text-white px-5 py-3.5 justify-between items-center rounded-2xl mb-6 scroll-mt-28 shadow-sm">
