@@ -57,7 +57,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
         </Link>
 
         {/* Search bar — hidden on mobile, visible on md+ */}
-        <div className="hidden md:flex flex-1 max-w-xs mx-4">
+        <div className="hidden lg:flex flex-1 max-w-xs mx-4">
           <SearchBar />
         </div>
 
@@ -65,7 +65,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
         <button
           onClick={() => setIsOpen(!isOpen)}
           type="button"
-          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-slate-300 rounded-xl md:hidden hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700"
+          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-slate-300 rounded-xl lg:hidden hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700"
           aria-expanded={isOpen}
           aria-controls="navbar-dropdown"
           aria-label="Ouvrir le menu de navigation"
@@ -90,25 +90,15 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
         {/* Navigation links */}
         <div
           id="navbar-dropdown"
-          className={`${isOpen ? "block" : "hidden"} w-full md:block md:w-auto`}
+          className={`${isOpen ? "block" : "hidden"} w-full lg:block lg:w-auto`}
         >
-          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 rounded-2xl bg-slate-800 md:space-x-6 md:flex-row md:items-center md:mt-0 md:border-0 md:bg-transparent text-sm">
-            <li>
-              <Link
-                href="/"
-                onClick={closeAll}
-                className="block py-2 px-3 text-slate-200 hover:text-blue-400 md:p-0 transition-colors"
-                aria-current="page"
-              >
-                Accueil
-              </Link>
-            </li>
+          <ul className="flex flex-col font-medium p-4 lg:p-0 mt-4 rounded-2xl bg-slate-800 lg:space-x-8 lg:flex-row lg:items-center lg:mt-0 lg:border-0 lg:bg-transparent text-sm">
 
             {/* Niveau dropdown */}
             <li ref={levelRef} className="relative">
               <button
                 onClick={() => setLevelOpen(!levelOpen)}
-                className="flex items-center justify-between w-full py-2 px-3 text-slate-200 hover:text-blue-400 md:p-0 md:w-auto transition-colors"
+                className="flex items-center justify-between w-full py-2 px-3 text-slate-200 hover:text-blue-400 lg:p-0 lg:w-auto transition-colors"
                 aria-expanded={levelOpen}
                 aria-haspopup="true"
               >
@@ -144,7 +134,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
               <Link
                 href="/formations"
                 onClick={closeAll}
-                className="block py-2 px-3 text-slate-200 hover:text-blue-400 md:p-0 transition-colors"
+                className="block py-2 px-3 text-slate-200 hover:text-blue-400 lg:p-0 transition-colors"
               >
                 Formations
               </Link>
@@ -154,7 +144,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
               <Link
                 href="/lives"
                 onClick={closeAll}
-                className="flex items-center gap-1.5 py-2 px-3 text-slate-200 hover:text-blue-400 md:p-0 transition-colors"
+                className="flex items-center gap-1.5 py-2 px-3 text-slate-200 hover:text-blue-400 lg:p-0 transition-colors"
               >
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                 <span>Lives</span>
@@ -165,7 +155,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
               <Link
                 href="/calendrier"
                 onClick={closeAll}
-                className="flex items-center gap-1.5 py-2 px-3 text-slate-200 hover:text-blue-400 md:p-0 transition-colors"
+                className="flex items-center gap-1.5 py-2 px-3 text-slate-200 hover:text-blue-400 lg:p-0 transition-colors"
               >
                 <span>📅</span>
                 <span>Calendrier</span>
@@ -176,21 +166,12 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
               <Link
                 href="/tarifs"
                 onClick={closeAll}
-                className="block py-2 px-3 text-amber-300 hover:text-amber-200 font-bold md:p-0 transition-colors"
+                className="block py-2 px-3 text-amber-300 hover:text-amber-200 font-bold lg:p-0 transition-colors"
               >
                 Tarifs & Packs
               </Link>
             </li>
 
-            <li>
-              <Link
-                href="/methodologie-bac"
-                onClick={closeAll}
-                className="block py-2 px-3 text-slate-200 hover:text-blue-400 md:p-0 transition-colors"
-              >
-                Méthode BAC
-              </Link>
-            </li>
 
             <li className="flex items-center">
               <ThemeToggle />
@@ -198,7 +179,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
 
             {/* Auth / Dashboard button */}
             {status === "loading" ? null : session ? (
-              <li ref={profileRef} className="relative mt-3 md:mt-0 pt-3 md:pt-0 border-t md:border-t-0 border-slate-700">
+              <li ref={profileRef} className="relative mt-3 lg:mt-0 pt-3 lg:pt-0 border-t lg:border-t-0 border-slate-700">
                 <button
                   onClick={() => setProfileOpen(!profileOpen)}
                   className="flex items-center gap-2.5 py-1.5 px-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-full transition-all"
@@ -293,7 +274,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
                 )}
               </li>
             ) : (
-              <li className="mt-3 md:mt-0">
+              <li className="mt-3 lg:mt-0">
                 <Link
                   href="/login"
                   onClick={closeAll}
