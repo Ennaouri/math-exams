@@ -28,6 +28,7 @@ export default function Header() {
 
         {/* Clear Action Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3">
+          {/*
           <Link
             href="/lives"
             className="inline-flex items-center justify-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all"
@@ -41,6 +42,7 @@ export default function Header() {
           >
             <span>✨ Packs d'Abonnement</span>
           </Link>
+          */}
 
           <Link
             href="/#niveaux"

@@ -149,12 +149,12 @@ export default async function RootLayout({
         <Providers>
           {isProduction && (
             <>
-              <Script
+              {/* <Script
                 async
                 src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301"
                 crossOrigin="anonymous"
                 strategy="lazyOnload"
-              />
+              /> */}
               <Script
                 src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
                 strategy="afterInteractive"
@@ -173,7 +173,7 @@ export default async function RootLayout({
                 <div className="container mx-auto flex flex-wrap lg:flex-nowrap">
                   <aside className="w-full xl:w-3/12 hidden xl:block" aria-label="Barre latérale">
                     <CategoriesSideBar categories={categories} />
-                    {isProduction && (
+                    {/* {isProduction && (
                       <div style={{ overflow: "hidden", margin: "5px" }}>
                         <ins
                           className="adsbygoogle"
@@ -185,7 +185,7 @@ export default async function RootLayout({
                           data-ad-status="unfilled"
                         ></ins>
                       </div>
-                    )}
+                    )} */}
                     {randomPosts.length > 0 && <RandomPosts posts={randomPosts} />}
                     <div className="mt-4">
                       <RightSide undercategories={undercategories} />

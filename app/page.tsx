@@ -137,7 +137,7 @@ export default async function Home() {
         </p>
       </section>
 
-      <AdUnit slot="5512454890" format="fluid" layout="in-article" />
+      {/* <AdUnit slot="5512454890" format="fluid" layout="in-article" /> */}
 
       {/* Level cards */}
       <div id="niveaux" className="flex bg-slate-900 text-white px-5 py-3.5 justify-between items-center rounded-2xl mb-6 scroll-mt-28 shadow-sm">
@@ -148,7 +148,7 @@ export default async function Home() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
-        {categories.map((category) => (
+        {categories.map((category, index) => (
           <Link key={category.id} href={`/category/${category.slug}`}>
             <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer h-full flex flex-col justify-between">
               <div>
@@ -158,6 +158,7 @@ export default async function Home() {
                       src={category.thumbnail}
                       alt={category.name}
                       fill
+                      priority={index < 2}
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
