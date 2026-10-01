@@ -1,0 +1,299 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Category {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(255)
+  thumbnail     String?         @db.VarChar(500)
+  description   String?         @db.Text
+  slug          String          @unique @db.VarChar(255)
+  created_at    DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at    DateTime?       @default(now()) @db.Timestamp(6)
+  UnderCategory UnderCategory[]
+  Formations    Formation[]
+
+  @@map("Category")
+}
+
+model UnderCategory {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(255)
+  thumbnail   String?   @db.VarChar(500)
+  description String?   @db.Text
+  slug        String    @unique @db.VarChar(255)
+  category_id Int?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  updated_at  DateTime? @default(now()) @db.Timestamp(6)
+  Category    Category? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Posts       Post[]
+
+  @@map("UnderCategory")
+}
+
+model Post {
+  id               Int             @id @default(autoincrement())
+  name             String          @db.VarChar(255)
+  thumbnail        String?         @db.VarChar(500)
+  description      String?         @db.Text
+  slug             String          @unique @db.VarChar(255)
+  underCategory_id Int?
+  semestre         Int?
+  semestre_order   Int?
+  attribute        String?         @db.Text
+  created_at       DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at       DateTime?       @default(now()) @db.Timestamp(6)
+  UnderCategory    UnderCategory?  @relation(fields: [underCategory_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PostDetails      PostDetails[]
+  UserProgress     UserProgress[]
+  Quiz             Quiz?
+
+  @@map("Post")
+}
+
+model PostDetails {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(255)
+  thumbnail   String?   @db.VarChar(500)
+  description String?   @db.Text
+  slug        String    @unique @db.VarChar(255)
+  post_id     Int?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  updated_at  DateTime? @default(now()) @db.Timestamp(6)
+  Post        Post?     @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("PostDetails")
+}
+
+model User {
+  id                Int                 @id @default(autoincrement())
+  email             String              @unique @db.VarChar(255)
+  password          String?             @db.VarChar(255)
+  name              String              @db.VarChar(255)
+  role              String?             @default("etudiant") @db.VarChar(50)
+  niveau            String?             @db.VarChar(100)
+  phone             String?             @db.VarChar(50)
+  image             String?             @db.VarChar(500)
+  metadata          Json?
+  created_at        DateTime?           @default(now()) @db.Timestamp(6)
+  Students          ParentStudent[]     @relation("ParentToStudent")
+  Parents           ParentStudent[]     @relation("StudentToParent")
+  UserSubscriptions UserSubscription[]
+  UserProgress      UserProgress[]
+  LiveNotifications LiveNotification[]
+  QuizAttempts      QuizAttempt[]
+
+  @@map("users")
+}
+
+model ParentStudent {
+  id         Int       @id @default(autoincrement())
+  parent_id  Int?
+  student_id Int?
+  status     String?   @default("active") @db.VarChar(50)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  Parent     User?     @relation("ParentToStudent", fields: [parent_id], references: [id], onDelete: Cascade)
+  Student    User?     @relation("StudentToParent", fields: [student_id], references: [id], onDelete: Cascade)
+
+  @@unique([parent_id, student_id])
+  @@map("parent_student")
+}
+
+model SubscriptionPlan {
+  id               Int                @id @default(autoincrement())
+  name             String             @db.VarChar(255)
+  slug             String             @unique @db.VarChar(255)
+  niveau           String             @db.VarChar(100)
+  level_label      String             @db.VarChar(255)
+  price            Decimal            @db.Decimal(10, 2)
+  billing_period   String             @db.VarChar(50)
+  description      String?            @db.Text
+  features         Json?              @default("[]")
+  is_popular       Boolean?           @default(false)
+  is_active        Boolean?           @default(true)
+  created_at       DateTime?          @default(now()) @db.Timestamp(6)
+  UserSubscriptions UserSubscription[]
+
+  @@map("subscription_plan")
+}
+
+model UserSubscription {
+  id             Int               @id @default(autoincrement())
+  user_id        Int?
+  plan_id        Int?
+  status         String?           @default("pending") @db.VarChar(50)
+  started_at     DateTime?         @default(now()) @db.Timestamp(6)
+  expires_at     DateTime          @db.Timestamp(6)
+  payment_method String?           @default("virement") @db.VarChar(50)
+  notes          String?           @db.Text
+  created_at     DateTime?         @default(now()) @db.Timestamp(6)
+  User           User?             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Plan           SubscriptionPlan? @relation(fields: [plan_id], references: [id], onDelete: NoAction)
+
+  @@map("user_subscription")
+}
+
+model Formation {
+  id              Int                  @id @default(autoincrement())
+  title           String               @db.VarChar(255)
+  slug            String               @unique @db.VarChar(255)
+  description     String?              @db.Text
+  niveau          String               @db.VarChar(100)
+  niveau_label    String               @db.VarChar(255)
+  category_id     Int?
+  thumbnail       String?              @db.VarChar(500)
+  is_premium      Boolean?             @default(true)
+  instructor_name String?              @default("Professeur Maths-Exams") @db.VarChar(255)
+  total_hours     Int?                 @default(20)
+  total_chapters  Int?                 @default(8)
+  created_at      DateTime?            @default(now()) @db.Timestamp(6)
+  Category        Category?            @relation(fields: [category_id], references: [id], onDelete: NoAction)
+  LiveSessions    LiveSession[]
+  Resources       FormationResource[]
+
+  @@map("formation")
+}
+
+model LiveSession {
+  id               Int                  @id @default(autoincrement())
+  formation_id     Int?
+  title            String               @db.VarChar(255)
+  description      String?              @db.Text
+  niveau           String               @db.VarChar(100)
+  niveau_label     String               @db.VarChar(255)
+  instructor_name  String?              @default("Professeur Maths-Exams") @db.VarChar(255)
+  scheduled_at     DateTime             @db.Timestamp(6)
+  duration_minutes Int?                 @default(90)
+  meeting_url      String?              @db.VarChar(500)
+  replay_url       String?              @db.VarChar(500)
+  status           String?              @default("upcoming") @db.VarChar(50)
+  created_at       DateTime?            @default(now()) @db.Timestamp(6)
+  Formation        Formation?           @relation(fields: [formation_id], references: [id], onDelete: SetNull)
+  Resources        FormationResource[]
+  Notifications    LiveNotification[]
+
+  @@map("live_session")
+}
+
+model FormationResource {
+  id              Int          @id @default(autoincrement())
+  formation_id    Int?
+  live_session_id Int?
+  title           String       @db.VarChar(255)
+  file_url        String       @db.VarChar(500)
+  file_type       String       @db.VarChar(50)
+  is_premium      Boolean?     @default(true)
+  created_at      DateTime?    @default(now()) @db.Timestamp(6)
+  Formation       Formation?   @relation(fields: [formation_id], references: [id], onDelete: Cascade)
+  LiveSession     LiveSession? @relation(fields: [live_session_id], references: [id], onDelete: SetNull)
+
+  @@map("formation_resource")
+}
+
+model LiveNotification {
+  id          Int          @id @default(autoincrement())
+  live_id     Int?
+  user_id     Int?
+  email       String       @db.VarChar(255)
+  user_name   String?      @db.VarChar(255)
+  notified    Boolean?     @default(false)
+  created_at  DateTime?    @default(now()) @db.Timestamp(6)
+  LiveSession LiveSession? @relation(fields: [live_id], references: [id], onDelete: Cascade)
+  User        User?        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([live_id, user_id])
+  @@index([live_id])
+  @@index([notified])
+  @@map("live_notification")
+}
+
+model UserProgress {
+  id            Int       @id @default(autoincrement())
+  user_id       Int?
+  post_id       Int?
+  post_slug     String    @db.VarChar(255)
+  post_name     String?   @db.VarChar(500)
+  category_name String?   @db.VarChar(255)
+  category_slug String?   @db.VarChar(255)
+  viewed_at     DateTime? @default(now()) @db.Timestamp(6)
+  User          User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Post          Post?     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, post_id])
+  @@index([user_id])
+  @@index([viewed_at])
+  @@map("user_progress")
+}
+
+model Quiz {
+  id          Int            @id @default(autoincrement())
+  post_id     Int            @unique
+  title       String         @db.VarChar(255)
+  description String?        @db.Text
+  time_limit  Int?
+  is_active   Boolean?       @default(true)
+  created_at  DateTime?      @default(now()) @db.Timestamp(6)
+  updated_at  DateTime?      @default(now()) @db.Timestamp(6)
+  Post        Post           @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  Questions   QuizQuestion[]
+  Attempts    QuizAttempt[]
+
+  @@map("quiz")
+}
+
+model QuizQuestion {
+  id            Int       @id @default(autoincrement())
+  quiz_id       Int?
+  question_text String    @db.Text
+  choices       Json
+  correct_index Int
+  explanation   String?   @db.Text
+  position      Int       @default(0)
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  Quiz          Quiz?     @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+
+  @@map("quiz_question")
+}
+
+model QuizAttempt {
+  id           Int       @id @default(autoincrement())
+  quiz_id      Int?
+  user_id      Int?
+  answers      Json
+  score        Int
+  total        Int
+  completed    Boolean   @default(false)
+  completed_at DateTime? @db.Timestamp(6)
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  Quiz         Quiz?     @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+  User         User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([quiz_id, user_id])
+  @@map("quiz_attempt")
+}
+
+model ExamEvent {
+  id           Int       @id @default(autoincrement())
+  title        String    @db.VarChar(255)
+  event_date   DateTime  @db.Date
+  event_time   String?   @db.VarChar(50)
+  end_date     DateTime? @db.Date
+  type         String    @db.VarChar(50)
+  niveau       String?   @db.VarChar(100)
+  niveau_label String?   @db.VarChar(255)
+  description  String?   @db.Text
+  location     String?   @db.VarChar(255)
+  pdf_url      String?   @db.VarChar(500)
+  source_url   String?   @db.VarChar(500)
+  is_active    Boolean?  @default(true)
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  updated_at   DateTime? @default(now()) @db.Timestamp(6)
+
+  @@map("exam_event")
+}

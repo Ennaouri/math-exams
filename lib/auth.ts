@@ -54,13 +54,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user, account, profile }) {
-      if (account && profile) {
+      if (account?.provider === 'google' && profile) {
         const email = profile.email;
         if (email) {
           let dbUser = await getUserByEmail(email);
           if (!dbUser) {
             const userMeta = JSON.stringify({ role: 'etudiant', emailVerified: true });
-            dbUser = await createUser(email, '', profile.name || 'Google User', 'etudiant', userMeta);
+            dbUser = await createUser({ email, password: '', name: profile.name || 'Google User', role: 'etudiant', metadata: userMeta });
           } else if (dbUser.metadata) {
             try {
               const meta = JSON.parse(dbUser.metadata);
@@ -84,8 +84,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             token.image = dbUser.image;
           }
         }
-      }
-      if (user) {
+      } else if (user) {
         token.id = (user as any).id;
         token.role = (user as any).role || 'etudiant';
         token.niveau = (user as any).niveau;

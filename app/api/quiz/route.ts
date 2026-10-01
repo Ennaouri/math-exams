@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
   }));
 
   const session = await auth();
-  let attempt = null;
+  let attempt: any = null;
   if (session?.user) {
     const userId = Number((session.user as any).id);
     attempt = await getQuizAttempt(quiz.id, userId);

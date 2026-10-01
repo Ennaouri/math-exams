@@ -22,13 +22,13 @@ function toSitemapEntry(row: SitemapRow): MetadataRoute.Sitemap[number] {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [categoriesResult, underCategoriesResult, postsResult] = await Promise.all([
-    pool.query<{ slug: string; updated_at?: Date }>('SELECT slug, updated_at FROM "Category"'),
-    pool.query<{ category_slug: string; slug: string; updated_at?: Date }>(`
+    pool.query('SELECT slug, updated_at FROM "Category"'),
+    pool.query(`
       SELECT c.slug AS category_slug, uc.slug, uc.updated_at
       FROM "UnderCategory" uc
       JOIN "Category" c ON c.id = uc.category_id
     `),
-    pool.query<{ slug: string; updated_at?: Date }>('SELECT slug, updated_at FROM "Post"'),
+    pool.query('SELECT slug, updated_at FROM "Post"'),
   ]);
 
   const staticRoutes: SitemapRow[] = [

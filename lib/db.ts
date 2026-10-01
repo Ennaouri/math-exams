@@ -1,4 +1,4 @@
-import pg from 'pg';
+import prisma from './prisma';
 import {
   Category,
   UnderCategory,
@@ -11,41 +11,34 @@ import {
   Formation,
   LiveSession,
   FormationResource,
+  UserProgress,
+  UserProgressStats,
+  Quiz,
+  QuizAttempt,
+  QuizQuestion,
+  ExamEvent,
 } from './types';
 import bcrypt from 'bcrypt';
 
-const { Pool } = pg;
-
-function getConnectionString() {
-  const connString = process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_URL;
-  if (!connString) return undefined;
-
-  let baseUrl = connString;
-  if (baseUrl.includes('?')) {
-    baseUrl = `${baseUrl}&uselibpqcompat=true&sslmode=require`;
-  } else {
-    baseUrl = `${baseUrl}?uselibpqcompat=true&sslmode=require`;
+// Polyfill for legacy @vercel/postgres pool.query calls in API routes
+export const pool = {
+  query: async (text: string, values?: any[]) => {
+    try {
+      const rows = await prisma.$queryRawUnsafe<any[]>(text, ...(values || []));
+      return { rows: Array.isArray(rows) ? rows : [], rowCount: Array.isArray(rows) ? rows.length : 0 };
+    } catch (e: any) {
+      // Prisma raw queries that don't return rows might return a number (affected rows)
+      if (typeof e === 'number') return { rows: [], rowCount: e };
+      throw e;
+    }
   }
-  return baseUrl;
-}
-
-const pool = new Pool({
-  connectionString: getConnectionString(),
-  max: 5,
-  connectionTimeoutMillis: 5000,
-  idleTimeoutMillis: 10000,
-  query_timeout: 10000,
-});
-
-export const sql = pool;
-export { pool };
+};
 
 // ─── Categories & Posts (Base) ──────────────────────────────────────────────
 
 export async function getCategories(): Promise<Category[]> {
   try {
-    const result = await pool.query('SELECT * FROM "Category" ORDER BY id');
-    return result.rows as Category[];
+    return (await prisma.category.findMany({ orderBy: { id: 'asc' } })) as Category[];
   } catch (e) {
     return [
       { id: 1, name: "Tronc Commun Sciences", slug: "tronc-commun-sciences", thumbnail: "", description: "Programme de mathématiques du Tronc Commun Scientifique marocain.", created_at: new Date(), updated_at: new Date() },
@@ -60,8 +53,10 @@ export async function getCategories(): Promise<Category[]> {
 
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {
   try {
-    const result = await pool.query('SELECT * FROM "Category" WHERE slug = $1', [slug]);
-    return (result.rows[0] as Category) ?? null;
+    const category = await prisma.category.findUnique({ where: { slug } });
+    if (category) return category as Category;
+    const all = await getCategories();
+    return all.find((c) => c.slug === slug) || null;
   } catch {
     const all = await getCategories();
     return all.find((c) => c.slug === slug) || null;
@@ -70,8 +65,7 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
 
 export async function getUnderCategories(): Promise<UnderCategory[]> {
   try {
-    const result = await pool.query('SELECT * FROM "UnderCategory"');
-    return result.rows as UnderCategory[];
+    return (await prisma.underCategory.findMany()) as UnderCategory[];
   } catch {
     return [];
   }
@@ -79,11 +73,10 @@ export async function getUnderCategories(): Promise<UnderCategory[]> {
 
 export async function getLatestUnderCategories(limit = 4): Promise<UnderCategory[]> {
   try {
-    const result = await pool.query(
-      'SELECT * FROM "UnderCategory" ORDER BY created_at DESC LIMIT $1',
-      [limit]
-    );
-    return result.rows as UnderCategory[];
+    return (await prisma.underCategory.findMany({
+      orderBy: { created_at: 'desc' },
+      take: limit,
+    })) as UnderCategory[];
   } catch {
     return [];
   }
@@ -91,11 +84,9 @@ export async function getLatestUnderCategories(limit = 4): Promise<UnderCategory
 
 export async function getUnderCategoriesByCategorySlug(slug: string): Promise<UnderCategory[]> {
   try {
-    const result = await pool.query(
-      'SELECT uc.* FROM "UnderCategory" uc JOIN "Category" c ON c.id = uc.category_id WHERE c.slug = $1',
-      [slug]
-    );
-    return result.rows as UnderCategory[];
+    return (await prisma.underCategory.findMany({
+      where: { Category: { slug } },
+    })) as UnderCategory[];
   } catch {
     return [];
   }
@@ -103,8 +94,7 @@ export async function getUnderCategoriesByCategorySlug(slug: string): Promise<Un
 
 export async function getUnderCategoryBySlug(slug: string): Promise<UnderCategory | null> {
   try {
-    const result = await pool.query('SELECT * FROM "UnderCategory" WHERE slug = $1', [slug]);
-    return (result.rows[0] as UnderCategory) ?? null;
+    return (await prisma.underCategory.findUnique({ where: { slug } })) as UnderCategory | null;
   } catch {
     return null;
   }
@@ -112,8 +102,13 @@ export async function getUnderCategoryBySlug(slug: string): Promise<UnderCategor
 
 export async function getPosts(): Promise<Post[]> {
   try {
-    const result = await pool.query('SELECT * FROM "Post" ORDER BY semestre, semestre_order NULLS LAST, created_at DESC');
-    return result.rows as Post[];
+    return (await prisma.post.findMany({
+      orderBy: [
+        { semestre: 'asc' },
+        { semestre_order: 'asc' },
+        { created_at: 'desc' }
+      ]
+    })) as Post[];
   } catch {
     return [];
   }
@@ -121,11 +116,10 @@ export async function getPosts(): Promise<Post[]> {
 
 export async function getLatestPosts(limit = 8): Promise<Post[]> {
   try {
-    const result = await pool.query(
-      'SELECT * FROM "Post" ORDER BY created_at DESC LIMIT $1',
-      [limit]
-    );
-    return result.rows as Post[];
+    return (await prisma.post.findMany({
+      orderBy: { created_at: 'desc' },
+      take: limit,
+    })) as Post[];
   } catch {
     return [];
   }
@@ -133,17 +127,22 @@ export async function getLatestPosts(limit = 8): Promise<Post[]> {
 
 export async function getExamPosts(limit = 6): Promise<Post[]> {
   try {
-    const result = await pool.query(
-      `SELECT *
-       FROM "Post"
-       WHERE attribute = 'exam'
-          OR name ILIKE ANY($1)
-          OR description ILIKE ANY($1)
-       ORDER BY created_at DESC
-       LIMIT $2`,
-      [["%examen%", "%national%", "%bac%", "%concours%"], limit]
-    );
-    return result.rows as Post[];
+    return (await prisma.post.findMany({
+      where: {
+        OR: [
+          { name: { contains: 'examen', mode: 'insensitive' } },
+          { name: { contains: 'national', mode: 'insensitive' } },
+          { name: { contains: 'bac', mode: 'insensitive' } },
+          { name: { contains: 'concours', mode: 'insensitive' } },
+          { description: { contains: 'examen', mode: 'insensitive' } },
+          { description: { contains: 'national', mode: 'insensitive' } },
+          { description: { contains: 'bac', mode: 'insensitive' } },
+          { description: { contains: 'concours', mode: 'insensitive' } }
+        ]
+      },
+      orderBy: { created_at: 'desc' },
+      take: limit,
+    })) as unknown as Post[];
   } catch {
     return [];
   }
@@ -151,11 +150,14 @@ export async function getExamPosts(limit = 6): Promise<Post[]> {
 
 export async function getPostsByUnderCategorySlug(slug: string): Promise<Post[]> {
   try {
-    const result = await pool.query(
-      'SELECT p.* FROM "Post" p JOIN "UnderCategory" uc ON uc.id = p."underCategory_id" WHERE uc.slug = $1 ORDER BY p.semestre, p.semestre_order NULLS LAST, p.created_at DESC',
-      [slug]
-    );
-    return result.rows as Post[];
+    return (await prisma.post.findMany({
+      where: { UnderCategory: { slug } },
+      orderBy: [
+        { semestre: 'asc' },
+        { semestre_order: 'asc' },
+        { created_at: 'desc' }
+      ]
+    })) as Post[];
   } catch {
     return [];
   }
@@ -163,8 +165,7 @@ export async function getPostsByUnderCategorySlug(slug: string): Promise<Post[]>
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
-    const result = await pool.query('SELECT * FROM "Post" WHERE slug = $1', [slug]);
-    return (result.rows[0] as Post) ?? null;
+    return (await prisma.post.findUnique({ where: { slug } })) as Post | null;
   } catch {
     return null;
   }
@@ -172,11 +173,9 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
 export async function getPostDetailsByPostSlug(slug: string): Promise<PostDetails[]> {
   try {
-    const result = await pool.query(
-      'SELECT pd.* FROM "PostDetails" pd JOIN "Post" p ON p.id = pd.post_id WHERE p.slug = $1',
-      [slug]
-    );
-    return result.rows as PostDetails[];
+    return (await prisma.postDetails.findMany({
+      where: { Post: { slug } }
+    })) as PostDetails[];
   } catch {
     return [];
   }
@@ -184,8 +183,7 @@ export async function getPostDetailsByPostSlug(slug: string): Promise<PostDetail
 
 export async function getAllPostDetails(): Promise<PostDetails[]> {
   try {
-    const result = await pool.query('SELECT * FROM "PostDetails"');
-    return result.rows as PostDetails[];
+    return (await prisma.postDetails.findMany()) as PostDetails[];
   } catch {
     return [];
   }
@@ -193,12 +191,13 @@ export async function getAllPostDetails(): Promise<PostDetails[]> {
 
 export async function getAllPostDetailsWithPostName(): Promise<(PostDetails & { post_name?: string })[]> {
   try {
-    const result = await pool.query(`
-      SELECT pd.*, p.name as post_name 
-      FROM "PostDetails" pd 
-      JOIN "Post" p ON p.id = pd.post_id
-    `);
-    return result.rows as (PostDetails & { post_name?: string })[];
+    const details = await prisma.postDetails.findMany({
+      include: { Post: { select: { name: true } } }
+    });
+    return details.map(d => ({
+      ...d,
+      post_name: d.Post?.name
+    })) as (PostDetails & { post_name?: string })[];
   } catch {
     return [];
   }
@@ -212,89 +211,33 @@ export interface PostWithCategory {
 
 export async function getPostWithCategory(slug: string): Promise<PostWithCategory | null> {
   try {
-    const result = await pool.query<{
-      p_id: number; p_name: string; p_thumbnail: string; p_description: string;
-      p_slug: string; p_underCategoryId: number; p_attribute: string;
-      p_semestre: number; p_semestre_order: number; p_created_at: Date; p_updated_at: Date;
-      uc_id: number; uc_name: string; uc_thumbnail: string; uc_description: string;
-      uc_slug: string; uc_category_id: number; uc_created_at: Date; uc_updated_at: Date;
-      c_id: number; c_name: string; c_thumbnail: string; c_description: string;
-      c_slug: string; c_created_at: Date; c_updated_at: Date;
-    }>(
-      `SELECT
-         p.id            AS p_id,
-         p.name          AS p_name,
-         p.thumbnail     AS p_thumbnail,
-         p.description   AS p_description,
-         p.slug          AS p_slug,
-         p."underCategory_id" AS "p_underCategoryId",
-         p.attribute     AS p_attribute,
-         p.semestre      AS p_semestre,
-         p.semestre_order AS p_semestre_order,
-         p.created_at    AS p_created_at,
-         p.updated_at    AS p_updated_at,
-         uc.id           AS uc_id,
-         uc.name         AS uc_name,
-         uc.thumbnail    AS uc_thumbnail,
-         uc.description  AS uc_description,
-         uc.slug         AS uc_slug,
-         uc.category_id  AS uc_category_id,
-         uc.created_at   AS uc_created_at,
-         uc.updated_at   AS uc_updated_at,
-         c.id            AS c_id,
-         c.name          AS c_name,
-         c.thumbnail     AS c_thumbnail,
-         c.description   AS c_description,
-         c.slug          AS c_slug,
-         c.created_at    AS c_created_at,
-         c.updated_at    AS c_updated_at
-       FROM "Post" p
-       LEFT JOIN "UnderCategory" uc ON uc.id = p."underCategory_id"
-       LEFT JOIN "Category" c ON c.id = uc.category_id
-       WHERE p.slug = $1`,
-      [slug]
-    );
+    const p = await prisma.post.findUnique({
+      where: { slug },
+      include: {
+        UnderCategory: {
+          include: {
+            Category: true
+          }
+        }
+      }
+    });
 
-    if (!result.rows.length) return null;
-    const row = result.rows[0];
+    if (!p) return null;
+
+    const underCategory = p.UnderCategory;
+    const category = underCategory?.Category || null;
+
+    const { UnderCategory: _uc, ...postData } = p;
+    let ucData: any = null;
+    if (underCategory) {
+      const { Category: _c, ...ucRest } = underCategory;
+      ucData = ucRest;
+    }
 
     return {
-      post: {
-        id: row.p_id,
-        name: row.p_name,
-        thumbnail: row.p_thumbnail,
-        description: row.p_description,
-        slug: row.p_slug,
-        underCategoryId: row["p_underCategoryId"],
-        attribute: row.p_attribute,
-        semestre: row.p_semestre,
-        semestre_order: row.p_semestre_order,
-        created_at: row.p_created_at,
-        updated_at: row.p_updated_at,
-      },
-      underCategory: row.uc_id
-        ? {
-            id: row.uc_id,
-            name: row.uc_name,
-            thumbnail: row.uc_thumbnail,
-            description: row.uc_description,
-            slug: row.uc_slug,
-            category_id: row.uc_category_id,
-            created_at: row.uc_created_at,
-            updated_at: row.uc_updated_at,
-          }
-        : null,
-      category: row.c_id
-        ? {
-            id: row.c_id,
-            name: row.c_name,
-            thumbnail: row.c_thumbnail,
-            description: row.c_description,
-            slug: row.c_slug,
-            created_at: row.c_created_at,
-            updated_at: row.c_updated_at,
-          }
-        : null,
+      post: postData as Post,
+      underCategory: ucData as UnderCategory | null,
+      category: category as Category | null,
     };
   } catch {
     return null;
@@ -303,29 +246,34 @@ export async function getPostWithCategory(slug: string): Promise<PostWithCategor
 
 export async function getRelatedPostsBySlug(slug: string, limit = 6): Promise<Post[]> {
   try {
-    const result = await pool.query<Post>(
-      `WITH target AS (
-         SELECT "underCategory_id" FROM "Post" WHERE slug = $1
-       )
-       SELECT p.* FROM "Post" p, target
-       WHERE p."underCategory_id" = target."underCategory_id"
-         AND p.slug <> $1
-       ORDER BY p.semestre NULLS LAST, p.semestre_order NULLS LAST, p.created_at DESC
-       LIMIT $2`,
-      [slug, limit]
-    );
+    const targetPost = await prisma.post.findUnique({ where: { slug }, select: { underCategory_id: true } });
+    if (targetPost?.underCategory_id) {
+      const related = await prisma.post.findMany({
+        where: {
+          underCategory_id: targetPost.underCategory_id,
+          slug: { not: slug }
+        },
+        orderBy: [
+          { semestre: 'asc' },
+          { semestre_order: 'asc' },
+          { created_at: 'desc' }
+        ],
+        take: limit
+      });
+      if (related.length > 0) return related as Post[];
+    }
 
-    if (result.rows.length > 0) return result.rows;
-
-    const fallback = await pool.query<Post>(
-      `SELECT * FROM "Post" WHERE slug <> $1 ORDER BY created_at DESC LIMIT $2`,
-      [slug, limit]
-    );
-    return fallback.rows;
+    const fallback = await prisma.post.findMany({
+      where: { slug: { not: slug } },
+      orderBy: { created_at: 'desc' },
+      take: limit
+    });
+    return fallback as Post[];
   } catch {
     return [];
   }
 }
+
 
 // ─── Subscriptions & Plans ──────────────────────────────────────────────────
 
@@ -411,8 +359,11 @@ export const DEFAULT_PLANS: SubscriptionPlan[] = [
 
 export async function getSubscriptionPlans(): Promise<SubscriptionPlan[]> {
   try {
-    const result = await pool.query('SELECT * FROM subscription_plan WHERE is_active = true ORDER BY price ASC');
-    if (result.rows.length > 0) return result.rows;
+    const plans = await prisma.subscriptionPlan.findMany({
+      where: { is_active: true },
+      orderBy: { price: 'asc' }
+    });
+    if (plans.length > 0) return plans.map(p => ({ ...p, price: Number(p.price), features: p.features as any })) as SubscriptionPlan[];
   } catch {}
   return DEFAULT_PLANS;
 }
@@ -424,30 +375,40 @@ export async function getPlanBySlug(slug: string): Promise<SubscriptionPlan | nu
 
 export async function getUserSubscription(userId: number): Promise<UserSubscription | null> {
   try {
-    const result = await pool.query(
-      `SELECT us.*, sp.name as plan_name, sp.niveau as niveau
-       FROM user_subscription us
-       LEFT JOIN subscription_plan sp ON sp.id = us.plan_id
-       WHERE us.user_id = $1
-       ORDER BY us.created_at DESC
-       LIMIT 1`,
-      [userId]
-    );
-    if (result.rows.length > 0) return result.rows[0];
+    const us = await prisma.userSubscription.findFirst({
+      where: { user_id: userId },
+      include: {
+        Plan: { select: { name: true, niveau: true } }
+      },
+      orderBy: { created_at: 'desc' }
+    });
+    if (us) {
+      return {
+        ...us,
+        plan_name: us.Plan?.name,
+        niveau: us.Plan?.niveau,
+      } as UserSubscription;
+    }
   } catch {}
   return null;
 }
 
 export async function getAllUserSubscriptions(): Promise<UserSubscription[]> {
   try {
-    const result = await pool.query(
-      `SELECT us.*, u.name as user_name, u.email as user_email, sp.name as plan_name, sp.niveau as niveau
-       FROM user_subscription us
-       JOIN users u ON u.id = us.user_id
-       LEFT JOIN subscription_plan sp ON sp.id = us.plan_id
-       ORDER BY us.created_at DESC`
-    );
-    return result.rows;
+    const subs = await prisma.userSubscription.findMany({
+      include: {
+        User: { select: { name: true, email: true } },
+        Plan: { select: { name: true, niveau: true } }
+      },
+      orderBy: { created_at: 'desc' }
+    });
+    return subs.map(us => ({
+      ...us,
+      user_name: us.User?.name,
+      user_email: us.User?.email,
+      plan_name: us.Plan?.name,
+      niveau: us.Plan?.niveau,
+    })) as UserSubscription[];
   } catch {
     return [];
   }
@@ -466,15 +427,19 @@ export async function createUserSubscription(data: {
   expiresAt.setMonth(expiresAt.getMonth() + durationMonths);
 
   try {
-    const result = await pool.query(
-      `INSERT INTO user_subscription (user_id, plan_id, status, started_at, expires_at, payment_method, notes)
-       VALUES ($1, $2, 'active', $3, $4, $5, $6)
-       RETURNING *`,
-      [data.user_id, data.plan_id, startedAt, expiresAt, data.payment_method, data.notes || null]
-    );
-    return result.rows[0];
+    const us = await prisma.userSubscription.create({
+      data: {
+        user_id: data.user_id,
+        plan_id: data.plan_id,
+        status: 'active',
+        started_at: startedAt,
+        expires_at: expiresAt,
+        payment_method: data.payment_method,
+        notes: data.notes || null
+      }
+    });
+    return us as UserSubscription;
   } catch (e) {
-    // Return mock subscription object if DB query fails in local test
     return {
       id: Date.now(),
       user_id: data.user_id,
@@ -491,7 +456,10 @@ export async function createUserSubscription(data: {
 
 export async function updateSubscriptionStatus(id: number, status: 'active' | 'pending' | 'expired' | 'cancelled'): Promise<boolean> {
   try {
-    await pool.query('UPDATE user_subscription SET status = $1 WHERE id = $2', [status, id]);
+    await prisma.userSubscription.update({
+      where: { id },
+      data: { status }
+    });
     return true;
   } catch {
     return false;
@@ -561,15 +529,19 @@ export const DEFAULT_LIVES: LiveSession[] = [
 
 export async function getLiveSessions(limit = 10): Promise<LiveSession[]> {
   try {
-    const result = await pool.query(
-      `SELECT ls.*, f.title as formation_title 
-       FROM live_session ls
-       LEFT JOIN formation f ON f.id = ls.formation_id
-       ORDER BY ls.scheduled_at ASC
-       LIMIT $1`,
-      [limit]
-    );
-    if (result.rows.length > 0) return result.rows;
+    const sessions = await prisma.liveSession.findMany({
+      include: {
+        Formation: { select: { title: true } }
+      },
+      orderBy: { scheduled_at: 'asc' },
+      take: limit
+    });
+    if (sessions.length > 0) {
+      return sessions.map(s => ({
+        ...s,
+        formation_title: s.Formation?.title
+      })) as LiveSession[];
+    }
   } catch {}
   return DEFAULT_LIVES;
 }
@@ -578,6 +550,8 @@ export async function getUpcomingLiveSessions(limit = 6): Promise<LiveSession[]>
   const all = await getLiveSessions(20);
   return all.filter((s) => s.status !== 'completed').slice(0, limit);
 }
+
+// We'll put some users funcs in db_3 or db_4, wait... I'll put all users funcs in db_3
 
 export async function createLiveSession(data: {
   title: string;
@@ -592,31 +566,29 @@ export async function createLiveSession(data: {
   formation_id?: number;
 }): Promise<LiveSession> {
   try {
-    const result = await pool.query(
-      `INSERT INTO live_session (title, description, niveau, niveau_label, instructor_name, scheduled_at, duration_minutes, meeting_url, replay_url, formation_id, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'upcoming')
-       RETURNING *`,
-      [
-        data.title,
-        data.description,
-        data.niveau,
-        data.niveau_label,
-        data.instructor_name,
-        data.scheduled_at,
-        data.duration_minutes,
-        data.meeting_url || null,
-        data.replay_url || null,
-        data.formation_id || null,
-      ]
-    );
-    return result.rows[0];
+    const ls = await prisma.liveSession.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        niveau: data.niveau,
+        niveau_label: data.niveau_label,
+        instructor_name: data.instructor_name,
+        scheduled_at: data.scheduled_at,
+        duration_minutes: data.duration_minutes,
+        meeting_url: data.meeting_url,
+        replay_url: data.replay_url,
+        formation_id: data.formation_id,
+        status: 'upcoming'
+      }
+    });
+    return ls as LiveSession;
   } catch {
     return {
       id: Date.now(),
       ...data,
       status: 'upcoming',
       created_at: new Date(),
-    };
+    } as LiveSession;
   }
 }
 
@@ -681,8 +653,8 @@ export const DEFAULT_FORMATIONS: Formation[] = [
 
 export async function getFormations(): Promise<Formation[]> {
   try {
-    const result = await pool.query('SELECT * FROM formation ORDER BY id ASC');
-    if (result.rows.length > 0) return result.rows;
+    const formations = await prisma.formation.findMany({ orderBy: { id: 'asc' } });
+    if (formations.length > 0) return formations as Formation[];
   } catch {}
   return DEFAULT_FORMATIONS;
 }
@@ -742,8 +714,11 @@ export const DEFAULT_RESOURCES: FormationResource[] = [
 
 export async function getFormationResources(formationId: number): Promise<FormationResource[]> {
   try {
-    const result = await pool.query('SELECT * FROM formation_resource WHERE formation_id = $1 ORDER BY id ASC', [formationId]);
-    if (result.rows.length > 0) return result.rows;
+    const resources = await prisma.formationResource.findMany({
+      where: { formation_id: formationId },
+      orderBy: { id: 'asc' }
+    });
+    if (resources.length > 0) return resources as FormationResource[];
   } catch {}
   return DEFAULT_RESOURCES.filter((r) => r.formation_id === formationId || formationId === 1);
 }
@@ -752,14 +727,18 @@ export async function getFormationResources(formationId: number): Promise<Format
 
 export async function getParentStudents(parentId: number): Promise<ParentStudent[]> {
   try {
-    const result = await pool.query(
-      `SELECT ps.*, u.name as student_name, u.email as student_email, u.niveau as student_niveau
-       FROM parent_student ps
-       JOIN users u ON u.id = ps.student_id
-       WHERE ps.parent_id = $1`,
-      [parentId]
-    );
-    return result.rows;
+    const relations = await prisma.parentStudent.findMany({
+      where: { parent_id: parentId },
+      include: {
+        Student: { select: { name: true, email: true, niveau: true } }
+      }
+    });
+    return relations.map(r => ({
+      ...r,
+      student_name: r.Student?.name,
+      student_email: r.Student?.email,
+      student_niveau: r.Student?.niveau,
+    })) as ParentStudent[];
   } catch {
     return [];
   }
@@ -775,12 +754,24 @@ export async function linkParentToStudent(parentId: number, studentEmail: string
       return { success: false, message: "Ce compte n'est pas un profil étudiant." };
     }
 
-    await pool.query(
-      `INSERT INTO parent_student (parent_id, student_id, status)
-       VALUES ($1, $2, 'active')
-       ON CONFLICT (parent_id, student_id) DO NOTHING`,
-      [parentId, student.id]
-    );
+    const existing = await prisma.parentStudent.findUnique({
+      where: {
+        parent_id_student_id: {
+          parent_id: parentId,
+          student_id: student.id
+        }
+      }
+    });
+
+    if (!existing) {
+      await prisma.parentStudent.create({
+        data: {
+          parent_id: parentId,
+          student_id: student.id,
+          status: 'active'
+        }
+      });
+    }
 
     return { success: true, message: "L'étudiant a été rattaché à votre compte avec succès !" };
   } catch (e: any) {
@@ -798,10 +789,13 @@ async function hashPassword(password: string): Promise<string> {
 
 export async function authenticateUser(email: string, password: string): Promise<User | null> {
   try {
-    const result = await pool.query('SELECT * FROM users WHERE email ILIKE $1', [email]);
-    if (result.rows.length === 0) return null;
-    const user = result.rows[0] as User;
+    const user = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() } // Prisma handles case if citext, else we should use insensitive 
+    }) || await prisma.user.findFirst({
+      where: { email: { equals: email, mode: 'insensitive' } }
+    });
 
+    if (!user) return null;
     if (!user.password) return null;
 
     const validPassword = await bcrypt.compare(password, user.password);
@@ -813,101 +807,89 @@ export async function authenticateUser(email: string, password: string): Promise
       try {
         const meta = JSON.parse(user.metadata);
         if (meta?.emailVerified === false) {
-          return { ...user, needsVerification: true };
+          return { ...user, needsVerification: true } as User;
         }
       } catch {}
     }
 
-    return user;
+    return user as User;
   } catch {
     return null;
   }
 }
 
-export async function createUser(
-  email: string,
-  password: string,
-  name: string,
-  role: 'admin' | 'etudiant' | 'parent' | 'enseignant' | 'user' = 'etudiant',
-  metadata?: string,
-  niveau?: string,
-  phone?: string
-): Promise<User> {
-  const hashedPassword = password ? await hashPassword(password) : '';
+export async function createUser(data: {
+  email: string;
+  password?: string;
+  name: string;
+  role?: 'admin' | 'etudiant' | 'parent' | 'enseignant' | 'user';
+  metadata?: string;
+  niveau?: string;
+  phone?: string;
+}): Promise<User> {
+  const hashedPassword = data.password ? await hashPassword(data.password) : '';
   try {
-    const result = await pool.query(
-      'INSERT INTO users (email, password, name, role, metadata, niveau, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [email, hashedPassword, name, role, metadata || null, niveau || null, phone || null]
-    );
-    const user = result.rows[0] as User;
+    const user = await prisma.user.create({
+      data: {
+        email: data.email,
+        password: hashedPassword,
+        name: data.name,
+        role: data.role || 'etudiant',
+        metadata: data.metadata,
+        niveau: data.niveau,
+        phone: data.phone
+      }
+    });
     delete (user as any).password;
-    return user;
+    return user as User;
   } catch {
     return {
       id: Date.now(),
-      email,
-      name,
-      role,
-      niveau,
-      phone,
+      email: data.email,
+      name: data.name,
+      role: data.role || 'etudiant',
+      niveau: data.niveau,
+      phone: data.phone,
       created_at: new Date(),
-    };
-  }
-}
-
-export async function updateUser(
-  id: number,
-  data: { name?: string; metadata?: string; image?: string; niveau?: string; phone?: string }
-): Promise<User | null> {
-  const updates: string[] = [];
-  const values: any[] = [];
-  let paramIndex = 1;
-
-  if (data.name !== undefined) {
-    updates.push(`name = $${paramIndex++}`);
-    values.push(data.name);
-  }
-  if (data.metadata !== undefined) {
-    updates.push(`metadata = $${paramIndex++}`);
-    values.push(data.metadata);
-  }
-  if (data.image !== undefined) {
-    updates.push(`image = $${paramIndex++}`);
-    values.push(data.image);
-  }
-  if (data.niveau !== undefined) {
-    updates.push(`niveau = $${paramIndex++}`);
-    values.push(data.niveau);
-  }
-  if (data.phone !== undefined) {
-    updates.push(`phone = $${paramIndex++}`);
-    values.push(data.phone);
-  }
-
-  if (updates.length === 0) return null;
-
-  values.push(id);
-  try {
-    const result = await pool.query(
-      `UPDATE users SET ${updates.join(', ')} WHERE id = $${paramIndex} RETURNING *`,
-      values
-    );
-    if (result.rows.length === 0) return null;
-    const user = result.rows[0] as User;
-    delete (user as any).password;
-    return user;
-  } catch {
-    return null;
+    } as User;
   }
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
   try {
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (result.rows.length === 0) return null;
-    const user = result.rows[0] as User;
+    const user = await prisma.user.findFirst({
+      where: { email: { equals: email, mode: 'insensitive' } }
+    });
+    if (!user) return null;
     delete (user as any).password;
-    return user;
+    return user as User;
+  } catch {
+    return null;
+  }
+}
+
+// Continuation of Users (Auth & Management)
+
+export async function updateUser(
+  id: number,
+  data: { name?: string; metadata?: string; image?: string; niveau?: string; phone?: string }
+): Promise<User | null> {
+  const updates: any = {};
+  if (data.name !== undefined) updates.name = data.name;
+  if (data.metadata !== undefined) updates.metadata = data.metadata;
+  if (data.image !== undefined) updates.image = data.image;
+  if (data.niveau !== undefined) updates.niveau = data.niveau;
+  if (data.phone !== undefined) updates.phone = data.phone;
+
+  if (Object.keys(updates).length === 0) return null;
+
+  try {
+    const user = await prisma.user.update({
+      where: { id },
+      data: updates
+    });
+    delete (user as any).password;
+    return user as User;
   } catch {
     return null;
   }
@@ -915,11 +897,10 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 
 export async function getUserById(id: number): Promise<User | null> {
   try {
-    const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-    if (result.rows.length === 0) return null;
-    const user = result.rows[0] as User;
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) return null;
     delete (user as any).password;
-    return user;
+    return user as User;
   } catch {
     return null;
   }
@@ -927,8 +908,19 @@ export async function getUserById(id: number): Promise<User | null> {
 
 export async function getAllUsers(): Promise<User[]> {
   try {
-    const result = await pool.query('SELECT id, email, name, role, niveau, phone, created_at FROM users ORDER BY created_at DESC');
-    return result.rows as User[];
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        niveau: true,
+        phone: true,
+        created_at: true
+      },
+      orderBy: { created_at: 'desc' }
+    });
+    return users as User[];
   } catch {
     return [];
   }
@@ -945,35 +937,58 @@ export async function trackPostView(
   categorySlug?: string
 ): Promise<void> {
   try {
-    await pool.query(
-      `INSERT INTO user_progress (user_id, post_id, post_slug, post_name, category_name, category_slug, viewed_at)
-       VALUES ($1, $2, $3, $4, $5, $6, NOW())
-       ON CONFLICT (user_id, post_id)
-       DO UPDATE SET viewed_at = NOW(),
-                     post_name = EXCLUDED.post_name,
-                     category_name = EXCLUDED.category_name,
-                     category_slug = EXCLUDED.category_slug`,
-      [userId, postId, postSlug, postName || null, categoryName || null, categorySlug || null]
-    );
+    const existing = await prisma.userProgress.findUnique({
+      where: {
+        user_id_post_id: {
+          user_id: userId,
+          post_id: postId
+        }
+      }
+    });
+
+    if (existing) {
+      await prisma.userProgress.update({
+        where: { id: existing.id },
+        data: {
+          viewed_at: new Date(),
+          post_name: postName || existing.post_name,
+          category_name: categoryName || existing.category_name,
+          category_slug: categorySlug || existing.category_slug,
+        }
+      });
+    } else {
+      await prisma.userProgress.create({
+        data: {
+          user_id: userId,
+          post_id: postId,
+          post_slug: postSlug,
+          post_name: postName,
+          category_name: categoryName,
+          category_slug: categorySlug,
+          viewed_at: new Date()
+        }
+      });
+    }
   } catch {
     // silently fail — tracking is non-critical
   }
 }
 
-export async function getUserProgress(userId: number, limit = 10): Promise<import('./types').UserProgress[]> {
+export async function getUserProgress(userId: number, limit = 10): Promise<UserProgress[]> {
   try {
-    const result = await pool.query(
-      `SELECT * FROM user_progress WHERE user_id = $1 ORDER BY viewed_at DESC LIMIT $2`,
-      [userId, limit]
-    );
-    return result.rows;
+    const progress = await prisma.userProgress.findMany({
+      where: { user_id: userId },
+      orderBy: { viewed_at: 'desc' },
+      take: limit
+    });
+    return progress as UserProgress[];
   } catch {
     return [];
   }
 }
 
-export async function getUserProgressStats(userId: number): Promise<import('./types').UserProgressStats> {
-  const empty: import('./types').UserProgressStats = {
+export async function getUserProgressStats(userId: number): Promise<UserProgressStats> {
+  const empty: UserProgressStats = {
     total_viewed: 0,
     recent: [],
     by_category: [],
@@ -982,20 +997,21 @@ export async function getUserProgressStats(userId: number): Promise<import('./ty
 
   try {
     // Total posts viewed
-    const totalRes = await pool.query(
-      `SELECT COUNT(*) AS cnt FROM user_progress WHERE user_id = $1`,
-      [userId]
-    );
-    const total_viewed = parseInt(totalRes.rows[0]?.cnt || '0', 10);
+    const total_viewed = await prisma.userProgress.count({
+      where: { user_id: userId }
+    });
 
     // Recent 5
-    const recentRes = await pool.query(
-      `SELECT * FROM user_progress WHERE user_id = $1 ORDER BY viewed_at DESC LIMIT 5`,
-      [userId]
-    );
+    const recentRes = await prisma.userProgress.findMany({
+      where: { user_id: userId },
+      orderBy: { viewed_at: 'desc' },
+      take: 5
+    });
 
-    // Per-category stats: how many posts exist and how many the user has viewed
-    const catRes = await pool.query(
+    // Per-category stats using raw query for complex GROUP BY
+    // Since Prisma is now used, we can do raw query or complex aggregations.
+    // It's easier to use raw query for this exact Postgres feature:
+    const catRes = await prisma.$queryRawUnsafe<any[]>(
       `SELECT
          c.name         AS category_name,
          c.slug         AS category_slug,
@@ -1008,10 +1024,10 @@ export async function getUserProgressStats(userId: number): Promise<import('./ty
          ON up.post_id = p.id AND up.user_id = $1
        GROUP BY c.id, c.name, c.slug
        ORDER BY c.id`,
-      [userId]
+      userId
     );
 
-    const by_category = catRes.rows.map((row: any) => ({
+    const by_category = catRes.map((row) => ({
       category_name: row.category_name,
       category_slug: row.category_slug,
       viewed: row.viewed,
@@ -1019,8 +1035,8 @@ export async function getUserProgressStats(userId: number): Promise<import('./ty
       percent: row.total > 0 ? Math.round((row.viewed / row.total) * 100) : 0,
     }));
 
-    // Streak : count consecutive days (today included) with at least one view
-    const streakRes = await pool.query(
+    // Streak : count consecutive days
+    const streakRes = await prisma.$queryRawUnsafe<any[]>(
       `WITH daily AS (
          SELECT DISTINCT date_trunc('day', viewed_at AT TIME ZONE 'UTC') AS day
          FROM user_progress
@@ -1032,13 +1048,13 @@ export async function getUserProgressStats(userId: number): Promise<import('./ty
        SELECT COUNT(*) AS streak
        FROM numbered
        WHERE day = CURRENT_DATE - (rn - 1) * INTERVAL '1 day'`,
-      [userId]
+      userId
     );
-    const streak_days = parseInt(streakRes.rows[0]?.streak || '0', 10);
+    const streak_days = parseInt(streakRes[0]?.streak?.toString() || '0', 10);
 
     return {
       total_viewed,
-      recent: recentRes.rows,
+      recent: recentRes as UserProgress[],
       by_category,
       streak_days,
     };
@@ -1056,12 +1072,25 @@ export async function subscribeLiveNotification(
   userName?: string
 ): Promise<{ success: boolean; alreadySubscribed?: boolean }> {
   try {
-    await pool.query(
-      `INSERT INTO live_notification (live_id, user_id, email, user_name)
-       VALUES ($1, $2, $3, $4)
-       ON CONFLICT (live_id, user_id) DO NOTHING`,
-      [liveId, userId, email, userName || null]
-    );
+    const existing = await prisma.liveNotification.findUnique({
+      where: {
+        live_id_user_id: {
+          live_id: liveId,
+          user_id: userId
+        }
+      }
+    });
+
+    if (!existing) {
+      await prisma.liveNotification.create({
+        data: {
+          live_id: liveId,
+          user_id: userId,
+          email,
+          user_name: userName
+        }
+      });
+    }
     return { success: true };
   } catch {
     return { success: false };
@@ -1073,10 +1102,12 @@ export async function unsubscribeLiveNotification(
   userId: number
 ): Promise<boolean> {
   try {
-    await pool.query(
-      'DELETE FROM live_notification WHERE live_id = $1 AND user_id = $2',
-      [liveId, userId]
-    );
+    await prisma.liveNotification.deleteMany({
+      where: {
+        live_id: liveId,
+        user_id: userId
+      }
+    });
     return true;
   } catch {
     return false;
@@ -1085,11 +1116,10 @@ export async function unsubscribeLiveNotification(
 
 export async function isSubscribedToLive(liveId: number, userId: number): Promise<boolean> {
   try {
-    const result = await pool.query(
-      'SELECT 1 FROM live_notification WHERE live_id = $1 AND user_id = $2',
-      [liveId, userId]
-    );
-    return result.rows.length > 0;
+    const count = await prisma.liveNotification.count({
+      where: { live_id: liveId, user_id: userId }
+    });
+    return count > 0;
   } catch {
     return false;
   }
@@ -1097,11 +1127,11 @@ export async function isSubscribedToLive(liveId: number, userId: number): Promis
 
 export async function getUserLiveSubscriptions(userId: number): Promise<number[]> {
   try {
-    const result = await pool.query(
-      'SELECT live_id FROM live_notification WHERE user_id = $1',
-      [userId]
-    );
-    return result.rows.map((r: any) => r.live_id);
+    const notifs = await prisma.liveNotification.findMany({
+      where: { user_id: userId },
+      select: { live_id: true }
+    });
+    return notifs.map(n => n.live_id).filter(id => id !== null) as number[];
   } catch {
     return [];
   }
@@ -1111,7 +1141,8 @@ export async function getPendingLiveNotifications(hoursAhead = 24): Promise<
   { email: string; user_name: string; live_id: number; live_title: string; scheduled_at: Date; niveau_label: string; meeting_url: string; notif_id: number }[]
 > {
   try {
-    const result = await pool.query(
+    // using raw query since we need date interval arithmetic
+    const result = await prisma.$queryRawUnsafe<any[]>(
       `SELECT
          ln.id           AS notif_id,
          ln.email,
@@ -1126,9 +1157,9 @@ export async function getPendingLiveNotifications(hoursAhead = 24): Promise<
        WHERE ln.notified = false
          AND ls.status = 'upcoming'
          AND ls.scheduled_at BETWEEN NOW() AND NOW() + ($1 || ' hours')::INTERVAL`,
-      [hoursAhead]
+      hoursAhead
     );
-    return result.rows;
+    return result;
   } catch {
     return [];
   }
@@ -1136,42 +1167,57 @@ export async function getPendingLiveNotifications(hoursAhead = 24): Promise<
 
 export async function markNotificationSent(notifId: number): Promise<void> {
   try {
-    await pool.query('UPDATE live_notification SET notified = true WHERE id = $1', [notifId]);
+    await prisma.liveNotification.update({
+      where: { id: notifId },
+      data: { notified: true }
+    });
   } catch {}
 }
 
 // ─── QCM Interactif ───────────────────────────────────────────────────────────
 
-export async function getQuizByPostId(postId: number): Promise<any | null> {
+export async function getQuizByPostId(postId: number): Promise<Quiz | null> {
   try {
-    const quizRes = await pool.query(
-      `SELECT * FROM quiz WHERE post_id = $1 AND is_active = true`,
-      [postId]
-    );
-    if (!quizRes.rows.length) return null;
-    const quiz = quizRes.rows[0];
+    const quiz = await prisma.quiz.findUnique({
+      where: { post_id: postId }
+    });
+    if (!quiz || !quiz.is_active) return null;
 
-    const qRes = await pool.query(
-      `SELECT * FROM quiz_question WHERE quiz_id = $1 ORDER BY position ASC`,
-      [quiz.id]
-    );
-    quiz.questions = qRes.rows.map((q: any) => ({
-      ...q,
-      choices: Array.isArray(q.choices) ? q.choices : JSON.parse(q.choices),
-    }));
-    return quiz;
+    const questions = await prisma.quizQuestion.findMany({
+      where: { quiz_id: quiz.id },
+      orderBy: { position: 'asc' }
+    });
+
+    return {
+      ...quiz,
+      questions: questions.map(q => ({
+        ...q,
+        choices: Array.isArray(q.choices) ? q.choices : JSON.parse(q.choices as any)
+      }))
+    } as Quiz;
   } catch {
     return null;
   }
 }
 
-export async function getQuizAttempt(quizId: number, userId: number): Promise<any | null> {
+export async function getQuizAttempt(quizId: number, userId: number): Promise<QuizAttempt | null> {
   try {
-    const res = await pool.query(
-      `SELECT * FROM quiz_attempt WHERE quiz_id = $1 AND user_id = $2`,
-      [quizId, userId]
-    );
-    return res.rows[0] || null;
+    const attempt = await prisma.quizAttempt.findUnique({
+      where: {
+        quiz_id_user_id: {
+          quiz_id: quizId,
+          user_id: userId
+        }
+      }
+    });
+    if (attempt) {
+      // the answers field is JSONB, we ensure it's typed
+      return {
+        ...attempt,
+        answers: attempt.answers as any
+      } as QuizAttempt;
+    }
+    return null;
   } catch {
     return null;
   }
@@ -1184,21 +1230,33 @@ export async function upsertQuizAttempt(
   score: number,
   total: number,
   completed: boolean
-): Promise<any> {
+): Promise<QuizAttempt> {
   try {
-    const res = await pool.query(
-      `INSERT INTO quiz_attempt (quiz_id, user_id, answers, score, total, completed, completed_at)
-       VALUES ($1, $2, $3::jsonb, $4, $5, $6, $7)
-       ON CONFLICT (quiz_id, user_id) DO UPDATE SET
-         answers      = EXCLUDED.answers,
-         score        = EXCLUDED.score,
-         total        = EXCLUDED.total,
-         completed    = EXCLUDED.completed,
-         completed_at = EXCLUDED.completed_at
-       RETURNING *`,
-      [quizId, userId, JSON.stringify(answers), score, total, completed, completed ? new Date() : null]
-    );
-    return res.rows[0];
+    const attempt = await prisma.quizAttempt.upsert({
+      where: {
+        quiz_id_user_id: {
+          quiz_id: quizId,
+          user_id: userId
+        }
+      },
+      update: {
+        answers: answers as any,
+        score,
+        total,
+        completed,
+        completed_at: completed ? new Date() : null
+      },
+      create: {
+        quiz_id: quizId,
+        user_id: userId,
+        answers: answers as any,
+        score,
+        total,
+        completed,
+        completed_at: completed ? new Date() : null
+      }
+    });
+    return attempt as unknown as QuizAttempt;
   } catch (e: any) {
     throw e;
   }
@@ -1211,17 +1269,21 @@ export async function upsertQuiz(
   description: string,
   timeLimit: number
 ): Promise<number> {
-  const res = await pool.query(
-    `INSERT INTO quiz (post_id, title, description, time_limit)
-     VALUES ($1, $2, $3, $4)
-     ON CONFLICT (post_id) DO UPDATE SET
-       title       = EXCLUDED.title,
-       description = EXCLUDED.description,
-       time_limit  = EXCLUDED.time_limit
-     RETURNING id`,
-    [postId, title, description, timeLimit]
-  );
-  return res.rows[0].id;
+  const quiz = await prisma.quiz.upsert({
+    where: { post_id: postId },
+    update: {
+      title,
+      description,
+      time_limit: timeLimit
+    },
+    create: {
+      post_id: postId,
+      title,
+      description,
+      time_limit: timeLimit
+    }
+  });
+  return quiz.id;
 }
 
 export async function upsertQuizQuestion(
@@ -1234,23 +1296,33 @@ export async function upsertQuizQuestion(
   id?: number
 ): Promise<number> {
   if (id) {
-    const res = await pool.query(
-      `UPDATE quiz_question SET question_text=$1, choices=$2::jsonb, correct_index=$3,
-       explanation=$4, position=$5 WHERE id=$6 AND quiz_id=$7 RETURNING id`,
-      [questionText, JSON.stringify(choices), correctIndex, explanation, position, id, quizId]
-    );
-    return res.rows[0]?.id ?? id;
+    const q = await prisma.quizQuestion.update({
+      where: { id },
+      data: {
+        question_text: questionText,
+        choices: choices as any,
+        correct_index: correctIndex,
+        explanation,
+        position
+      }
+    });
+    return q.id;
   }
-  const res = await pool.query(
-    `INSERT INTO quiz_question (quiz_id, question_text, choices, correct_index, explanation, position)
-     VALUES ($1, $2, $3::jsonb, $4, $5, $6) RETURNING id`,
-    [quizId, questionText, JSON.stringify(choices), correctIndex, explanation, position]
-  );
-  return res.rows[0].id;
+  const q = await prisma.quizQuestion.create({
+    data: {
+      quiz_id: quizId,
+      question_text: questionText,
+      choices: choices as any,
+      correct_index: correctIndex,
+      explanation,
+      position
+    }
+  });
+  return q.id;
 }
 
 export async function deleteQuizQuestion(questionId: number): Promise<void> {
-  await pool.query('DELETE FROM quiz_question WHERE id = $1', [questionId]);
+  await prisma.quizQuestion.delete({ where: { id: questionId } });
 }
 
 // ─── Calendrier des Examens ───────────────────────────────────────────────────
@@ -1260,54 +1332,51 @@ export async function getExamEvents(filters?: {
   type?: string;
   year?: number;
   month?: number;
-}): Promise<import('./types').ExamEvent[]> {
+}): Promise<ExamEvent[]> {
   try {
-    const conditions: string[] = ['is_active = true'];
-    const values: any[] = [];
-    let idx = 1;
+    const where: any = { is_active: true };
 
     if (filters?.niveau) {
-      conditions.push(`(niveau = $${idx} OR niveau = 'all')`);
-      values.push(filters.niveau);
-      idx++;
+      where.OR = [
+        { niveau: filters.niveau },
+        { niveau: 'all' }
+      ];
     }
     if (filters?.type) {
-      conditions.push(`type = $${idx}`);
-      values.push(filters.type);
-      idx++;
-    }
-    if (filters?.year) {
-      conditions.push(`EXTRACT(YEAR FROM event_date) = $${idx}`);
-      values.push(filters.year);
-      idx++;
-    }
-    if (filters?.month) {
-      conditions.push(`EXTRACT(MONTH FROM event_date) = $${idx}`);
-      values.push(filters.month);
-      idx++;
+      where.type = filters.type;
     }
 
-    const where = `WHERE ${conditions.join(' AND ')}`;
-    const res = await pool.query(
-      `SELECT * FROM exam_event ${where} ORDER BY event_date ASC`,
-      values
-    );
-    return res.rows;
+    let events = await prisma.examEvent.findMany({
+      where,
+      orderBy: { event_date: 'asc' }
+    });
+
+    if (filters?.year) {
+      events = events.filter(e => new Date(e.event_date).getFullYear() === filters.year);
+    }
+    if (filters?.month) {
+      events = events.filter(e => (new Date(e.event_date).getMonth() + 1) === filters.month);
+    }
+
+    return events as ExamEvent[];
   } catch {
     return [];
   }
 }
 
-export async function getUpcomingExamEvents(limit = 5): Promise<import('./types').ExamEvent[]> {
+export async function getUpcomingExamEvents(limit = 5): Promise<ExamEvent[]> {
   try {
-    const res = await pool.query(
-      `SELECT * FROM exam_event
-       WHERE is_active = true AND event_date >= CURRENT_DATE
-       ORDER BY event_date ASC
-       LIMIT $1`,
-      [limit]
-    );
-    return res.rows;
+    const events = await prisma.examEvent.findMany({
+      where: {
+        is_active: true,
+        event_date: {
+          gte: new Date()
+        }
+      },
+      orderBy: { event_date: 'asc' },
+      take: limit
+    });
+    return events as ExamEvent[];
   } catch {
     return [];
   }
@@ -1315,9 +1384,9 @@ export async function getUpcomingExamEvents(limit = 5): Promise<import('./types'
 
 export async function createExamEvent(data: {
   title: string;
-  event_date: string;
+  event_date: string | Date;
   event_time?: string;
-  end_date?: string;
+  end_date?: string | Date;
   type: string;
   niveau?: string;
   niveau_label?: string;
@@ -1325,33 +1394,41 @@ export async function createExamEvent(data: {
   location?: string;
   pdf_url?: string;
   source_url?: string;
-}): Promise<import('./types').ExamEvent> {
-  const res = await pool.query(
-    `INSERT INTO exam_event
-       (title, event_date, event_time, end_date, type, niveau, niveau_label, description, location, pdf_url, source_url)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
-     RETURNING *`,
-    [data.title, data.event_date, data.event_time || null, data.end_date || null,
-     data.type, data.niveau || null, data.niveau_label || null, data.description || null,
-     data.location || null, data.pdf_url || null, data.source_url || null]
-  );
-  return res.rows[0];
+}): Promise<ExamEvent> {
+  const e = await prisma.examEvent.create({
+    data: {
+      title: data.title,
+      event_date: new Date(data.event_date),
+      event_time: data.event_time,
+      end_date: data.end_date ? new Date(data.end_date) : undefined,
+      type: data.type,
+      niveau: data.niveau,
+      niveau_label: data.niveau_label,
+      description: data.description,
+      location: data.location,
+      pdf_url: data.pdf_url,
+      source_url: data.source_url
+    }
+  });
+  return e as ExamEvent;
 }
 
 export async function updateExamEvent(id: number, data: Partial<{
-  title: string; event_date: string; event_time: string; end_date: string;
+  title: string; event_date: string | Date; event_time: string; end_date: string | Date;
   type: string; niveau: string; niveau_label: string; description: string;
   location: string; pdf_url: string; source_url: string; is_active: boolean;
-}>): Promise<import('./types').ExamEvent> {
-  const fields = Object.keys(data).map((k, i) => `${k} = $${i + 2}`).join(', ');
-  const values = [id, ...Object.values(data)];
-  const res = await pool.query(
-    `UPDATE exam_event SET ${fields}, updated_at = NOW() WHERE id = $1 RETURNING *`,
-    values
-  );
-  return res.rows[0];
+}>): Promise<ExamEvent> {
+  const updates: any = { ...data };
+  if (data.event_date) updates.event_date = new Date(data.event_date);
+  if (data.end_date) updates.end_date = new Date(data.end_date);
+
+  const e = await prisma.examEvent.update({
+    where: { id },
+    data: updates
+  });
+  return e as ExamEvent;
 }
 
 export async function deleteExamEvent(id: number): Promise<void> {
-  await pool.query('DELETE FROM exam_event WHERE id = $1', [id]);
+  await prisma.examEvent.delete({ where: { id } });
 }

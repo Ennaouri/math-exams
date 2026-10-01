@@ -25,7 +25,7 @@ export interface Post {
   thumbnail: string;
   description: string;
   slug: string;
-  underCategoryId: number;
+  underCategory_id: number;
   attribute?: string;
   semestre?: number;
   semestre_order?: number;
@@ -209,7 +209,7 @@ export interface QuizAttempt {
   score: number;
   total: number;
   completed: boolean;
-  started_at: Date;
+  created_at: Date;
   completed_at?: Date;
 }
 

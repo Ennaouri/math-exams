@@ -1,0 +1,1 @@
+UPDATE "PostDetails" SET thumbnail = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';

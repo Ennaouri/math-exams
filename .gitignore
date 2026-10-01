@@ -41,3 +41,5 @@ node.msi
 node.cmd
 
 .vercel
+node_modules/
+dist/

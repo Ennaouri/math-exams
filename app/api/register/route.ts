@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       emailVerified: true,
     });
 
-    const user = await createUser(email, password, name, validRole, userMeta, niveau, phone);
+    const user = await createUser({ email, password, name, role: validRole, metadata: userMeta, niveau, phone });
 
     // If registered as parent with student email, link them
     if (validRole === 'parent' && studentEmail && studentEmail.trim()) {

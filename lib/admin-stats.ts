@@ -2,9 +2,9 @@ import { pool } from './db';
 
 export async function getAdminInternalStats() {
   try {
-    const usersCountRes = await pool.query('SELECT COUNT(*) as total FROM users');
-    const postsCountRes = await pool.query('SELECT COUNT(*) as total FROM post');
-    const subsCountRes = await pool.query(`SELECT COUNT(*) as total FROM user_subscription WHERE status = 'active'`);
+    const usersCountRes = await pool.query('SELECT COUNT(*) as total FROM "users"');
+    const postsCountRes = await pool.query('SELECT COUNT(*) as total FROM "Post"');
+    const subsCountRes = await pool.query(`SELECT COUNT(*) as total FROM "user_subscription" WHERE status = 'active'`);
     
     const totalUsers = parseInt(usersCountRes.rows[0].total) || 0;
     const totalPosts = parseInt(postsCountRes.rows[0].total) || 0;
@@ -13,7 +13,7 @@ export async function getAdminInternalStats() {
     // Top viewed posts based on user_progress
     const topPostsRes = await pool.query(`
       SELECT post_name, post_slug, COUNT(*) as views 
-      FROM user_progress 
+      FROM "user_progress" 
       GROUP BY post_slug, post_name 
       ORDER BY views DESC 
       LIMIT 10
@@ -22,7 +22,7 @@ export async function getAdminInternalStats() {
     // Registrations in last 30 days grouped by date
     const registrationsRes = await pool.query(`
       SELECT DATE(created_at) as date, COUNT(*) as count 
-      FROM users 
+      FROM "users" 
       WHERE created_at > NOW() - INTERVAL '30 days' 
       GROUP BY DATE(created_at) 
       ORDER BY date ASC

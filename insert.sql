@@ -1,0 +1,1 @@
+INSERT INTO "PostDetails" (name, slug, post_id, thumbnail, description) SELECT 'Fichier PDF Test', slug || '-pdf', id, 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 'Un PDF de démonstration' FROM "Post";

@@ -26,7 +26,7 @@ export default function PostDetailsPage() {
     description: '',
     slug: '',
     thumbnail: '',
-    post_id: 0,
+    post_id: '',
   });
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export default function PostDetailsPage() {
     try {
       const url = editingItem ? `/api/post-details/${editingItem.id}` : '/api/post-details';
       const method = editingItem ? 'PUT' : 'POST';
-      await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) }); if (!res.ok) { const d = await res.json(); alert('Erreur: ' + d.error); throw new Error(d.error); }
       fetchData();
       resetForm();
     } catch (error) {
@@ -107,7 +107,7 @@ export default function PostDetailsPage() {
   };
 
   const resetForm = () => {
-    setFormData({ name: '', description: '', slug: '', thumbnail: '', post_id: 0 });
+    setFormData({ name: '', description: '', slug: '', thumbnail: '', post_id: '' });
     setEditingItem(null);
     setShowForm(false);
   };
