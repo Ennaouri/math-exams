@@ -21,7 +21,7 @@ export default function PostDetailsPage() {
   const [editingItem, setEditingItem] = useState<PostDetail | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{name: string, description: string, slug: string, thumbnail: string, post_id: number | string}>({
     name: '',
     description: '',
     slug: '',
