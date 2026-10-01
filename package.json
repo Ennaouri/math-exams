@@ -10,7 +10,7 @@
     "generate-sitemap": "ts-node app/generateSitemap.ts",
     "start": "next start",
     "lint": "next lint",
-    "vercel-build": "npm install --legacy-peer-deps && npx next build --webpack"
+    "vercel-build": "npm install --legacy-peer-deps && npx prisma generate && npx next build --webpack"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -56,10 +56,10 @@
     "slick-carousel": "^1.8.1",
     "swiper": "^11.0.7",
     "tailwindcss": "^3.2.4",
-    "typescript": "5.4.2"
+    "typescript": "5.4.2",
+    "@prisma/client": "^5.22.0"
   },
   "devDependencies": {
-    "@prisma/client": "^5.22.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/pg": "^8.20.0",
     "@types/react-slick": "^0.23.13",
