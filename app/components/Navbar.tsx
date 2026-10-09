@@ -166,7 +166,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
                         Mon Profil
                       </Link>
                       {userRole === 'admin' && (
-                        <Link href="/admin/dashboard" onClick={closeAll} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">
+                        <Link href="/admin" onClick={closeAll} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">
                           Tableau de bord Admin
                         </Link>
                       )}
