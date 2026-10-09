@@ -146,25 +146,25 @@ export default async function RootLayout({
         />
       </head>
       <body>
+        {isProduction && (
+          <>
+            <Script
+              async
+              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301"
+              crossOrigin="anonymous"
+              strategy="lazyOnload"
+            />
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="gtag-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_TRACKING_ID}');`}
+            </Script>
+          </>
+        )}
+        <SpeedInsights />
         <Providers>
-          {isProduction && (
-            <>
-              <Script
-                async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5587331919297301"
-                crossOrigin="anonymous"
-                strategy="lazyOnload"
-              />
-              <Script
-                src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-                strategy="afterInteractive"
-              />
-              <Script id="gtag-init" strategy="afterInteractive">
-                {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_TRACKING_ID}');`}
-              </Script>
-            </>
-          )}
-          <SpeedInsights />
           <div className="bg-gray-100 dark:bg-slate-900 min-h-screen w-screen transition-colors">
             <div className="max-w-screen-xl m-auto bg-white dark:bg-slate-900 transition-colors">
               <Navbar categories={categories} />
