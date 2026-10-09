@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const HERO_IMAGES = [
   {
@@ -20,6 +21,11 @@ const HERO_IMAGES = [
 ];
 
 export default function Header() {
+  const pathname = usePathname();
+
+  // ONLY show hero on the home page
+  if (pathname !== "/") return null;
+
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {

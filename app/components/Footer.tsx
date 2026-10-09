@@ -1,7 +1,12 @@
+'use client';
 import Link from 'next/link'
 import React from 'react'
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname && pathname.startsWith("/admin")) return null;
+
   return (
     <>
       <a
