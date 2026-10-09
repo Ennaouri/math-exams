@@ -134,7 +134,7 @@ export default function CheckoutClient({ service, user }: { service: Service, us
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">RIB:</span>
-                  <strong>230 780 1234567890123456 78</strong>
+                  <strong>230 810 5180719211024500 56</strong>
                 </div>
               </div>
 

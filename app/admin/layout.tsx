@@ -29,7 +29,6 @@ export default async function AdminLayout({
             <Link href="/admin/posts" className="hover:text-gray-300">Posts</Link>
             <Link href="/admin/post-details" className="hover:text-gray-300">Post Details</Link>
             <Link href="/admin/blobs" className="hover:text-gray-300">Blobs</Link>
-            <Link href="/" className="hover:text-gray-300">View Site</Link>
             <LogoutButton />
           </div>
         </div>
