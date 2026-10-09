@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import type { Metadata } from "next";
 import { getCategories, getLatestPosts, getLatestUnderCategories } from "@/lib/db";
 import { Providers } from "./providers";
+import { SuppressWarning } from "./components/SuppressWarning";
 import Script from "next/script";
 import { GA_TRACKING_ID } from "@/lib/gtag";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -145,7 +146,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         {isProduction && (
           <>
             <Script
@@ -164,6 +165,7 @@ export default async function RootLayout({
           </>
         )}
         <SpeedInsights />
+        <SuppressWarning />
         <Providers>
           <div className="bg-gray-100 dark:bg-slate-900 min-h-screen w-screen transition-colors">
             <div className="max-w-screen-xl m-auto bg-white dark:bg-slate-900 transition-colors">
