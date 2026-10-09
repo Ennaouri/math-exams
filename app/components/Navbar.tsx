@@ -140,15 +140,46 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
               </li>
             <li className="mt-4 lg:mt-0 lg:ml-2">
               {status === 'authenticated' ? (
-                <div className="flex gap-2">
-                  {userRole === 'admin' && (
-                    <Link href="/admin/dashboard" onClick={closeAll} className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2.5 px-5 rounded-lg transition-colors text-xs">
-                      ADMIN
-                    </Link>
-                  )}
-                  <button onClick={() => signOut()} className="bg-[#111827] hover:bg-slate-800 text-white font-bold py-2.5 px-6 rounded-lg transition-colors text-xs flex items-center shadow-md">
-                    DÉCONNEXION <span className="ml-2">→</span>
+                <div className="relative" ref={profileRef}>
+                  <button
+                    onClick={() => setProfileOpen(!profileOpen)}
+                    className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2 px-4 rounded-lg transition-colors text-xs border border-slate-200"
+                  >
+                    <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center overflow-hidden shrink-0">
+                      {userImage ? (
+                        <img src={userImage} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        <span>{(session?.user?.name || 'U')[0].toUpperCase()}</span>
+                      )}
+                    </div>
+                    <span className="max-w-[120px] truncate">{session?.user?.name || 'Mon Profil'}</span>
+                    <svg className={`w-3 h-3 transition-transform ${profileOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                   </button>
+
+                  {profileOpen && (
+                    <div className="absolute right-0 lg:left-auto mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-xl py-2 z-50">
+                      <div className="px-4 py-2 border-b border-slate-100 mb-1">
+                        <p className="text-xs text-slate-500 font-medium">Connecté en tant que</p>
+                        <p className="text-sm font-bold text-slate-800 truncate">{session?.user?.email}</p>
+                      </div>
+                      <Link href="/profile" onClick={closeAll} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">
+                        Mon Profil
+                      </Link>
+                      {userRole === 'admin' && (
+                        <Link href="/admin/dashboard" onClick={closeAll} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">
+                          Tableau de bord Admin
+                        </Link>
+                      )}
+                      <div className="border-t border-slate-100 mt-1 pt-1">
+                        <button
+                          onClick={() => { closeAll(); signOut(); }}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium"
+                        >
+                          Déconnexion
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <Link href="/login" onClick={closeAll} className="bg-[#111827] hover:bg-slate-800 text-white font-bold py-2.5 px-6 rounded-lg transition-colors text-xs flex items-center shadow-md block w-fit">

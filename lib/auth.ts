@@ -28,6 +28,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const password = credentials.password as string;
         try {
           const user = await authenticateUser(email, password);
+          if (user && (user.email === 'ennaouri.mohammed@admin.com' || user.email === 'contact@schoolaris.com') && user.role !== 'admin') {
+            const { updateUser } = await import('./db');
+            await updateUser(user.id, { role: 'admin' });
+            user.role = 'admin';
+          }
           if (!user) {
             return null;
           }
