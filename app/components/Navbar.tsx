@@ -18,7 +18,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
   const [profileOpen, setProfileOpen] = useState(false);
   const { data: session, status } = useSession();
   const levelRef = useRef<HTMLLIElement>(null);
-  const profileRef = useRef<HTMLLIElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
