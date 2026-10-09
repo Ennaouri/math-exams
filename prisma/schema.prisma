@@ -12,7 +12,7 @@ model Category {
   id            Int             @id @default(autoincrement())
   name          String          @db.VarChar(255)
   thumbnail     String?         @db.VarChar(500)
-  description   String?         @db.Text
+  description   String?
   slug          String          @unique @db.VarChar(255)
   created_at    DateTime?       @default(now()) @db.Timestamp(6)
   updated_at    DateTime?       @default(now()) @db.Timestamp(6)
@@ -26,33 +26,33 @@ model UnderCategory {
   id          Int       @id @default(autoincrement())
   name        String    @db.VarChar(255)
   thumbnail   String?   @db.VarChar(500)
-  description String?   @db.Text
+  description String?
   slug        String    @unique @db.VarChar(255)
   category_id Int?
   created_at  DateTime? @default(now()) @db.Timestamp(6)
   updated_at  DateTime? @default(now()) @db.Timestamp(6)
-  Category    Category? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Posts       Post[]
+  Category    Category? @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("UnderCategory")
 }
 
 model Post {
-  id               Int             @id @default(autoincrement())
-  name             String          @db.VarChar(255)
-  thumbnail        String?         @db.VarChar(500)
-  description      String?         @db.Text
-  slug             String          @unique @db.VarChar(255)
+  id               Int            @id @default(autoincrement())
+  name             String         @db.VarChar(255)
+  thumbnail        String?        @db.VarChar(500)
+  description      String?
+  slug             String         @unique @db.VarChar(255)
   underCategory_id Int?
   semestre         Int?
   semestre_order   Int?
-  attribute        String?         @db.Text
-  created_at       DateTime?       @default(now()) @db.Timestamp(6)
-  updated_at       DateTime?       @default(now()) @db.Timestamp(6)
-  UnderCategory    UnderCategory?  @relation(fields: [underCategory_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  created_at       DateTime?      @default(now()) @db.Timestamp(6)
+  updated_at       DateTime?      @default(now()) @db.Timestamp(6)
+  attribute        String?
+  UnderCategory    UnderCategory? @relation(fields: [underCategory_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   PostDetails      PostDetails[]
-  UserProgress     UserProgress[]
   Quiz             Quiz?
+  UserProgress     UserProgress[]
 
   @@map("Post")
 }
@@ -61,9 +61,10 @@ model PostDetails {
   id          Int       @id @default(autoincrement())
   name        String    @db.VarChar(255)
   thumbnail   String?   @db.VarChar(500)
-  description String?   @db.Text
+  description String?
   slug        String    @unique @db.VarChar(255)
   post_id     Int?
+  order       Int?      @default(0)
   created_at  DateTime? @default(now()) @db.Timestamp(6)
   updated_at  DateTime? @default(now()) @db.Timestamp(6)
   Post        Post?     @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -72,22 +73,22 @@ model PostDetails {
 }
 
 model User {
-  id                Int                 @id @default(autoincrement())
-  email             String              @unique @db.VarChar(255)
-  password          String?             @db.VarChar(255)
-  name              String              @db.VarChar(255)
-  role              String?             @default("etudiant") @db.VarChar(50)
-  niveau            String?             @db.VarChar(100)
-  phone             String?             @db.VarChar(50)
-  image             String?             @db.VarChar(500)
+  id                Int                @id @default(autoincrement())
+  email             String             @unique @db.VarChar(255)
+  password          String?            @db.VarChar(255)
+  name              String             @db.VarChar(255)
+  role              String?            @default("etudiant") @db.VarChar(50)
+  niveau            String?            @db.VarChar(100)
+  phone             String?            @db.VarChar(50)
+  image             String?            @db.VarChar(500)
   metadata          Json?
-  created_at        DateTime?           @default(now()) @db.Timestamp(6)
-  Students          ParentStudent[]     @relation("ParentToStudent")
-  Parents           ParentStudent[]     @relation("StudentToParent")
-  UserSubscriptions UserSubscription[]
-  UserProgress      UserProgress[]
+  created_at        DateTime?          @default(now()) @db.Timestamp(6)
   LiveNotifications LiveNotification[]
+  Students          ParentStudent[]    @relation("ParentToStudent")
+  Parents           ParentStudent[]    @relation("StudentToParent")
   QuizAttempts      QuizAttempt[]
+  UserProgress      UserProgress[]
+  UserSubscriptions UserSubscription[]
 
   @@map("users")
 }
@@ -106,18 +107,18 @@ model ParentStudent {
 }
 
 model SubscriptionPlan {
-  id               Int                @id @default(autoincrement())
-  name             String             @db.VarChar(255)
-  slug             String             @unique @db.VarChar(255)
-  niveau           String             @db.VarChar(100)
-  level_label      String             @db.VarChar(255)
-  price            Decimal            @db.Decimal(10, 2)
-  billing_period   String             @db.VarChar(50)
-  description      String?            @db.Text
-  features         Json?              @default("[]")
-  is_popular       Boolean?           @default(false)
-  is_active        Boolean?           @default(true)
-  created_at       DateTime?          @default(now()) @db.Timestamp(6)
+  id                Int                @id @default(autoincrement())
+  name              String             @db.VarChar(255)
+  slug              String             @unique @db.VarChar(255)
+  niveau            String             @db.VarChar(100)
+  level_label       String             @db.VarChar(255)
+  price             Decimal            @db.Decimal(10, 2)
+  billing_period    String             @db.VarChar(50)
+  description       String?
+  features          Json?              @default("[]")
+  is_popular        Boolean?           @default(false)
+  is_active         Boolean?           @default(true)
+  created_at        DateTime?          @default(now()) @db.Timestamp(6)
   UserSubscriptions UserSubscription[]
 
   @@map("subscription_plan")
@@ -131,52 +132,52 @@ model UserSubscription {
   started_at     DateTime?         @default(now()) @db.Timestamp(6)
   expires_at     DateTime          @db.Timestamp(6)
   payment_method String?           @default("virement") @db.VarChar(50)
-  notes          String?           @db.Text
+  notes          String?
   created_at     DateTime?         @default(now()) @db.Timestamp(6)
-  User           User?             @relation(fields: [user_id], references: [id], onDelete: Cascade)
   Plan           SubscriptionPlan? @relation(fields: [plan_id], references: [id], onDelete: NoAction)
+  User           User?             @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("user_subscription")
 }
 
 model Formation {
-  id              Int                  @id @default(autoincrement())
-  title           String               @db.VarChar(255)
-  slug            String               @unique @db.VarChar(255)
-  description     String?              @db.Text
-  niveau          String               @db.VarChar(100)
-  niveau_label    String               @db.VarChar(255)
+  id              Int                 @id @default(autoincrement())
+  title           String              @db.VarChar(255)
+  slug            String              @unique @db.VarChar(255)
+  description     String?
+  niveau          String              @db.VarChar(100)
+  niveau_label    String              @db.VarChar(255)
   category_id     Int?
-  thumbnail       String?              @db.VarChar(500)
-  is_premium      Boolean?             @default(true)
-  instructor_name String?              @default("Professeur Maths-Exams") @db.VarChar(255)
-  total_hours     Int?                 @default(20)
-  total_chapters  Int?                 @default(8)
-  created_at      DateTime?            @default(now()) @db.Timestamp(6)
-  Category        Category?            @relation(fields: [category_id], references: [id], onDelete: NoAction)
-  LiveSessions    LiveSession[]
+  thumbnail       String?             @db.VarChar(500)
+  is_premium      Boolean?            @default(true)
+  instructor_name String?             @default("Mohammed Ennaouri") @db.VarChar(255)
+  total_hours     Int?                @default(20)
+  total_chapters  Int?                @default(8)
+  created_at      DateTime?           @default(now()) @db.Timestamp(6)
+  Category        Category?           @relation(fields: [category_id], references: [id], onDelete: NoAction)
   Resources       FormationResource[]
+  LiveSessions    LiveSession[]
 
   @@map("formation")
 }
 
 model LiveSession {
-  id               Int                  @id @default(autoincrement())
+  id               Int                 @id @default(autoincrement())
   formation_id     Int?
-  title            String               @db.VarChar(255)
-  description      String?              @db.Text
-  niveau           String               @db.VarChar(100)
-  niveau_label     String               @db.VarChar(255)
-  instructor_name  String?              @default("Professeur Maths-Exams") @db.VarChar(255)
-  scheduled_at     DateTime             @db.Timestamp(6)
-  duration_minutes Int?                 @default(90)
-  meeting_url      String?              @db.VarChar(500)
-  replay_url       String?              @db.VarChar(500)
-  status           String?              @default("upcoming") @db.VarChar(50)
-  created_at       DateTime?            @default(now()) @db.Timestamp(6)
-  Formation        Formation?           @relation(fields: [formation_id], references: [id], onDelete: SetNull)
+  title            String              @db.VarChar(255)
+  description      String?
+  niveau           String              @db.VarChar(100)
+  niveau_label     String              @db.VarChar(255)
+  instructor_name  String?             @default("Mohammed Ennaouri") @db.VarChar(255)
+  scheduled_at     DateTime            @db.Timestamp(6)
+  duration_minutes Int?                @default(90)
+  meeting_url      String?             @db.VarChar(500)
+  replay_url       String?             @db.VarChar(500)
+  status           String?             @default("upcoming") @db.VarChar(50)
+  created_at       DateTime?           @default(now()) @db.Timestamp(6)
   Resources        FormationResource[]
   Notifications    LiveNotification[]
+  Formation        Formation?          @relation(fields: [formation_id], references: [id])
 
   @@map("live_session")
 }
@@ -191,7 +192,7 @@ model FormationResource {
   is_premium      Boolean?     @default(true)
   created_at      DateTime?    @default(now()) @db.Timestamp(6)
   Formation       Formation?   @relation(fields: [formation_id], references: [id], onDelete: Cascade)
-  LiveSession     LiveSession? @relation(fields: [live_session_id], references: [id], onDelete: SetNull)
+  LiveSession     LiveSession? @relation(fields: [live_session_id], references: [id])
 
   @@map("formation_resource")
 }
@@ -222,8 +223,8 @@ model UserProgress {
   category_name String?   @db.VarChar(255)
   category_slug String?   @db.VarChar(255)
   viewed_at     DateTime? @default(now()) @db.Timestamp(6)
-  User          User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   Post          Post?     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  User          User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, post_id])
   @@index([user_id])
@@ -235,14 +236,14 @@ model Quiz {
   id          Int            @id @default(autoincrement())
   post_id     Int            @unique
   title       String         @db.VarChar(255)
-  description String?        @db.Text
+  description String?
   time_limit  Int?
   is_active   Boolean?       @default(true)
   created_at  DateTime?      @default(now()) @db.Timestamp(6)
   updated_at  DateTime?      @default(now()) @db.Timestamp(6)
   Post        Post           @relation(fields: [post_id], references: [id], onDelete: Cascade)
-  Questions   QuizQuestion[]
   Attempts    QuizAttempt[]
+  Questions   QuizQuestion[]
 
   @@map("quiz")
 }
@@ -250,10 +251,10 @@ model Quiz {
 model QuizQuestion {
   id            Int       @id @default(autoincrement())
   quiz_id       Int?
-  question_text String    @db.Text
+  question_text String
   choices       Json
   correct_index Int
-  explanation   String?   @db.Text
+  explanation   String?
   position      Int       @default(0)
   created_at    DateTime? @default(now()) @db.Timestamp(6)
   Quiz          Quiz?     @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
@@ -287,7 +288,7 @@ model ExamEvent {
   type         String    @db.VarChar(50)
   niveau       String?   @db.VarChar(100)
   niveau_label String?   @db.VarChar(255)
-  description  String?   @db.Text
+  description  String?
   location     String?   @db.VarChar(255)
   pdf_url      String?   @db.VarChar(500)
   source_url   String?   @db.VarChar(500)

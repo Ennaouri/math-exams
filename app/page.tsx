@@ -1,6 +1,7 @@
 import { getCategories, getExamPosts, getLatestPosts, getUpcomingLiveSessions } from "@/lib/db";
 import { buildPageMetadata } from "@/lib/seo";
 import Link from "next/link";
+import SearchBar from "./components/SearchBar";
 import Script from "next/script";
 import AdUnit from "./components/AdUnit";
 import Image from "next/image";
@@ -140,11 +141,15 @@ export default async function Home() {
       <AdUnit slot="5512454890" format="fluid" layout="in-article" />
 
       {/* Level cards */}
-      <div id="niveaux" className="flex bg-slate-900 text-white px-5 py-3.5 justify-between items-center rounded-2xl mb-6 scroll-mt-28 shadow-sm">
+      <div id="niveaux" className="flex flex-col md:flex-row bg-slate-900 text-white px-5 py-4 justify-between items-center rounded-2xl mb-6 scroll-mt-28 shadow-sm gap-4">
         <h2 className="text-sm uppercase font-black tracking-wider text-white">
           📚 Niveaux Scolaires & Concours
         </h2>
-        <span className="text-xs text-blue-300 font-semibold">Programme Officiel</span>
+        <div className="w-full md:w-auto flex-1 max-w-sm flex items-center justify-end">
+          <div className="w-full">
+            <SearchBar />
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">

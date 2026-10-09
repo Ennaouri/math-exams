@@ -5,11 +5,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id: idStr } = await params;
     const body = await request.json();
-    const { name, description, slug, thumbnail, post_id } = body;
+    const { name, description, slug, thumbnail, post_id, order } = body;
     const id = parseInt(idStr);
     const result = await pool.query(
-      'UPDATE "PostDetails" SET name = $1, description = $2, slug = $3, thumbnail = $4, post_id = $5 WHERE id = $6 RETURNING *',
-      [name, description, slug, thumbnail, post_id, id]
+      'UPDATE "PostDetails" SET name = $1, description = $2, slug = $3, thumbnail = $4, post_id = $5, "order" = $6 WHERE id = $7 RETURNING *',
+      [name, description, slug, thumbnail, post_id, order || 0, id]
     );
     return NextResponse.json(result.rows[0]);
   } catch (error: any) {

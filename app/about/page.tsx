@@ -1,157 +1,111 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { buildPageMetadata } from "@/lib/seo";
+import React from 'react';
+import type { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/seo';
+import Image from 'next/image';
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "À propos de Maths-Exams",
-  description:
-    "Découvrez Maths-Exams, une plateforme de cours, exercices, examens et concours de mathématiques pour le programme marocain et les élèves francophones.",
-  path: "/about",
+  title: 'À propos | Maths-Exams',
+  description: "Découvrez Maths-Exams, votre partenaire d'excellence pour la réussite en mathématiques au collège et lycée.",
+  path: '/about',
 });
 
-const stats = [
-  { value: "500+", label: "Examens Corrigés" },
-  { value: "50+", label: "Catégories" },
-  { value: "10K+", label: "Utilisateurs" },
-  { value: "100+", label: "Vidéos Explicatives" },
-];
-
-const features = [
-  {
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    title: "Corrections Détaillées",
-    description: "Des solutions complètes et expliquées pas à pas pour chaque exercice.",
-  },
-  {
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-      </svg>
-    ),
-    title: "Tous les Niveaux",
-    description: "Du tronc commun au baccalauréat, pour toutes les filières scientifiques.",
-  },
-  {
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    title: "Vidéos Explicatives",
-    description: "Des tutoriels vidéo pour mieux comprendre les méthodes de résolution.",
-  },
-  {
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
-    title: "Équipe Professionnelle",
-    description: "Des enseignants expérimentés et des examinateurs certifiés.",
-  },
-];
-
-const About = () => {
+export default function AboutPage() {
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-          À Propos de <span className="text-blue-600">Maths-Exams</span>
+    <div className="min-h-screen bg-slate-50/50 pb-20 font-sans">
+      
+      {/* Hero Section */}
+      <div className="bg-white border-b border-slate-100 pt-20 pb-16 px-4 text-center">
+        <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
+          Notre Mission : <span className="text-[#0084c7]">Votre Réussite.</span>
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Votre plateforme de référence pour la réussite en mathématiques au Maroc
+        <p className="text-lg text-slate-500 max-w-3xl mx-auto leading-relaxed">
+          Maths-Exams est né d'une conviction simple : chaque élève a le potentiel d'exceller en mathématiques s'il est accompagné avec la bonne méthode. Nous avons conçu cette plateforme pour vous offrir une longueur d'avance.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-16">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow duration-300"
-          >
-            <div className="text-3xl md:text-4xl font-bold mb-2">{stat.value}</div>
-            <div className="text-sm md:text-base opacity-90">{stat.label}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="bg-white rounded-3xl shadow-lg p-8 md:p-12 mb-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
-          Qui Sommes-Nous ?
-        </h2>
-        <div className="prose prose-lg max-w-none text-gray-600">
-          <p className="mb-6">
-            <strong className="text-blue-600">Maths-Exams</strong> est la première plateforme éducative
-            dédiée aux examens et concours de mathématiques au Maroc et au Maghreb. Nous avons pour mission
-            de rendre accessible à tous les élèves et étudiants les meilleures ressources pour réussir
-            leurs examens.
-          </p>
-          <p className="mb-6">
-            Fondée par une équipe d&apos;enseignants passionnés et d&apos;anciens examinateurs du baccalauréat,
-            notre plateforme propose des centaines de sujets d&apos;examens corrigés, des exercices interactifs
-            et des vidéos explicatives pour vous aider à maîtriser les concepts mathématiques.
-          </p>
-          <p>
-            Que vous soyez élève au <strong>tronc commun</strong>, en <strong>1ère année BAC</strong> ou en
-            <strong> 2ème année BAC</strong> (PC, SVT ou SM), vous trouverez ici toutes les ressources
-            nécessaires pour exceller en mathématiques.
-          </p>
-        </div>
-      </div>
-
-      <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">
-        Pourquoi Choisir Maths-Exams ?
-      </h2>
-
-      <div className="grid md:grid-cols-2 gap-6 mb-16">
-        {features.map((feature, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"
-          >
-            <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-4">
-              {feature.icon}
+      <div className="max-w-screen-xl mx-auto px-4 mt-16">
+        
+        {/* Story Section */}
+        <div className="flex flex-col md:flex-row gap-12 items-center mb-24">
+          <div className="w-full md:w-1/2 relative">
+            <div className="aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden relative shadow-xl">
+              <Image 
+                src="https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                alt="Enseignement et Mathématiques" 
+                fill 
+                className="object-cover"
+              />
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">{feature.title}</h3>
-            <p className="text-gray-600">{feature.description}</p>
+            {/* Decorative element */}
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-blue-100 rounded-full -z-10 blur-2xl opacity-70"></div>
           </div>
-        ))}
-      </div>
-
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-3xl shadow-lg p-8 md:p-12 text-white text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4">
-          Prêt à Réussir vos Examens ?
-        </h2>
-        <p className="text-lg mb-8 opacity-90 max-w-2xl mx-auto">
-          Rejoignez des milliers d&apos;étudiants qui font confiance à Maths-Exams pour préparer leur baccalauréat.
-        </p>
-        <Link
-          href="/"
-          className="inline-flex items-center bg-white text-blue-600 font-semibold px-8 py-4 rounded-full hover:bg-gray-100 transition-colors duration-300"
-        >
-          Commencer Gratuitement
-          <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </Link>
-      </div>
-
-      <div className="mt-16 bg-gray-50 rounded-2xl p-8">
-        <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">Nos Partenaires</h3>
-        <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-          <div className="text-gray-400 font-semibold text-lg">Université Mohammed V</div>
-          <div className="text-gray-400 font-semibold text-lg">ENSAM Rabat</div>
-          <div className="text-gray-400 font-semibold text-lg">EMI</div>
-          <div className="text-gray-400 font-semibold text-lg">INPT</div>
+          
+          <div className="w-full md:w-1/2 space-y-6">
+            <h2 className="text-3xl font-black text-slate-900">Plus qu'une plateforme, un accompagnement sur mesure.</h2>
+            <p className="text-slate-600 leading-relaxed text-lg">
+              Face aux exigences grandissantes du programme de mathématiques (au Collège, au Lycée et lors de la préparation au Baccalauréat), de nombreux élèves se sentent parfois dépassés. 
+            </p>
+            <p className="text-slate-600 leading-relaxed text-lg">
+              C'est pour répondre à ce besoin que nous avons rassemblé Monsieur Mohammed Ennaouri, professeur de mathématiques expérimenté et passionné. Notre objectif : déconstruire la complexité des mathématiques, proposer des cours clairs, des exercices d'application corrigés pas à pas, et des annales d'examens nationaux décortiquées.
+            </p>
+          </div>
         </div>
+
+        {/* Values Grid */}
+        <div className="mb-24">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-black text-slate-900 mb-4">Ce qui fait notre différence</h2>
+            <p className="text-slate-500">Une approche pédagogique axée sur la compréhension profonde et l'entraînement ciblé.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Value 1 */}
+            <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6">
+                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Pédagogie Structurée</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Des cours allant de l'essentiel à l'approfondissement, conçus pour vous faire progresser étape par étape, sans brûler les étapes.
+              </p>
+            </div>
+
+            {/* Value 2 */}
+            <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-14 h-14 bg-red-50 text-red-500 rounded-xl flex items-center justify-center mb-6">
+                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Séances Live Interactives</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Le contact humain reste primordial. Posez vos questions en direct à votre professeur lors de nos visioconférences régulières.
+              </p>
+            </div>
+
+            {/* Value 3 */}
+            <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-6">
+                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Focus sur l'Examen</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Des centaines d'examens nationaux corrigés. Nous vous apprenons la méthodologie pour rédiger correctement vos réponses le jour J.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="bg-[#111827] rounded-3xl p-10 md:p-16 text-center text-white">
+          <h2 className="text-3xl font-black mb-6">Prêt à booster vos notes en Maths ?</h2>
+          <p className="text-slate-400 mb-8 max-w-2xl mx-auto">
+            Rejoignez des centaines d'élèves qui font confiance à Maths-Exams pour leur réussite scolaire.
+          </p>
+          <a href="/login" className="inline-block bg-[#0084c7] hover:bg-[#006ba1] text-white font-bold py-4 px-8 rounded-xl transition-colors shadow-md shadow-blue-500/20">
+            Commencer dès maintenant
+          </a>
+        </div>
+
       </div>
     </div>
   );
-};
-
-export default About;
+}

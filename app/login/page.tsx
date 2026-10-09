@@ -2,11 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-export default function LoginPage() {
+import { Suspense } from 'react';
+
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -50,7 +54,7 @@ export default function LoginPage() {
           } else {
             localStorage.removeItem('savedEmail');
           }
-          router.push('/dashboard');
+          router.push(callbackUrl);
           router.refresh();
         }
       } else {
@@ -87,7 +91,7 @@ export default function LoginPage() {
           if (result?.error) {
             setError('Compte créé mais erreur de connexion. Veuillez vous connecter.');
           } else {
-            router.push('/dashboard');
+            router.push(callbackUrl);
             router.refresh();
           }
         }
@@ -100,7 +104,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/dashboard' });
+    signIn('google', { callbackUrl });
   };
 
   return (
@@ -398,5 +402,13 @@ export default function LoginPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Chargement...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

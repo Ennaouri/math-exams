@@ -44,61 +44,41 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
   const userRole = (session?.user as any)?.role;
 
   return (
-    <nav className="bg-slate-900 text-white sticky top-0 z-50 border-b border-slate-800/80 shadow-lg backdrop-blur-md bg-slate-900/95" aria-label="Navigation principale">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+    <nav className="bg-white/95 text-slate-800 sticky top-0 z-50 border-b border-slate-100 shadow-sm backdrop-blur-md" aria-label="Navigation principale">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 lg:px-8">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-            <span className="text-white font-black text-xl">M</span>
-          </div>
-          <span className="self-center text-xl sm:text-2xl font-black whitespace-nowrap tracking-tight">
-            Maths<span className="text-blue-400">-Exams</span>
+        <Link href="/" className="flex items-center gap-0.5 group">
+          <span className="text-[#FFC107] font-black text-2xl tracking-tighter uppercase flex items-center">
+            <svg className="w-6 h-6 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3ZM18.82 9L12 12.72L5.18 9L12 5.28L18.82 9ZM17 15.99L12 18.72L7 15.99V12.27L12 15L17 12.27V15.99Z"/></svg>
+            LOW
+          </span>
+          <span className="text-[#007BFF] font-black text-2xl tracking-tighter uppercase">
+            DISCOVERY
           </span>
         </Link>
-
-        {/* Search bar — hidden on mobile, visible on md+ */}
-        <div className="hidden lg:flex flex-1 max-w-xs mx-4">
-          <SearchBar />
-        </div>
 
         {/* Hamburger */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           type="button"
-          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-slate-300 rounded-xl lg:hidden hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700"
+          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-slate-500 rounded-xl lg:hidden hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-200"
           aria-expanded={isOpen}
           aria-controls="navbar-dropdown"
           aria-label="Ouvrir le menu de navigation"
         >
-          <svg
-            className="w-5 h-5"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 17 14"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M1 1h15M1 7h15M1 13h15"
-            />
+          <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
           </svg>
         </button>
 
         {/* Navigation links */}
-        <div
-          id="navbar-dropdown"
-          className={`${isOpen ? "block" : "hidden"} w-full lg:block lg:w-auto`}
-        >
-          <ul className="flex flex-col font-medium p-4 lg:p-0 mt-4 rounded-2xl bg-slate-800 lg:space-x-8 lg:flex-row lg:items-center lg:mt-0 lg:border-0 lg:bg-transparent text-sm">
-
+        <div id="navbar-dropdown" className={`${isOpen ? "block" : "hidden"} w-full lg:block lg:w-auto`}>
+          <ul className="flex flex-col font-semibold p-4 lg:p-0 mt-4 rounded-2xl bg-slate-50 lg:space-x-6 lg:flex-row lg:items-center lg:mt-0 lg:border-0 lg:bg-transparent text-[13px] uppercase tracking-wide">
             {/* Niveau dropdown */}
             <li ref={levelRef} className="relative">
               <button
                 onClick={() => setLevelOpen(!levelOpen)}
-                className="flex items-center justify-between w-full py-2 px-3 text-slate-200 hover:text-blue-400 lg:p-0 lg:w-auto transition-colors"
+                className="flex items-center justify-between w-full py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors"
                 aria-expanded={levelOpen}
                 aria-haspopup="true"
               >
@@ -114,13 +94,13 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
                 </svg>
               </button>
               {levelOpen && (
-                <ul className="absolute z-20 mt-2 font-normal bg-slate-800 border border-slate-700 divide-y divide-slate-700/60 rounded-xl shadow-2xl w-56 py-2 text-xs text-slate-200">
+                <ul className="absolute z-20 mt-2 font-normal bg-white border border-slate-100 divide-y divide-slate-100 rounded-xl shadow-2xl w-56 py-2 text-xs text-slate-700">
                   {categories.map((category) => (
                     <li key={category.id}>
                       <Link
                         href={`/category/${category.slug}`}
                         onClick={closeAll}
-                        className="block px-4 py-2.5 hover:bg-slate-700/80 hover:text-blue-400 transition-colors"
+                        className="block px-4 py-2.5 hover:bg-slate-50 hover:text-blue-600 transition-colors"
                       >
                         {category.name}
                       </Link>
@@ -130,131 +110,52 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
               )}
             </li>
 
-
-            <li>
-              <Link
-                href="/calendrier"
-                onClick={closeAll}
-                className="flex items-center gap-1.5 py-2 px-3 text-slate-200 hover:text-blue-400 lg:p-0 transition-colors"
-              >
-                <span>📅</span>
-                <span>Calendrier</span>
-              </Link>
-            </li>
-
-
-
-            <li className="flex items-center">
-              <ThemeToggle />
-            </li>
-
-            {/* Auth / Dashboard button */}
-            {status === "loading" ? null : session ? (
-              <li ref={profileRef} className="relative mt-3 lg:mt-0 pt-3 lg:pt-0 border-t lg:border-t-0 border-slate-700">
-                <button
-                  onClick={() => setProfileOpen(!profileOpen)}
-                  className="flex items-center gap-2.5 py-1.5 px-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-full transition-all"
-                  aria-expanded={profileOpen}
-                  aria-haspopup="true"
-                >
-                  <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center overflow-hidden text-xs font-bold">
-                    {userImage ? (
-                      <img
-                        src={userImage}
-                        alt={session.user?.name || "Utilisateur"}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      session.user?.name?.charAt(0).toUpperCase() || 'U'
-                    )}
-                  </div>
-                  <span className="text-xs font-bold max-w-[100px] truncate">{session.user?.name}</span>
-                  <svg className="w-2 h-2 text-slate-400" fill="none" viewBox="0 0 10 6" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m1 1 4 4 4-4" />
-                  </svg>
-                </button>
-
-                {profileOpen && (
-                  <div className="z-20 bg-slate-800 border border-slate-700 divide-y divide-slate-700 rounded-2xl shadow-2xl w-64 absolute right-0 mt-2">
-                    <div className="px-4 py-3">
-                      <p className="text-sm text-white font-bold">{session.user?.name}</p>
-                      <p className="text-xs text-slate-400 truncate">{session.user?.email}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black uppercase ${
-                          userRole === 'admin'
-                            ? 'bg-purple-600 text-white'
-                            : userRole === 'parent'
-                            ? 'bg-amber-600 text-white'
-                            : 'bg-blue-600 text-white'
-                        }`}>
-                          {userRole === 'admin' ? 'Admin' : userRole === 'parent' ? 'Parent' : 'Étudiant'}
-                        </span>
-                      </div>
-                    </div>
-
-                    <ul className="py-2 text-xs text-slate-200">
-                      <li>
-                        <Link
-                          href="/dashboard"
-                          onClick={closeAll}
-                          className="flex items-center gap-2 px-4 py-2.5 hover:bg-slate-700 text-blue-400 font-bold"
-                        >
-                          <span>📊</span>
-                          <span>Mon Tableau de Bord</span>
-                        </Link>
-                      </li>
-                      {userRole === 'admin' && (
-                        <li>
-                          <Link
-                            href="/admin"
-                            onClick={closeAll}
-                            className="flex items-center gap-2 px-4 py-2.5 hover:bg-slate-700 text-purple-400 font-bold"
-                          >
-                            <span>⚙️</span>
-                            <span>Administration</span>
-                          </Link>
-                        </li>
-                      )}
-                      <li>
-                        <Link
-                          href="/profile"
-                          onClick={closeAll}
-                          className="flex items-center gap-2 px-4 py-2.5 hover:bg-slate-700"
-                        >
-                          <span>👤</span>
-                          <span>Paramètres du Profil</span>
-                        </Link>
-                      </li>
-                    </ul>
-
-                    <div className="py-2">
-                      <button
-                        onClick={() => {
-                          if (typeof window !== "undefined") {
-                            localStorage.removeItem("userImage");
-                          }
-                          signOut({ callbackUrl: "/" });
-                        }}
-                        className="flex items-center gap-2 w-full text-left px-4 py-2 text-xs text-rose-400 hover:bg-slate-700 font-semibold"
-                      >
-                        <span>🚪</span>
-                        <span>Déconnexion</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </li>
-            ) : (
-              <li className="mt-3 lg:mt-0">
-                <Link
-                  href="/login"
-                  onClick={closeAll}
-                  className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md shadow-blue-600/30 transition-all"
-                >
-                  Espace Membre
+            {/* <li>
+                <Link href="/classes" onClick={closeAll} className="block py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors">
+                  Classes e-learning
                 </Link>
+              </li> */}
+            <li>
+              <Link href="/lives" onClick={closeAll} className="block py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors">
+                  Séances Live
+                </Link>
+            </li>
+            
+            <li>
+              <Link href="/about" onClick={closeAll} className="block py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors">
+                  À propos
+                </Link>
+            </li>
+            <li>
+              <Link href="/contact" onClick={closeAll} className="block py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors">
+                  Contact
+                </Link>
+            </li>
+            <li className="hidden lg:block border-l border-slate-300 h-5 mx-2"></li>
+            <li className="hidden lg:block">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg" alt="FR" className="w-6 h-6 rounded-full object-cover border border-slate-200 shadow-sm" />
               </li>
-            )}
+              <li className="mt-4 lg:mt-0 lg:ml-2 flex items-center justify-center">
+                <ThemeToggle />
+              </li>
+            <li className="mt-4 lg:mt-0 lg:ml-2">
+              {status === 'authenticated' ? (
+                <div className="flex gap-2">
+                  {userRole === 'admin' && (
+                    <Link href="/admin/dashboard" onClick={closeAll} className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2.5 px-5 rounded-lg transition-colors text-xs">
+                      ADMIN
+                    </Link>
+                  )}
+                  <button onClick={() => signOut()} className="bg-[#111827] hover:bg-slate-800 text-white font-bold py-2.5 px-6 rounded-lg transition-colors text-xs flex items-center shadow-md">
+                    DÉCONNEXION <span className="ml-2">→</span>
+                  </button>
+                </div>
+              ) : (
+                <Link href="/login" onClick={closeAll} className="bg-[#111827] hover:bg-slate-800 text-white font-bold py-2.5 px-6 rounded-lg transition-colors text-xs flex items-center shadow-md block w-fit">
+                  ESPACE MEMBRE <span className="ml-2">→</span>
+                </Link>
+              )}
+            </li>
           </ul>
         </div>
       </div>

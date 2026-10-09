@@ -171,27 +171,8 @@ export default async function RootLayout({
               <Header />
               <div className="pt-12 bg-gray-100 dark:bg-slate-900 pb-12 transition-colors">
                 <div className="container mx-auto flex flex-wrap lg:flex-nowrap">
-                  <aside className="w-full xl:w-3/12 hidden xl:block" aria-label="Barre latérale">
-                    <CategoriesSideBar categories={categories} />
-                    {isProduction && (
-                      <div style={{ overflow: "hidden", margin: "5px" }}>
-                        <ins
-                          className="adsbygoogle"
-                          style={{ display: "block" }}
-                          data-ad-format="autorelaxed"
-                          data-ad-client="ca-pub-5587331919297301"
-                          data-ad-slot="1112602893"
-                          data-full-width-responsive="true"
-                          data-ad-status="unfilled"
-                        ></ins>
-                      </div>
-                    )}
-                    {randomPosts.length > 0 && <RandomPosts posts={randomPosts} />}
-                    <div className="mt-4">
-                      <RightSide undercategories={undercategories} />
-                    </div>
-                  </aside>
-                  <main className="xl:w-9/12 lg:w-9/12 w-full xl:ml-6 lg:mr-6" id="main-content">
+                  
+                  <main className="w-full px-4 lg:px-8" id="main-content">
                     {children}
                   </main>
                 </div>

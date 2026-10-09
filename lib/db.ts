@@ -174,7 +174,11 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 export async function getPostDetailsByPostSlug(slug: string): Promise<PostDetails[]> {
   try {
     return (await prisma.postDetails.findMany({
-      where: { Post: { slug } }
+      where: { Post: { slug } },
+      orderBy: [
+        { order: 'asc' },
+        { id: 'asc' }
+      ]
     })) as PostDetails[];
   } catch {
     return [];
@@ -475,7 +479,7 @@ export const DEFAULT_LIVES: LiveSession[] = [
     description: "Séance en direct consacrée aux techniques de calcul de dérivées, tangentes et tracé des courbes représentatives.",
     niveau: "2bac",
     niveau_label: "2ème Année BAC SM & PC/SVT",
-    instructor_name: "Professeur K. Ennaouri",
+    instructor_name: "Mohammed Ennaouri",
     scheduled_at: new Date(Date.now() + 24 * 60 * 60 * 1000), // Demain
     duration_minutes: 90,
     meeting_url: "https://meet.google.com/maths-exams-live",
@@ -489,7 +493,7 @@ export const DEFAULT_LIVES: LiveSession[] = [
     description: "Entraînement pas à pas sur les suites arithmétiques, géométriques et les suites récurrentes avec calcul de limites.",
     niveau: "1bac",
     niveau_label: "1ère Année BAC",
-    instructor_name: "Professeur A. Benjelloun",
+    instructor_name: "Mohammed Ennaouri",
     scheduled_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // Dans 3 jours
     duration_minutes: 90,
     meeting_url: "https://meet.google.com/maths-exams-1bac",
@@ -503,7 +507,7 @@ export const DEFAULT_LIVES: LiveSession[] = [
     description: "Maîtriser le cercle trigonométrique, les formules de transformation et la résolution des équations trigonométriques.",
     niveau: "tronc-commun",
     niveau_label: "Tronc Commun Sciences",
-    instructor_name: "Professeur M. Tazi",
+    instructor_name: "Mohammed Ennaouri",
     scheduled_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // Dans 5 jours
     duration_minutes: 75,
     meeting_url: "https://meet.google.com/maths-exams-tc",
@@ -517,7 +521,7 @@ export const DEFAULT_LIVES: LiveSession[] = [
     description: "Correction détaillée et astuces de rédaction pour l'examen blanc.",
     niveau: "2bac",
     niveau_label: "2ème Année BAC SM",
-    instructor_name: "Professeur K. Ennaouri",
+    instructor_name: "Mohammed Ennaouri",
     scheduled_at: new Date(Date.now() - 48 * 60 * 60 * 1000), // Passé
     duration_minutes: 105,
     replay_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
@@ -602,7 +606,7 @@ export const DEFAULT_FORMATIONS: Formation[] = [
     niveau_label: "2ème BAC Sciences Maths",
     thumbnail: "/ThumbnailSerieExponentielle.png",
     is_premium: true,
-    instructor_name: "Professeur K. Ennaouri",
+    instructor_name: "Mohammed Ennaouri",
     total_hours: 45,
     total_chapters: 12,
     created_at: new Date(),
@@ -616,7 +620,7 @@ export const DEFAULT_FORMATIONS: Formation[] = [
     niveau_label: "2ème BAC PC / SVT",
     thumbnail: "/ThumbnailSerieExponentielle.png",
     is_premium: true,
-    instructor_name: "Professeur A. Benjelloun",
+    instructor_name: "Mohammed Ennaouri",
     total_hours: 35,
     total_chapters: 9,
     created_at: new Date(),
@@ -630,7 +634,7 @@ export const DEFAULT_FORMATIONS: Formation[] = [
     niveau_label: "1ère Année Baccalauréat",
     thumbnail: "/ThumbnailSerieExponentielle.png",
     is_premium: true,
-    instructor_name: "Professeur M. Tazi",
+    instructor_name: "Mohammed Ennaouri",
     total_hours: 28,
     total_chapters: 8,
     created_at: new Date(),

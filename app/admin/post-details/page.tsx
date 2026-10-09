@@ -11,6 +11,7 @@ interface PostDetail {
   thumbnail: string;
   post_id: number;
   post_name?: string;
+  order: number;
 }
 
 export default function PostDetailsPage() {
@@ -21,12 +22,13 @@ export default function PostDetailsPage() {
   const [editingItem, setEditingItem] = useState<PostDetail | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const [formData, setFormData] = useState<{name: string, description: string, slug: string, thumbnail: string, post_id: number | string}>({
+  const [formData, setFormData] = useState<{name: string, description: string, slug: string, thumbnail: string, post_id: number | string, order: number}>({
     name: '',
     description: '',
     slug: '',
     thumbnail: '',
     post_id: '',
+    order: 0,
   });
 
   useEffect(() => {
@@ -78,7 +80,16 @@ export default function PostDetailsPage() {
     try {
       const url = editingItem ? `/api/post-details/${editingItem.id}` : '/api/post-details';
       const method = editingItem ? 'PUT' : 'POST';
-      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) }); if (!res.ok) { const d = await res.json(); alert('Erreur: ' + d.error); throw new Error(d.error); }
+      const payload = {
+        ...formData,
+        order: Number(formData.order)
+      };
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); 
+      if (!res.ok) { 
+        const d = await res.json(); 
+        alert('Erreur: ' + d.error); 
+        throw new Error(d.error); 
+      }
       fetchData();
       resetForm();
     } catch (error) {
@@ -102,12 +113,13 @@ export default function PostDetailsPage() {
       slug: item.slug,
       thumbnail: item.thumbnail,
       post_id: item.post_id,
+      order: item.order ?? 0,
     });
     setShowForm(true);
   };
 
   const resetForm = () => {
-    setFormData({ name: '', description: '', slug: '', thumbnail: '', post_id: '' });
+    setFormData({ name: '', description: '', slug: '', thumbnail: '', post_id: '', order: 0 });
     setEditingItem(null);
     setShowForm(false);
   };
@@ -123,7 +135,7 @@ export default function PostDetailsPage() {
 
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold mb-4">{editingItem ? 'Edit' : 'Add'} Post Detail</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
@@ -140,6 +152,10 @@ export default function PostDetailsPage() {
                   <option value="">Select</option>
                   {posts.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Ordre d'affichage</label>
+                <input type="number" value={formData.order} onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })} className="w-full border p-2 rounded" />
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Description</label>
@@ -171,6 +187,7 @@ export default function PostDetailsPage() {
         columns={[
           { key: 'id', label: 'ID', sortable: true },
           { key: 'name', label: 'Name', sortable: true },
+          { key: 'order', label: 'Ordre', sortable: true },
           { 
             key: 'post_name', 
             label: 'Post', 

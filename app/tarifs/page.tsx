@@ -46,7 +46,7 @@ export default async function TarifsPage() {
             <div>
               <h3 className="font-bold text-slate-800 text-base">Enseignants Spécialisés BAC & Concours</h3>
               <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                Des professeurs chevronnés qui connaissent parfaitement le barème et les pièges classiques de l'Examen National marocain.
+                Un professeur chevronné qui connait parfaitement le barème et les pièges classiques de l'Examen National marocain.
               </p>
             </div>
           </div>
