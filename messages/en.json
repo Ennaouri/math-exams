@@ -8,5 +8,28 @@
     "logout": "Logout",
     "profile": "My Profile",
     "about": "About"
+  },
+  "Home": {
+    "breadcrumb": "Home",
+    "heroTitle": "Moroccan curriculum mathematics: courses, exercises and corrected exams",
+    "heroDescription": "Prepare for Common Core, 1st BAC, 2nd BAC math and post-baccalaureate exams with educational resources matching official curriculum guidelines.",
+    "levelsTitle": "📚 School Levels & Exams",
+    "accessChapters": "Access chapters & assignments →",
+    "recentResources": "Recent resources",
+    "bacPrep": "BAC Preparation and national exams",
+    "methodTitle": "A simple method to improve in mathematics",
+    "methodStep1Title": "1. Understand the lesson",
+    "methodStep1Desc": "Review definitions, properties, and examples before starting exercises.",
+    "methodStep2Title": "2. Practice by chapter",
+    "methodStep2Desc": "Work through corrected exercises to master standard methods.",
+    "methodStep3Title": "3. Move on to exams",
+    "methodStep3Desc": "Finish with assignments and national exams to learn time management and proper drafting.",
+    "faqTitle": "Frequently Asked Questions",
+    "faqQ1": "Do the resources follow the Moroccan curriculum?",
+    "faqA1": "Yes, the main classification follows the levels and chapters of the Moroccan curriculum.",
+    "faqQ2": "Is the site useful outside Morocco?",
+    "faqA2": "Yes, the math courses and exercises remain useful for French-speaking students in other countries.",
+    "faqQ3": "Is the site free?",
+    "faqA3": "Yes, all Maths-Exams resources are free to access. No registration is required to view courses and exercises."
   }
 }

@@ -8,5 +8,28 @@
     "logout": "Se déconnecter",
     "profile": "Mon Profil",
     "about": "À propos"
+  },
+  "Home": {
+    "breadcrumb": "Accueil",
+    "heroTitle": "Mathématiques du programme marocain : cours, exercices et examens corrigés",
+    "heroDescription": "Préparez les mathématiques du Tronc Commun, de la 1ère BAC, de la 2ème BAC et des concours post-bac avec des ressources pédagogiques conformes aux cadres de référence officiels.",
+    "levelsTitle": "📚 Niveaux Scolaires & Concours",
+    "accessChapters": "Accéder aux chapitres & devoirs →",
+    "recentResources": "Ressources récentes",
+    "bacPrep": "Préparation BAC et examens nationaux",
+    "methodTitle": "Méthode simple pour progresser en mathématiques",
+    "methodStep1Title": "1. Comprendre le cours",
+    "methodStep1Desc": "Relisez les définitions, propriétés et exemples avant de commencer les exercices.",
+    "methodStep2Title": "2. S'entraîner par chapitre",
+    "methodStep2Desc": "Travaillez les exercices corrigés pour maîtriser les méthodes classiques du programme.",
+    "methodStep3Title": "3. Passer aux examens",
+    "methodStep3Desc": "Terminez par les devoirs et examens nationaux pour apprendre à gérer le temps et la rédaction.",
+    "faqTitle": "Questions fréquentes",
+    "faqQ1": "Les ressources suivent-elles le programme marocain ?",
+    "faqA1": "Oui, le classement principal suit les niveaux et chapitres du programme marocain.",
+    "faqQ2": "Le site est-il utile hors du Maroc ?",
+    "faqA2": "Oui, les cours et exercices de mathématiques restent utiles pour les élèves francophones d'autres pays.",
+    "faqQ3": "Est-ce que le site est gratuit ?",
+    "faqA3": "Oui, toutes les ressources de Maths-Exams sont accessibles gratuitement. Aucune inscription n'est requise pour consulter les cours et exercices."
   }
 }

@@ -1,6 +1,7 @@
 import { getCategories, getExamPosts, getLatestPosts, getUpcomingLiveSessions } from "@/lib/db";
 import { buildPageMetadata } from "@/lib/seo";
-import Link from "next/link";
+import { Link } from "../../i18n/routing";
+import { getTranslations } from "next-intl/server";
 import SearchBar from "../components/SearchBar";
 import Script from "next/script";
 import AdUnit from "../components/AdUnit";
@@ -19,6 +20,7 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function Home() {
+  const t = await getTranslations("Home");
   let categories: Category[] = [];
   let posts: Post[] = [];
   let recentPosts: Post[] = [];
@@ -122,7 +124,7 @@ export default async function Home() {
       <nav className="mb-4 text-sm text-gray-500" aria-label="Fil d'Ariane">
         <ol className="flex items-center space-x-2" itemScope itemType="https://schema.org/BreadcrumbList">
           <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-            <span itemProp="name" className="text-gray-700">Accueil</span>
+            <span itemProp="name" className="text-gray-700">{t("breadcrumb")}</span>
             <meta itemProp="position" content="1" />
           </li>
         </ol>
@@ -130,21 +132,15 @@ export default async function Home() {
 
       {/* Hero intro banner */}
       <section className="bg-white px-6 py-6 rounded-2xl border border-slate-200/80 shadow-sm mb-6">
-        <h2 className="text-xl md:text-2xl font-black text-slate-900">
-          Mathématiques du programme marocain : cours, exercices et examens corrigés
-        </h2>
-        <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-          Préparez les mathématiques du Tronc Commun, de la 1ère BAC, de la 2ème BAC et des concours post-bac avec des ressources pédagogiques conformes aux cadres de référence officiels.
-        </p>
+        <h2 className="text-xl md:text-2xl font-black text-slate-900">{t("heroTitle")}</h2>
+        <p className="mt-2 text-sm text-slate-600 leading-relaxed">{t("heroDescription")}</p>
       </section>
 
       <AdUnit slot="5512454890" format="fluid" layout="in-article" />
 
       {/* Level cards */}
       <div id="niveaux" className="flex flex-col md:flex-row bg-slate-900 text-white px-5 py-4 justify-between items-center rounded-2xl mb-6 scroll-mt-28 shadow-sm gap-4">
-        <h2 className="text-sm uppercase font-black tracking-wider text-white">
-          📚 Niveaux Scolaires & Concours
-        </h2>
+        <h2 className="text-sm uppercase font-black tracking-wider text-white">{t("levelsTitle")}</h2>
         <div className="w-full md:w-auto flex-1 max-w-sm flex items-center justify-end">
           <div className="w-full">
             <SearchBar />
@@ -181,9 +177,7 @@ export default async function Home() {
                 </div>
               </div>
               <div className="px-5 pb-4 pt-0">
-                <span className="text-xs font-bold text-blue-600 inline-flex items-center gap-1">
-                  Accéder aux chapitres & devoirs →
-                </span>
+                <span className="text-xs font-bold text-blue-600 inline-flex items-center gap-1">{t("accessChapters")}</span>
               </div>
             </div>
           </Link>
@@ -194,9 +188,7 @@ export default async function Home() {
       {recentPosts.length > 0 && (
         <section className="mt-10">
           <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
-            <h2 className="text-base uppercase font-semibold font-roboto">
-              Ressources récentes
-            </h2>
+            <h2 className="text-base uppercase font-semibold font-roboto">{t("recentResources")}</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {recentPosts.map((post) => (
@@ -219,9 +211,7 @@ export default async function Home() {
       {examPosts.length > 0 && (
         <section className="mt-10">
           <div className="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
-            <h2 className="text-base uppercase font-semibold font-roboto">
-              Préparation BAC et examens nationaux
-            </h2>
+            <h2 className="text-base uppercase font-semibold font-roboto">{t("bacPrep")}</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {examPosts.map((post) => (
@@ -242,38 +232,38 @@ export default async function Home() {
 
       {/* Study method */}
       <section className="mt-10 bg-white px-5 py-6 rounded-sm">
-        <h2 className="text-xl font-bold text-gray-800">Méthode simple pour progresser en mathématiques</h2>
+        <h2 className="text-xl font-bold text-gray-800">{t("methodTitle")}</h2>
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <h3 className="font-semibold text-gray-800">1. Comprendre le cours</h3>
-            <p className="mt-2 text-sm text-gray-600">Relisez les définitions, propriétés et exemples avant de commencer les exercices.</p>
+            <h3 className="font-semibold text-gray-800">{t("methodStep1Title")}</h3>
+            <p className="mt-2 text-sm text-gray-600">{t("methodStep1Desc")}</p>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-800">2. S'entraîner par chapitre</h3>
-            <p className="mt-2 text-sm text-gray-600">Travaillez les exercices corrigés pour maîtriser les méthodes classiques du programme.</p>
+            <h3 className="font-semibold text-gray-800">{t("methodStep2Title")}</h3>
+            <p className="mt-2 text-sm text-gray-600">{t("methodStep2Desc")}</p>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-800">3. Passer aux examens</h3>
-            <p className="mt-2 text-sm text-gray-600">Terminez par les devoirs et examens nationaux pour apprendre à gérer le temps et la rédaction.</p>
+            <h3 className="font-semibold text-gray-800">{t("methodStep3Title")}</h3>
+            <p className="mt-2 text-sm text-gray-600">{t("methodStep3Desc")}</p>
           </div>
         </div>
       </section>
 
       {/* FAQ */}
       <section className="mt-10 bg-white px-5 py-6 rounded-sm">
-        <h2 className="text-xl font-bold text-gray-800">Questions fréquentes</h2>
+        <h2 className="text-xl font-bold text-gray-800">{t("faqTitle")}</h2>
         <div className="mt-4 space-y-4">
           <div>
-            <h3 className="font-semibold text-gray-800">Les ressources suivent-elles le programme marocain ?</h3>
-            <p className="mt-1 text-sm text-gray-600">Oui, le classement principal suit les niveaux et chapitres du programme marocain.</p>
+            <h3 className="font-semibold text-gray-800">{t("faqQ1")}</h3>
+            <p className="mt-1 text-sm text-gray-600">{t("faqA1")}</p>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-800">Le site est-il utile hors du Maroc ?</h3>
-            <p className="mt-1 text-sm text-gray-600">Oui, les cours et exercices de mathématiques restent utiles pour les élèves francophones d'autres pays.</p>
+            <h3 className="font-semibold text-gray-800">{t("faqQ2")}</h3>
+            <p className="mt-1 text-sm text-gray-600">{t("faqA2")}</p>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-800">Est-ce que le site est gratuit ?</h3>
-            <p className="mt-1 text-sm text-gray-600">Oui, toutes les ressources de Maths-Exams sont accessibles gratuitement. Aucune inscription n'est requise pour consulter les cours et exercices.</p>
+            <h3 className="font-semibold text-gray-800">{t("faqQ3")}</h3>
+            <p className="mt-1 text-sm text-gray-600">{t("faqA3")}</p>
           </div>
         </div>
       </section>
