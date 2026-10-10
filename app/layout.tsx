@@ -8,7 +8,6 @@ import Footer from "./components/Footer";
 import type { Metadata } from "next";
 import { getCategories, getLatestPosts, getLatestUnderCategories } from "@/lib/db";
 import { Providers } from "./providers";
-import { SuppressWarning } from "./components/SuppressWarning";
 import Script from "next/script";
 import { GA_TRACKING_ID } from "@/lib/gtag";
 import { SpeedInsights } from "@vercel/speed-insights/next";

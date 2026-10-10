@@ -4,6 +4,7 @@
 
 .pdf-viewer-no-download .rpv-core__toolbar-button[data-testid="toolbar-button-download"],
 .pdf-viewer-no-download button[aria-label="Download"],
+.pdf-viewer-no-download button[aria-label="Print"],
 .pdf-viewer-no-download .rpv-core__download-menu-button,
 .pdf-viewer-no-download .rpv-default-layout__toolbar-button--download {
   display: none !important;

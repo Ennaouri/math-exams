@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import AdUnit from "@/app/components/AdUnit";
 import WatermarkedDownloadButton from "@/app/components/WatermarkedDownloadButton";
+import PdfViewer from "@/app/components/PdfViewer";
 
 type PostDetailItem = {
   id?: number;
@@ -50,13 +51,7 @@ function renderContent(postDetail: PostDetailItem, showDownload = true) {
   if (isPdf) {
     return (
       <div className="pdf-container pdf-embed-wrapper" style={{ height: "calc(100vh - 200px)", minHeight: "500px" }}>
-        <embed
-          src={`${mediaUrl}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`}
-          type="application/pdf"
-          width="100%"
-          height="100%"
-          style={{ border: "none", pointerEvents: "auto" }}
-        />
+          <PdfViewer url={mediaUrl} />
         {showDownload && (
           <div className="mt-3 flex items-center gap-3 flex-wrap">
             <WatermarkedDownloadButton
