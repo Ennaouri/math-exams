@@ -86,7 +86,7 @@ function pickUniqueRandom<T>(arr: T[], count: number): T[] {
 
 
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+
 
 export default async function RootLayout({
   children,
@@ -98,7 +98,7 @@ export default async function RootLayout({
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
-  const messages = await getMessages();
+  const messages = (await import(`../../messages/${locale}.json`)).default;
   let categories: Category[] = [];
   let posts: Post[] = [];
   let undercategories: UnderCategory[] = [];

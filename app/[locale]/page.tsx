@@ -1,7 +1,7 @@
 import { getCategories, getExamPosts, getLatestPosts, getUpcomingLiveSessions } from "@/lib/db";
 import { buildPageMetadata } from "@/lib/seo";
 import { Link } from "../../i18n/routing";
-import { getTranslations } from "next-intl/server";
+import { createTranslator } from "next-intl";
 import SearchBar from "../components/SearchBar";
 import Script from "next/script";
 import AdUnit from "../components/AdUnit";
@@ -19,8 +19,11 @@ export const metadata = buildPageMetadata({
   path: "/",
 });
 
-export default async function Home() {
-  const t = await getTranslations("Home");
+export default async function Home(props: { params: Promise<{ locale: string }> }) {
+  const resolvedParams = await props.params;
+  const messages = (await import(`../../messages/${resolvedParams.locale}.json`)).default;
+  const t = createTranslator({ locale: resolvedParams.locale, messages, namespace: "Home" });
+  
   let categories: Category[] = [];
   let posts: Post[] = [];
   let recentPosts: Post[] = [];
