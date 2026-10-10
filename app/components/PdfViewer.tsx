@@ -15,7 +15,7 @@ const PdfViewer = ({ url }: { url: string }) => {
 
   return (
     <div className={`h-full w-full ${!isAuth ? 'pdf-viewer-no-download' : ''}`}>
-      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.10.111/build/pdf.worker.min.js">
+      <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js">
         <Viewer fileUrl={url} plugins={[defaultLayoutPluginInstance]} />
       </Worker>
     </div>
