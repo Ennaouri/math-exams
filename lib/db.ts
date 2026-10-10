@@ -876,7 +876,7 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 
 export async function updateUser(
   id: number,
-  data: { name?: string; metadata?: string; image?: string; niveau?: string; phone?: string }
+  data: { name?: string; metadata?: string; image?: string; niveau?: string; phone?: string; role?: string }
 ): Promise<User | null> {
   const updates: any = {};
   if (data.name !== undefined) updates.name = data.name;
@@ -884,6 +884,7 @@ export async function updateUser(
   if (data.image !== undefined) updates.image = data.image;
   if (data.niveau !== undefined) updates.niveau = data.niveau;
   if (data.phone !== undefined) updates.phone = data.phone;
+  if (data.role !== undefined) updates.role = data.role;
 
   if (Object.keys(updates).length === 0) return null;
 
