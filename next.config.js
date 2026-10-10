@@ -31,6 +31,11 @@ const nextConfig = {
     ],
   },
   webpack: (config) => {
+    const path = require('path');
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'next-intl/config': path.resolve(__dirname, 'i18n/request.ts'),
+    };
     config.module.rules.push({
       test: /\.node/,
       use: 'raw-loader',
