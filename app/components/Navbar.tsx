@@ -1,11 +1,14 @@
 "use client";
 
-import Link from "next/link";
+
 import React, { useState, useRef, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
-import type { CategoryCardType } from "../layout";
+import type { CategoryCardType } from "../[locale]/layout";
 import SearchBar from "./SearchBar";
 import ThemeToggle from "./ThemeToggle";
+import LocaleSwitcher from "./LocaleSwitcher";
+import { useTranslations } from "next-intl";
+import { Link } from "../../i18n/routing";
 
 function getStoredImage(): string | null {
   if (typeof window === "undefined") return null;
@@ -13,6 +16,7 @@ function getStoredImage(): string | null {
 }
 
 export default function Navbar({ categories }: { categories: CategoryCardType[] }) {
+  const t = useTranslations("Navigation");
   const [isOpen, setIsOpen] = useState(false);
   const [levelOpen, setLevelOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -81,9 +85,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
                 className="flex items-center justify-between w-full py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors"
                 aria-expanded={levelOpen}
                 aria-haspopup="true"
-              >
-                Niveaux
-                <svg
+              >{t("courses")}<svg
                   className={`w-2.5 h-2.5 ms-1.5 transition-transform ${levelOpen ? "rotate-180" : ""}`}
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
@@ -116,25 +118,17 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
                 </Link>
               </li> */}
             <li>
-              <Link href="/lives" onClick={closeAll} className="block py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors">
-                  Séances Live
-                </Link>
+              <Link href="/lives" onClick={closeAll} className="block py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors">{t("lives")}</Link>
             </li>
             
             <li>
-              <Link href="/about" onClick={closeAll} className="block py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors">
-                  À propos
-                </Link>
+              <Link href="/about" onClick={closeAll} className="block py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors">{t("about", { fallback: "À propos" })}</Link>
             </li>
             <li>
-              <Link href="/contact" onClick={closeAll} className="block py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors">
-                  Contact
-                </Link>
+              <Link href="/contact" onClick={closeAll} className="block py-2 px-3 text-slate-700 hover:text-blue-600 lg:p-0 transition-colors">{t("contact")}</Link>
             </li>
             <li className="hidden lg:block border-l border-slate-300 h-5 mx-2"></li>
-            <li className="hidden lg:block">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg" alt="FR" className="w-6 h-6 rounded-full object-cover border border-slate-200 shadow-sm" />
-              </li>
+            <li className="mt-4 lg:mt-0 lg:ml-2 flex items-center justify-center"><LocaleSwitcher /></li>
               <li className="mt-4 lg:mt-0 lg:ml-2 flex items-center justify-center">
                 <ThemeToggle />
               </li>
@@ -152,7 +146,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
                         <span>{(session?.user?.name || 'U')[0].toUpperCase()}</span>
                       )}
                     </div>
-                    <span className="max-w-[120px] truncate">{session?.user?.name || 'Mon Profil'}</span>
+                    <span className="max-w-[120px] truncate">{session?.user?.name || t("profile")}</span>
                     <svg className={`w-3 h-3 transition-transform ${profileOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                   </button>
 
@@ -162,9 +156,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
                         <p className="text-xs text-slate-500 font-medium">Connecté en tant que</p>
                         <p className="text-sm font-bold text-slate-800 truncate">{session?.user?.email}</p>
                       </div>
-                      <Link href="/profile" onClick={closeAll} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">
-                        Mon Profil
-                      </Link>
+                      <Link href="/profile" onClick={closeAll} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">{t("profile")}</Link>
                       {userRole === 'admin' && (
                         <Link href="/admin" onClick={closeAll} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">
                           Tableau de bord Admin
@@ -174,16 +166,13 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
                         <button
                           onClick={() => { closeAll(); signOut(); }}
                           className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium"
-                        >
-                          Déconnexion
-                        </button>
+                        >{t("logout")}</button>
                       </div>
                     </div>
                   )}
                 </div>
               ) : (
-                <Link href="/login" onClick={closeAll} className="bg-[#111827] hover:bg-slate-800 text-white font-bold py-2.5 px-6 rounded-lg transition-colors text-xs flex items-center shadow-md block w-fit">
-                  ESPACE MEMBRE <span className="ml-2">→</span>
+                <Link href="/login" onClick={closeAll} className="bg-[#111827] hover:bg-slate-800 text-white font-bold py-2.5 px-6 rounded-lg transition-colors text-xs flex items-center shadow-md block w-fit">{t("login")}<span className="ml-2">→</span>
                 </Link>
               )}
             </li>

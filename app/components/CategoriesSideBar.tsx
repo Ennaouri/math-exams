@@ -1,5 +1,5 @@
 import React from "react";
-import type { CategoryCardType } from "../layout";
+import type { CategoryCardType } from "../[locale]/layout";
 import Link from "next/link";
 
 export default function CategoriesSideBar({

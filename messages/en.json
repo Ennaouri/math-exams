@@ -1,0 +1,12 @@
+{
+  "Navigation": {
+    "home": "Home",
+    "courses": "Courses",
+    "lives": "Lives",
+    "contact": "Contact",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "My Profile",
+    "about": "About"
+  }
+}

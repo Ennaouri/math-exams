@@ -1,13 +1,13 @@
 import { getCategories, getExamPosts, getLatestPosts, getUpcomingLiveSessions } from "@/lib/db";
 import { buildPageMetadata } from "@/lib/seo";
 import Link from "next/link";
-import SearchBar from "./components/SearchBar";
+import SearchBar from "../components/SearchBar";
 import Script from "next/script";
-import AdUnit from "./components/AdUnit";
+import AdUnit from "../components/AdUnit";
 import Image from "next/image";
 import type { Category, Post } from "@/lib/types";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
-import LiveCountdownBanner from "./components/LiveCountdownBanner";
+import LiveCountdownBanner from "../components/LiveCountdownBanner";
 
 export const revalidate = 3600;
 

@@ -1,13 +1,13 @@
-import CategoriesSideBar from "./components/CategoriesSideBar";
-import Header from "./components/Header";
-import Navbar from "./components/Navbar";
-import RandomPosts from "./components/RandomPosts";
-import RightSide from "./components/RightSide";
-import "./globals.css";
-import Footer from "./components/Footer";
+import CategoriesSideBar from "../components/CategoriesSideBar";
+import Header from "../components/Header";
+import Navbar from "../components/Navbar";
+import RandomPosts from "../components/RandomPosts";
+import RightSide from "../components/RightSide";
+import "../globals.css";
+import Footer from "../components/Footer";
 import type { Metadata } from "next";
 import { getCategories, getLatestPosts, getLatestUnderCategories } from "@/lib/db";
-import { Providers } from "./providers";
+import { Providers } from "../providers";
 import Script from "next/script";
 import { GA_TRACKING_ID } from "@/lib/gtag";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -85,11 +85,20 @@ function pickUniqueRandom<T>(arr: T[], count: number): T[] {
 
 
 
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+
 export default async function RootLayout({
   children,
+  params
 }: {
   children: React.ReactNode;
+  params: Promise<{locale: string}>;
 }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const dir = locale === 'ar' ? 'rtl' : 'ltr';
+  const messages = await getMessages();
   let categories: Category[] = [];
   let posts: Post[] = [];
   let undercategories: UnderCategory[] = [];
@@ -131,7 +140,7 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" href="/favicon.png" type="image/png" />
@@ -164,7 +173,8 @@ export default async function RootLayout({
           </>
         )}
         <SpeedInsights />
-        <Providers>
+        <NextIntlClientProvider messages={messages}>
+          <Providers>
           <div className="bg-gray-100 dark:bg-slate-900 min-h-screen w-screen transition-colors">
             <div className="max-w-screen-xl m-auto bg-white dark:bg-slate-900 transition-colors">
               <Navbar categories={categories} />
@@ -181,6 +191,7 @@ export default async function RootLayout({
             </div>
           </div>
         </Providers>
+          </NextIntlClientProvider>
       </body>
     </html>
   );

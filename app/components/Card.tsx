@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link';
 import Image from 'next/image';
-import { CategoryCardType } from '../layout';
+import { CategoryCardType } from '../[locale]/layout';
 
 
 interface Props {

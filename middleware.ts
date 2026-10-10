@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
+import { routing } from './i18n/routing';
+
+const intlMiddleware = createMiddleware(routing);
 
 const trustedCrawlerPattern =
   /googlebot|adsbot-google|mediapartners-google|bingbot|duckduckbot|slurp|yandexbot|baiduspider|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegrambot/i;
@@ -10,10 +14,11 @@ const blockedUserAgentPattern =
 const sensitivePathPattern =
   /^\/(?:wp-admin|wp-login\.php|xmlrpc\.php|\.env|\.git|phpmyadmin|vendor|cgi-bin|server-status|actuator|debug|config|backup|backups|database|db)(?:\/|$)/i;
 
-export default function proxy(request: NextRequest) {
+export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const userAgent = request.headers.get('user-agent') || '';
 
+  // 1. Security proxy checks
   if (sensitivePathPattern.test(pathname)) {
     return new NextResponse('Not found', { status: 404 });
   }
@@ -35,11 +40,16 @@ export default function proxy(request: NextRequest) {
     return new NextResponse('Method not allowed', { status: 405 });
   }
 
+  // 2. intl middleware for localization
+  // Do not run on API routes
+  if (!pathname.startsWith('/api/')) {
+    return intlMiddleware(request);
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|ads.txt|uploads/).*)',
-  ],
+  // Match only internationalized pathnames, excluding static assets and API routes
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|ads.txt|uploads/|api/).*)'],
 };
