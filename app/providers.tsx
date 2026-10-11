@@ -18,7 +18,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-      <SessionProvider>{children}</SessionProvider>
+      <SessionProvider basePath="/api/auth">{children}</SessionProvider>
     </ThemeProvider>
   );
 }

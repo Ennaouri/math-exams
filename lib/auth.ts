@@ -12,6 +12,7 @@ const getAuthSecret = () => {
 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
   secret: getAuthSecret(),
   providers: [
     CredentialsProvider({

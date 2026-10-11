@@ -164,7 +164,7 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
                       )}
                       <div className="border-t border-slate-100 mt-1 pt-1">
                         <button
-                          onClick={() => { closeAll(); signOut(); }}
+                          onClick={() => { closeAll(); signOut({ callbackUrl: '/' }); }}
                           className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium"
                         >{t("logout")}</button>
                       </div>
