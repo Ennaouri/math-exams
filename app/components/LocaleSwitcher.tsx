@@ -6,7 +6,6 @@ import { useState, useRef, useEffect } from 'react';
 
 const locales = [
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'ar', name: 'العربية', flag: '🇲🇦' },
   { code: 'en', name: 'English', flag: '🇬🇧' }
 ];
 
