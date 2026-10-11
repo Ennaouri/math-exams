@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { LiveSession } from '@/lib/types';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 
 function BellButton({ liveId, initialSubscribed }: { liveId: number; initialSubscribed: boolean }) {
   const [subscribed, setSubscribed] = useState(initialSubscribed);
@@ -46,6 +47,7 @@ function BellButton({ liveId, initialSubscribed }: { liveId: number; initialSubs
 }
 
 export default function LivesClient({ initialLives }: { initialLives: LiveSession[] }) {
+  const t = useTranslations("Lives");
   const { data: session } = useSession();
   const [selectedNiveau, setSelectedNiveau] = useState<string>('all');
   const [activeTab, setActiveTab] = useState<'upcoming' | 'replays'>('upcoming');
@@ -119,7 +121,7 @@ export default function LivesClient({ initialLives }: { initialLives: LiveSessio
       {filteredLives.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-2xl border border-slate-100 p-8 shadow-sm">
           <div className="text-4xl mb-3">📅</div>
-          <h3 className="text-lg font-bold text-slate-800">Aucune séance trouvée</h3>
+          <h3 className="text-lg font-bold text-slate-800">{t("noLives")}</h3>
           <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
             Il n'y a pas de séance programmée pour ce niveau actuellement. Les nouvelles dates de cours en direct sont ajoutées chaque semaine.
           </p>
@@ -221,7 +223,7 @@ export default function LivesClient({ initialLives }: { initialLives: LiveSessio
                       rel="noopener noreferrer"
                       className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm shadow-blue-600/30"
                     >
-                      <span>Rejoindre la séance</span>
+                      <span>{t("join")}</span>
                       <span>→</span>
                     </a>
                   ) : (
