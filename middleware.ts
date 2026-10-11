@@ -41,15 +41,15 @@ export default function middleware(request: NextRequest) {
   }
 
   // 2. intl middleware for localization
-  // Do not run on API routes
-  if (!pathname.startsWith('/api/')) {
-    return intlMiddleware(request);
+  // Skip static files with extensions and API routes
+  if (pathname.includes('.') || pathname.startsWith('/api/')) {
+    return NextResponse.next();
   }
 
-  return NextResponse.next();
+  return intlMiddleware(request);
 }
 
 export const config = {
-  // Match only internationalized pathnames, excluding static assets and API routes
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|ads.txt|uploads/|api/).*)'],
+  // Match only internationalized pathnames, excluding static files (containing .) and API routes
+  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
 };
