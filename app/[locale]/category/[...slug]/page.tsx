@@ -1,6 +1,7 @@
 import React from "react";
 import { getUnderCategoriesByCategorySlug, getPostsByUnderCategorySlug, getCategoryBySlug, getUnderCategoryBySlug } from "@/lib/db";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+import { createTranslator } from "next-intl";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import AdUnit from "@/app/components/AdUnit";
@@ -8,11 +9,13 @@ import AdUnit from "@/app/components/AdUnit";
 export const revalidate = 3600;
 
 type CategoryProps = {
-  params: Promise<{ slug: string[] }>;
+  params: Promise<{ locale: string; slug: string[] }>;
 };
 
 export async function generateMetadata({ params }: CategoryProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const messages = (await import(`../../../../messages/${locale}.json`)).default;
+  const t = createTranslator({ locale, messages, namespace: 'Category' });
   const categorySlug = slug[0];
   const underCategorySlug = slug[1];
   
@@ -45,9 +48,11 @@ export async function generateMetadata({ params }: CategoryProps): Promise<Metad
 export default async function CategoryPage({
   params,
 }: {
-  params: Promise<{ slug: string[] }>;
+  params: Promise<{ locale: string; slug: string[] }>;
 }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const messages = (await import(`../../../../messages/${locale}.json`)).default;
+  const t = createTranslator({ locale, messages, namespace: 'Category' });
   const categorySlug = slug[0];
   const underCategorySlug = slug[1];
 
@@ -90,7 +95,7 @@ export default async function CategoryPage({
       <div>
         <nav className="mb-4 text-sm text-gray-500">
           <ol className="flex items-center space-x-2">
-            <li><Link href="/" className="hover:text-red-600">Accueil</Link></li>
+            <li><Link href="/" className="hover:text-red-600">{t("home")}</Link></li>
             {category && (<><li>/</li><li><Link href={`/category/${category.slug}`} className="hover:text-red-600">{category.name}</Link></li></>)}
             <li>/</li>
             <li className="text-gray-700">{underCategory?.name}</li>
@@ -112,7 +117,7 @@ export default async function CategoryPage({
           <div className="mb-8">
             <div className="flex bg-blue-600 px-3 py-2 justify-between items-center rounded-sm mb-4">
               <h2 className="text-base uppercase font-semibold font-roboto text-white">
-                Semestre 1
+                {t("semester1")}
               </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -125,7 +130,7 @@ export default async function CategoryPage({
           <div className="mb-8">
             <div className="flex bg-green-600 px-3 py-2 justify-between items-center rounded-sm mb-4">
               <h2 className="text-base uppercase font-semibold font-roboto text-white">
-                Semestre 2
+                {t("semester2")}
               </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -143,7 +148,7 @@ export default async function CategoryPage({
         )}
         
         {allPosts.length === 0 && (
-          <p className="text-gray-500">Aucun post disponible.</p>
+          <p className="text-gray-500">{t("noPosts")}</p>
         )}
       </div>
     );
@@ -156,7 +161,7 @@ export default async function CategoryPage({
     <div>
       <nav className="mb-4 text-sm text-gray-500">
         <ol className="flex items-center space-x-2">
-          <li><Link href="/" className="hover:text-red-600">Accueil</Link></li>
+          <li><Link href="/" className="hover:text-red-600">{t("home")}</Link></li>
           <li>/</li>
           <li className="text-gray-700">{category?.name}</li>
         </ol>

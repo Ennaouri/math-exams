@@ -1,11 +1,11 @@
 {
   "Navigation": {
     "home": "Accueil",
-    "courses": "Cours",
-    "lives": "Lives",
+    "courses": "Niveaux",
+    "lives": "Séances Live",
     "contact": "Contact",
-    "login": "Se connecter",
-    "logout": "Se déconnecter",
+    "login": "ESPACE MEMBRE",
+    "logout": "Déconnexion",
     "profile": "Mon Profil",
     "about": "À propos"
   },
@@ -31,5 +31,77 @@
     "faqA2": "Oui, les cours et exercices de mathématiques restent utiles pour les élèves francophones d'autres pays.",
     "faqQ3": "Est-ce que le site est gratuit ?",
     "faqA3": "Oui, toutes les ressources de Maths-Exams sont accessibles gratuitement. Aucune inscription n'est requise pour consulter les cours et exercices."
+  },
+  "Footer": {
+    "description": "Votre plateforme éducative pour maîtriser les mathématiques. Cours, exercices et examens pour tous les niveaux.",
+    "resources": "Ressources",
+    "home": "Accueil",
+    "about": "À propos",
+    "methodBac": "Méthode BAC",
+    "pedagogicalTeam": "Équipe pédagogique",
+    "levels": "Niveaux",
+    "followUs": "Suivez-nous",
+    "legal": "Légal",
+    "contactUs": "Contactez-nous",
+    "privacyPolicy": "Politique de confidentialité",
+    "rights": "Tous droits réservés.",
+    "createdFor": "Créé pour les étudiants du Maroc"
+  },
+  "SearchBar": {
+    "placeholder": "Rechercher un cours, exercice…",
+    "viewAll": "Voir tous les résultats pour « {query} »"
+  },
+  "RightSide": {
+    "mostViewed": "Les plus consultés",
+    "tags": "Tags"
+  },
+  "About": {
+    "title": "Notre Mission :",
+    "subtitle": "Votre Réussite.",
+    "description": "Maths-Exams est né d'une conviction simple : chaque élève a le potentiel d'exceller en mathématiques s'il est accompagné avec la bonne méthode. Nous avons conçu cette plateforme pour vous offrir une longueur d'avance.",
+    "storyTitle": "Plus qu'une plateforme, un accompagnement sur mesure.",
+    "storyP1": "Face aux exigences grandissantes du programme de mathématiques (au Collège, au Lycée et lors de la préparation au Baccalauréat), de nombreux élèves se sentent parfois dépassés.",
+    "storyP2": "C'est pour répondre à ce besoin que nous avons rassemblé Monsieur Mohammed Ennaouri, professeur de mathématiques expérimenté et passionné. Notre objectif : déconstruire la complexité des mathématiques, proposer des cours clairs, des exercices d'application corrigés pas à pas, et des annales d'examens nationaux décortiquées.",
+    "diffTitle": "Ce qui fait notre différence",
+    "diffSubtitle": "Une approche pédagogique axée sur la compréhension profonde et l'entraînement ciblé.",
+    "val1Title": "Pédagogie Structurée",
+    "val1Desc": "Des cours allant de l'essentiel à l'approfondissement, conçus pour vous faire progresser étape par étape, sans brûler les étapes.",
+    "val2Title": "Séances Live Interactives",
+    "val2Desc": "Le contact humain reste primordial. Posez vos questions en direct à votre professeur lors de nos visioconférences régulières.",
+    "val3Title": "Focus sur l'Examen",
+    "val3Desc": "Des centaines d'examens nationaux corrigés. Nous vous apprenons la méthodologie pour rédiger correctement vos réponses le jour J.",
+    "ctaTitle": "Prêt à booster vos notes en Maths ?",
+    "ctaDesc": "Rejoignez des centaines d'élèves qui font confiance à Maths-Exams pour leur réussite scolaire.",
+    "ctaBtn": "Commencer dès maintenant"
+  },
+  "Contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Une question sur nos cours, un besoin spécifique ou une assistance technique ? Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.",
+    "nameLabel": "Nom Complet *",
+    "namePlaceholder": "Ex: Ahmed B.",
+    "emailLabel": "Email *",
+    "emailPlaceholder": "votre@email.com",
+    "subjectLabel": "Sujet *",
+    "subjectSelect": "Sélectionnez un sujet",
+    "subjectOption1": "Problème d'inscription / abonnement",
+    "subjectOption2": "Question sur les cours ou séances live",
+    "subjectOption3": "Support technique",
+    "subjectOption4": "Autre demande",
+    "messageLabel": "Votre Message *",
+    "messagePlaceholder": "Comment pouvons-nous vous aider ?",
+    "sendBtn": "ENVOYER LE MESSAGE"
+  },
+  "Category": {
+    "home": "Accueil",
+    "semester1": "Semestre 1",
+    "semester2": "Semestre 2",
+    "noPosts": "Aucun post disponible."
+  },
+  "PostDetails": {
+    "downloadWatermarked": "⬇ Télécharger (avec filigrane)",
+    "loginToDownload": "🔒 Connectez-vous pour télécharger ce PDF",
+    "share": "Partager :",
+    "related": "Ressources similaires",
+    "home": "Accueil"
   }
 }

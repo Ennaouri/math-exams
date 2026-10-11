@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { Link } from '../../i18n/routing';
+import { useTranslations } from 'next-intl';
 
 interface Suggestion {
   name: string;
@@ -12,6 +13,7 @@ interface Suggestion {
 }
 
 export default function SearchBar() {
+  const t = useTranslations('SearchBar');
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [open, setOpen] = useState(false);
@@ -91,7 +93,7 @@ export default function SearchBar() {
             value={query}
             onChange={handleChange}
             onFocus={() => suggestions.length > 0 && setOpen(true)}
-            placeholder="Rechercher un cours, exercice…"
+            placeholder={t('placeholder')}
             className="w-full pl-9 pr-3 py-2 bg-slate-800 border border-slate-700 text-slate-100 placeholder-slate-400 text-xs rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             autoComplete="off"
           />
@@ -134,7 +136,7 @@ export default function SearchBar() {
                 <svg className="h-3 w-3 flex-none" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
                 </svg>
-                Voir tous les résultats pour « {query} »
+                {t('viewAll', { query })}
               </button>
             </li>
           </ul>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import AdUnit from "@/app/components/AdUnit";
 import WatermarkedDownloadButton from "@/app/components/WatermarkedDownloadButton";
 import PdfViewer from "@/app/components/PdfViewer";
@@ -18,7 +19,7 @@ function getYouTubeEmbedId(url: string): string | null {
   return match && match[2].length === 11 ? match[2] : null;
 }
 
-function renderContent(postDetail: PostDetailItem, showDownload = true) {
+function renderContent(postDetail: PostDetailItem, showDownload = true, downloadLabel = "⬇ Télécharger (avec filigrane)") {
   const { thumbnail, description } = postDetail;
   const mediaUrl = thumbnail || "";
 
@@ -57,7 +58,7 @@ function renderContent(postDetail: PostDetailItem, showDownload = true) {
             <WatermarkedDownloadButton
               pdfUrl={mediaUrl}
               fileName={cleanFileName}
-              label="⬇ Télécharger (avec filigrane)"
+              label={downloadLabel}
             />
             <span className="text-xs text-slate-400 italic">
               Le PDF téléchargé contiendra votre nom en filigrane.
@@ -138,6 +139,7 @@ export default function PostDetailsAccordion({
   categoryName?: string;
   categorySlug?: string;
 }) {
+  const t = useTranslations("PostDetails");
   const [openIndex, setOpenIndex] = useState(0);
   const tracked = useRef(false);
 
@@ -220,7 +222,7 @@ export default function PostDetailsAccordion({
                 aria-labelledby={buttonId}
                 className={`border-t border-gray-100 dark:border-slate-700 px-3 py-4 md:px-5 ${!showDownload ? "no-download" : ""}`}
               >
-                {renderContent(postDetail, showDownload)}
+                {renderContent(postDetail, showDownload, t("downloadWatermarked"))}
                 <AdUnit slot="5512454890" format="fluid" layout="in-article" />
               </div>
             )}

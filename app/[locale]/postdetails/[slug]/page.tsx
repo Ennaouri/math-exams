@@ -3,7 +3,8 @@ import "./postDetails.css";
 import type { Metadata, ResolvingMetadata } from "next";
 import { getPostBySlug, getPostDetailsByPostSlug, getPostWithCategory, getRelatedPostsBySlug } from "@/lib/db";
 import { auth } from "@/lib/auth";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+import { createTranslator } from "next-intl";
 import Script from "next/script";
 import AdSenseLoader from "@/app/components/AdSenseLoader";
 import { SITE_NAME, SITE_URL, buildPageMetadata } from "@/lib/seo";
@@ -14,7 +15,7 @@ import QuizBlock from "@/app/components/QuizBlock";
 export const revalidate = 3600;
 
 type Props = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
@@ -22,7 +23,9 @@ export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const messages = (await import(`../../../../messages/${locale}.json`)).default;
+  const t = createTranslator({ locale, messages, namespace: 'PostDetails' });
   const post = await getPostBySlug(slug);
   const postdetails = await getPostDetailsByPostSlug(slug);
   const firstDetail = postdetails[0];
@@ -60,9 +63,11 @@ function getShareImage(...urls: Array<string | null | undefined>) {
 export default async function PostDetails({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const messages = (await import(`../../../../messages/${locale}.json`)).default;
+  const t = createTranslator({ locale, messages, namespace: 'PostDetails' });
   const postdetails = await getPostDetailsByPostSlug(slug);
   const sortedPosts = postdetails.sort((a, b) => {
     return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
@@ -125,7 +130,7 @@ export default async function PostDetails({
             <nav className="px-5 mb-3 text-sm text-gray-500 dark:text-gray-400">
               <ol className="flex items-center space-x-2 flex-wrap">
                 <li>
-                  <Link href="/" className="hover:text-red-600 dark:hover:text-red-400">Accueil</Link>
+                  <Link href="/" className="hover:text-red-600 dark:hover:text-red-400">{t("home")}</Link>
                 </li>
                 {postWithCategory?.category && (
                   <>
@@ -203,7 +208,7 @@ export default async function PostDetails({
         </div>
         {relatedPosts.length > 0 && (
           <section className="mt-6 rounded-sm bg-white dark:bg-slate-800 p-5 shadow-sm border dark:border-slate-700">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Ressources liées</h2>
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">{t("related")}</h2>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
               Continuez avec des cours, exercices ou examens du même niveau pour augmenter vos chances de réussite.
             </p>
