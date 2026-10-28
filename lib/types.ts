@@ -80,13 +80,13 @@ export interface UserSubscription {
   user_id: number;
   user_name?: string;
   user_email?: string;
-  plan_id: number;
+  plan_id?: number | null;
   plan_name?: string;
   niveau?: string;
-  status: 'active' | 'pending' | 'expired' | 'cancelled';
+  status: 'active' | 'pending' | 'expired' | 'cancelled' | 'paid' | string;
   started_at: Date;
   expires_at: Date;
-  payment_method: 'virement' | 'carte' | 'especes' | 'whatsapp';
+  payment_method: 'virement' | 'carte' | 'especes' | 'whatsapp' | 'paypal' | string;
   notes?: string;
   created_at: Date;
 }

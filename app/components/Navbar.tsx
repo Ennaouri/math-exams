@@ -156,6 +156,9 @@ export default function Navbar({ categories }: { categories: CategoryCardType[] 
                         <p className="text-xs text-slate-500 font-medium">Connecté en tant que</p>
                         <p className="text-sm font-bold text-slate-800 truncate">{session?.user?.email}</p>
                       </div>
+                      <Link href="/dashboard" onClick={closeAll} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600 font-semibold">
+                        Mon Espace Élève
+                      </Link>
                       <Link href="/profile" onClick={closeAll} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">{t("profile")}</Link>
                       {userRole === 'admin' && (
                         <Link href="/admin" onClick={closeAll} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-blue-600">

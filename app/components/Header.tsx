@@ -1,6 +1,6 @@
 'use client';
 
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
@@ -22,18 +22,26 @@ const HERO_IMAGES = [
 
 export default function Header() {
   const pathname = usePathname();
-
-  // ONLY show hero on the home page
-  if (pathname !== "/") return null;
-
   const [activeIndex, setActiveIndex] = useState(0);
 
+  // Check if we are on the home page (handles both / and locale prefixes like /fr, /en)
+  const isHomePage =
+    pathname === "/" ||
+    pathname === "/fr" ||
+    pathname === "/en" ||
+    pathname === "/fr/" ||
+    pathname === "/en/";
+
   useEffect(() => {
+    if (!isHomePage) return;
     const timer = setInterval(() => {
       setActiveIndex((current) => (current + 1) % HERO_IMAGES.length);
     }, 3500);
     return () => clearInterval(timer);
-  }, []);
+  }, [isHomePage]);
+
+  // NEVER return before hooks — always return after all hooks are called
+  if (!isHomePage) return null;
 
   return (
     <header className="relative bg-gradient-to-br from-[#f0f9ff] via-[#fffdf5] to-white border-b border-slate-100 overflow-hidden">
@@ -48,7 +56,7 @@ export default function Header() {
           </h1>
           
           <p className="text-lg text-slate-600 mb-8 max-w-xl leading-relaxed">
-            Réussir les Mathématiques au Collège et Lycée : cours structurés, séances en direct, exercices d'application et annales d'examens corrigées pas à pas.
+            Réussir les Mathématiques au Collège et Lycée : cours structurés, soutien scolaire en ligne ou en présentiel, exercices d'application et annales d'examens corrigées pas à pas.
           </p>
 
           {/* Action Buttons */}
@@ -64,12 +72,12 @@ export default function Header() {
               href="/lives"
               className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-[13px] uppercase tracking-wider rounded-xl shadow-sm transition-all"
             >
-              VOIR LES SÉANCES LIVE
+              RÉSERVER UNE SÉANCE
             </Link>
           </div>
 
           <p className="text-xs text-slate-500 mt-8 mb-4 font-medium">
-            Matières, classes en direct et annales : toute votre préparation dans votre poche.
+            Matières, séances particulières et annales : toute votre préparation dans votre poche.
           </p>
 
           {/* Stats */}

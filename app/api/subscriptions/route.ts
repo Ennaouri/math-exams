@@ -44,7 +44,15 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { planId, paymentMethod = 'virement', notes, durationMonths = 1, studentId } = body;
+    const {
+      planId,
+      paymentMethod = 'virement',
+      notes,
+      durationMonths = 1,
+      studentId,
+      status,
+      paypalOrderId,
+    } = body;
 
     if (!planId) {
       return NextResponse.json({ error: 'Identifiant du plan manquant.' }, { status: 400 });
@@ -55,12 +63,18 @@ export async function POST(request: Request) {
       ? Number(studentId)
       : Number((session.user as any).id);
 
+    let fullNotes = notes ? `${notes} (Inscrit par: ${session.user.name})` : undefined;
+    if (paypalOrderId) {
+      fullNotes = fullNotes ? `${fullNotes} | PayPal: ${paypalOrderId}` : `PayPal Order: ${paypalOrderId}`;
+    }
+
     const subscription = await createUserSubscription({
       user_id: userId,
       plan_id: Number(planId),
       payment_method: paymentMethod,
-      notes: notes ? `${notes} (Inscrit par: ${session.user.name})` : undefined,
+      notes: fullNotes,
       durationMonths: Number(durationMonths),
+      status: status || (paymentMethod === 'paypal' ? 'paid' : 'pending'),
     });
 
     return NextResponse.json({ success: true, subscription });

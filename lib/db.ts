@@ -420,22 +420,25 @@ export async function getAllUserSubscriptions(): Promise<UserSubscription[]> {
 
 export async function createUserSubscription(data: {
   user_id: number;
-  plan_id: number;
+  plan_id?: number | null;
   payment_method: string;
   notes?: string;
   durationMonths?: number;
+  status?: string;
 }): Promise<UserSubscription> {
   const durationMonths = data.durationMonths || 1;
   const startedAt = new Date();
   const expiresAt = new Date();
   expiresAt.setMonth(expiresAt.getMonth() + durationMonths);
 
+  const initialStatus = data.status || (data.payment_method === 'paypal' ? 'paid' : 'pending');
+
   try {
     const us = await prisma.userSubscription.create({
       data: {
         user_id: data.user_id,
-        plan_id: data.plan_id,
-        status: 'active',
+        plan_id: data.plan_id ? Number(data.plan_id) : null,
+        status: initialStatus,
         started_at: startedAt,
         expires_at: expiresAt,
         payment_method: data.payment_method,
@@ -447,8 +450,8 @@ export async function createUserSubscription(data: {
     return {
       id: Date.now(),
       user_id: data.user_id,
-      plan_id: data.plan_id,
-      status: 'active',
+      plan_id: data.plan_id ? Number(data.plan_id) : null,
+      status: initialStatus,
       started_at: startedAt,
       expires_at: expiresAt,
       payment_method: data.payment_method as any,
